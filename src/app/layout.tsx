@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Suspense } from "react";
 import ClientOnly from "@/components/ClientOnly";
+import Navigation from "@/components/Navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
       >
         <ClientOnly fallback={<div>Loading...</div>}>
           <AuthProvider>
+            <Navigation />
             {children}
           </AuthProvider>
         </ClientOnly>

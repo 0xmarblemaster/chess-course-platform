@@ -9,6 +9,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 export interface User {
   id: string
   email: string
+  role: 'student' | 'admin'
   created_at: string
 }
 
