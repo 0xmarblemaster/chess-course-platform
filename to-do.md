@@ -1,6 +1,6 @@
 # To-Do List for Coding Agent
 **Project:** Online Chess Course MVP  
-**Progress:** 75%
+**Progress:** 90%
 
 ---
 
@@ -42,10 +42,10 @@
 ---
 
 ### 3. Admin Pages
-12. [ ] Create **Admin Dashboard** (`/admin`)
+12. [x] Create **Admin Dashboard** (`/admin`)
     - Overview of Levels, lessons, PDFs, badges, student progress
     - Mobile-friendly design optional
-13. [ ] Create **Manage Levels & Lessons Page** (`/admin/manage`)
+13. [x] Create **Manage Levels & Lessons Page** (`/admin/manage`)
     - Add/edit/delete Levels, lessons, PDFs, badge graphics
 14. [ ] Create **Optional Admin Stats Page** (`/admin/stats`)
     - Analytics and progress monitoring (if included in MVP)
@@ -53,10 +53,10 @@
 ---
 
 ### 3.1 User Roles & Authentication
-15. [ ] Add `role` field to users table (student/admin)
-16. [ ] Implement role-based access control
-17. [ ] Create admin authentication middleware
-18. [ ] Add admin user creation functionality
+15. [x] Add `role` field to users table (student/admin)
+16. [x] Implement role-based access control
+17. [x] Create admin authentication middleware
+18. [x] Add admin user creation functionality
 
 ---
 
