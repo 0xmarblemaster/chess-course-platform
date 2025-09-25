@@ -1,6 +1,6 @@
 # To-Do List for Coding Agent
 **Project:** Online Chess Course MVP  
-**Progress:** 85%
+**Progress:** 100%
 
 ---
 
@@ -32,7 +32,7 @@
     - List lessons, Level progress bar
     - PDF download button
     - Locked/unlocked Level status
-11. [ ] Create **Lesson Page** (`/lessons/[lessonId]`)
+11. [x] Create **Lesson Page** (`/lessons/[lessonId]`)
     - Mobile-first responsive layout
     - Embedded YouTube video
     - Embedded Lichess iframe
@@ -69,12 +69,19 @@
 ---
 
 ### 6. Testing & Verification
-23. [ ] Test full workflow:
+23. [x] Test full workflow:
    - Signup/login → dashboard → Level → Lesson → progress → badges
    - Verify mobile-first responsiveness on phone, tablet, desktop
-24. [ ] Verify Supabase CRUD operations (students and admin)
-25. [ ] Verify PDFs download correctly
-26. [ ] Verify dynamic progress bar and badges update correctly
+24. [x] Verify Supabase CRUD operations (students and admin)
+25. [x] Verify PDFs download correctly
+26. [x] Verify dynamic progress bar and badges update correctly
+
+---
+
+### 7. Deployment & Production
+27. [x] Push project to GitHub repository
+28. [x] Deploy to Vercel with environment variables
+29. [x] Verify production deployment is working
 
 ---
 
