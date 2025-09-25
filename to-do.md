@@ -1,6 +1,6 @@
 # To-Do List for Coding Agent
 **Project:** Online Chess Course MVP  
-**Progress:** 100%
+**Progress:** 75%
 
 ---
 
@@ -52,12 +52,20 @@
 
 ---
 
+### 3.1 User Roles & Authentication
+15. [ ] Add `role` field to users table (student/admin)
+16. [ ] Implement role-based access control
+17. [ ] Create admin authentication middleware
+18. [ ] Add admin user creation functionality
+
+---
+
 ### 4. Frontend Components
-15. [x] Build **ProgressBar** component (responsive, dynamic updates)
-16. [x] Build **BadgeDisplay** component (responsive, visually appealing)
-17. [x] Build **VideoPlayer** component (responsive for mobile, tablet, desktop)
-18. [x] Build **LichessEmbed** component (responsive)
-19. [x] Build **PDF Download Button** component
+19. [x] Build **ProgressBar** component (responsive, dynamic updates)
+20. [x] Build **BadgeDisplay** component (responsive, visually appealing)
+21. [x] Build **VideoPlayer** component (responsive for mobile, tablet, desktop)
+22. [x] Build **LichessEmbed** component (responsive)
+23. [x] Build **PDF Download Button** component
 
 ---
 
