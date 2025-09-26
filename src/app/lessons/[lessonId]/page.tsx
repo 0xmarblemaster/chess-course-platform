@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import { getLessonsForLevel, getUserProgress, type Lesson } from '@/lib/data'
+import { getLessonsForLevel, getUserProgress, getLevels, type Lesson } from '@/lib/data'
 import { markVideoWatched, markTestPassed, markLessonComplete } from '@/lib/progress'
 import Link from 'next/link'
 
@@ -29,20 +29,24 @@ export default function LessonPage() {
       setLoading(true)
       setError('')
       
-      // Find the lesson by searching through all levels
-      const levels = [1, 2, 3] // We know we have 3 levels
+      // Find the lesson by searching through all available levels
+      const levels = await getLevels()
+      console.log('LessonPage - Available levels:', levels)
       let foundLesson: Lesson | null = null
       
-      for (const levelId of levels) {
-        const lessons = await getLessonsForLevel(levelId)
+      for (const level of levels) {
+        const lessons = await getLessonsForLevel(level.id)
+        console.log(`LessonPage - Lessons for level ${level.id}:`, lessons)
         const targetLesson = lessons.find(l => l.id === lessonId)
         if (targetLesson) {
           foundLesson = targetLesson
+          console.log('LessonPage - Found lesson:', targetLesson)
           break
         }
       }
       
       if (!foundLesson) {
+        console.log('LessonPage - Lesson not found for ID:', lessonId)
         setError('Lesson not found')
         return
       }
