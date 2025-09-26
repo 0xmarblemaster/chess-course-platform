@@ -78,6 +78,8 @@ const Navigation = () => {
     setMobileMenuOpen(!mobileMenuOpen)
   }
 
+  console.log('Navigation component rendering, mobileMenuOpen:', mobileMenuOpen)
+
   if (loading) {
     return (
       <nav className="bg-white shadow-sm border-b">
@@ -171,7 +173,7 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu Button - Only visible on mobile */}
-          <div className="mobile-menu-button items-center" data-testid="mobile-menu-button">
+          <div className="mobile-menu-button items-center" data-testid="mobile-menu-button" style={{ backgroundColor: 'red', minWidth: '50px', minHeight: '50px' }}>
             <button
               onClick={toggleMobileMenu}
               className="text-gray-700 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 rounded-md p-2"

@@ -25,13 +25,15 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Mobile Navigation Fix */
+/* Mobile Navigation Fix - TEST */
 .desktop-nav {
   display: flex;
+  background-color: lime !important; /* TEST - should be visible */
 }
 
 .mobile-menu-button {
   display: none;
+  background-color: red !important; /* TEST - should be visible */
 }
 
 @media (max-width: 767px) {
