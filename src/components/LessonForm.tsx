@@ -22,31 +22,48 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  console.log('LessonForm - Initialized with:', { lesson, levels, formData })
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
     try {
+      console.log('LessonForm - Submitting form data:', formData)
+      
       if (lesson) {
         // Update existing lesson
+        console.log('LessonForm - Updating existing lesson:', lesson.id)
         const { error } = await supabase
           .from('lessons')
           .update(formData)
           .eq('id', lesson.id)
 
-        if (error) throw error
+        if (error) {
+          console.error('LessonForm - Update error:', error)
+          throw error
+        }
       } else {
         // Create new lesson
-        const { error } = await supabase
+        console.log('LessonForm - Creating new lesson with data:', formData)
+        const { data, error } = await supabase
           .from('lessons')
           .insert([formData])
+          .select()
 
-        if (error) throw error
+        if (error) {
+          console.error('LessonForm - Insert error:', error)
+          console.error('LessonForm - Error details:', JSON.stringify(error, null, 2))
+          throw error
+        }
+        
+        console.log('LessonForm - Insert successful:', data)
       }
 
       onSuccess()
     } catch (err: unknown) {
+      console.error('LessonForm - Exception:', err)
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setLoading(false)
