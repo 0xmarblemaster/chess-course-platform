@@ -74,6 +74,7 @@ const Navigation = () => {
 
   const toggleMobileMenu = () => {
     console.log('Mobile menu toggled, current state:', mobileMenuOpen)
+    console.log('Window width:', window.innerWidth)
     setMobileMenuOpen(!mobileMenuOpen)
   }
 
@@ -107,8 +108,8 @@ const Navigation = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
+          {/* Desktop Navigation - Hidden on mobile */}
+          <div className="desktop-nav items-center space-x-4" data-testid="desktop-nav">
             {user ? (
               <>
                 <Link
@@ -169,8 +170,8 @@ const Navigation = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          {/* Mobile Menu Button - Only visible on mobile */}
+          <div className="mobile-menu-button items-center" data-testid="mobile-menu-button">
             <button
               onClick={toggleMobileMenu}
               className="text-gray-700 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 rounded-md p-2"
@@ -189,7 +190,7 @@ const Navigation = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200 py-2 space-y-1">
+          <div className="mobile-menu bg-white border-t border-gray-200 py-2 space-y-1">
             <div className="space-y-1">
               {user ? (
                 <>
