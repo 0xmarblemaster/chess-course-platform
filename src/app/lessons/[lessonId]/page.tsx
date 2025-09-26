@@ -199,8 +199,8 @@ export default function LessonPage() {
             </h1>
             
             {/* Progress Indicators */}
-            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-6 mb-6">
-              <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap items-center gap-4 mb-6">
+              <div className="flex items-center space-x-2 text-sm sm:text-base">
                 <span className={videoWatched ? 'text-green-600' : 'text-gray-400'}>
                   {videoWatched ? '✅' : '⭕'}
                 </span>
@@ -208,7 +208,7 @@ export default function LessonPage() {
                   {videoWatched ? t('lesson.videoWatched', 'Video Watched') : t('lesson.videoNotWatched', 'Video Not Watched')}
                 </span>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 text-sm sm:text-base">
                 <span className={testPassed ? 'text-green-600' : 'text-gray-400'}>
                   {testPassed ? '✅' : '⭕'}
                 </span>
@@ -217,7 +217,7 @@ export default function LessonPage() {
                 </span>
               </div>
               {isCompleted && (
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 text-sm sm:text-base">
                   <span className="text-green-600">🏆</span>
                   <span className="text-green-600 font-medium">{t('lesson.lessonCompleted', 'Lesson Completed!')}</span>
                 </div>

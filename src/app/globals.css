@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+/* Mobile Navigation Fix - v2.0 - Clean styling without debug colors */
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

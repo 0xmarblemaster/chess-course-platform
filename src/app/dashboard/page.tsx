@@ -115,7 +115,7 @@ export default function DashboardPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
           {/* Welcome Section */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -127,7 +127,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Overall Progress */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
               {t('dashboard.overallProgress', 'Overall Progress')}
             </h2>
@@ -152,7 +152,7 @@ export default function DashboardPage() {
 
           {/* Badges Section */}
           {badges.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 Earned Badges
               </h2>
@@ -170,7 +170,7 @@ export default function DashboardPage() {
           )}
 
           {/* Levels Section */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">
               {t('dashboard.courseLevels', 'Course Levels')}
             </h2>
