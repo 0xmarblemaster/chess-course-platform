@@ -14,7 +14,8 @@ export default function LevelForm({ level, onSuccess, onCancel }: LevelFormProps
   const [formData, setFormData] = useState({
     title: level?.title || '',
     description: level?.description || '',
-    order: level?.order || 1,
+    video_url: level?.video_url || '',
+    puzzle_practice_url: level?.puzzle_practice_url || '',
     pdf_url: level?.pdf_url || ''
   })
   const [loading, setLoading] = useState(false)
@@ -56,7 +57,7 @@ export default function LevelForm({ level, onSuccess, onCancel }: LevelFormProps
       <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div className="mt-3">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
-            {level ? 'Edit Level' : 'Add New Level'}
+            {level ? 'Edit Course' : 'Add New Course'}
           </h3>
           
           {error && (
@@ -76,7 +77,7 @@ export default function LevelForm({ level, onSuccess, onCancel }: LevelFormProps
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="e.g., Beginner Level"
+                placeholder="e.g., Beginner Course"
               />
             </div>
 
@@ -90,22 +91,40 @@ export default function LevelForm({ level, onSuccess, onCancel }: LevelFormProps
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Describe what students will learn in this level"
+                placeholder="Describe what students will learn in this course"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Order
+                Video Link - YouTube Embed
               </label>
               <input
-                type="number"
-                required
-                min="1"
-                value={formData.order}
-                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                type="url"
+                value={formData.video_url}
+                onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="https://www.youtube.com/watch?v=VIDEO_ID or https://youtu.be/VIDEO_ID"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Supports YouTube watch URLs (youtube.com/watch?v=) or short URLs (youtu.be/)
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Puzzle Practice - Lichess URL
+              </label>
+              <input
+                type="url"
+                value={formData.puzzle_practice_url}
+                onChange={(e) => setFormData({ ...formData, puzzle_practice_url: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="https://lichess.org/training/CHALLENGE_ID or https://lichess.org/study/STUDY_ID"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Supports Lichess training puzzles, studies, or game analysis URLs
+              </p>
             </div>
 
             <div>

@@ -72,7 +72,7 @@ const AdminDashboard = () => {
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
                 <p className="mt-1 text-sm text-gray-500">
-                  Welcome back, {user?.email}
+                  Welcome back, {user?.email} - Manage your chess courses and lessons
                 </p>
               </div>
               <Link
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
                   href="/admin/manage"
                   className="bg-indigo-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-indigo-700 transition-colors"
                 >
-                  Manage Levels & Lessons
+                  Manage Courses & Lessons
                 </Link>
                 <Link
                   href="/admin/stats"

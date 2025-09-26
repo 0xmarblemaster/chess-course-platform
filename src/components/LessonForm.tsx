@@ -58,7 +58,7 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
       <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
         <div className="mt-3">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
-            {lesson ? 'Edit Lesson' : 'Add New Lesson'}
+            {lesson ? 'Edit Lesson' : 'Add New Lesson to Course'}
           </h3>
           
           {error && (
@@ -85,7 +85,7 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Level
+                  Course
                 </label>
                 <select
                   required
@@ -99,12 +99,15 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
                     </option>
                   ))}
                 </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Select which course this lesson belongs to
+                </p>
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Order
+                Lesson Number
               </label>
               <input
                 type="number"
@@ -113,7 +116,11 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
                 value={formData.order}
                 onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="1, 2, 3, etc."
               />
+              <p className="text-xs text-gray-500 mt-1">
+                The order this lesson appears within the course (1 = first lesson, 2 = second lesson, etc.)
+              </p>
             </div>
 
             <div>

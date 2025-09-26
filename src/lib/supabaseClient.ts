@@ -22,8 +22,9 @@ export interface Level {
   id: number
   title: string
   description: string
-  order: number
-  pdf_url: string
+  video_url?: string
+  puzzle_practice_url?: string
+  pdf_url?: string
 }
 
 export interface Lesson {
