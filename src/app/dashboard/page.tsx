@@ -225,7 +225,7 @@ export default function DashboardPage() {
                       {level.isUnlocked ? (
                         <>
                           <Link
-                            href={`/levels/${level.id}`}
+                            href="/courses"
                             className="bg-indigo-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors text-center shadow-sm hover:shadow-md"
                           >
                             {level.progress.completedLessons === 0 ? t('dashboard.startLevel', 'Start Level') : t('dashboard.continueLevel', 'Continue Level')}

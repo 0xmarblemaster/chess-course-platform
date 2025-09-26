@@ -1,0 +1,191 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useAuth } from '@/contexts/AuthContext'
+import { useLanguage } from '@/contexts/LanguageContext'
+import ProtectedRoute from '@/components/ProtectedRoute'
+import { getLessonsForLevel, getUserProgress, getLevels, type Lesson } from '@/lib/data'
+import Link from 'next/link'
+
+export default function CoursesPage() {
+  const { t } = useLanguage()
+  const { user } = useAuth()
+  
+  const [lessons, setLessons] = useState<Lesson[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const loadCourses = async () => {
+      if (!user) return
+
+      try {
+        setLoading(true)
+        setError('')
+        
+        // Get the first level (assuming it's the main course)
+        const levels = await getLevels()
+        if (levels.length === 0) {
+          setError('No courses available')
+          return
+        }
+        
+        const firstLevel = levels[0]
+        const levelLessons = await getLessonsForLevel(firstLevel.id)
+        setLessons(levelLessons)
+        
+      } catch (err: any) {
+        setError(err.message || 'Failed to load courses')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadCourses()
+  }, [user])
+
+  if (loading) {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">{t('level.loading', 'Loading courses...')}</p>
+          </div>
+        </div>
+      </ProtectedRoute>
+    )
+  }
+
+  if (error) {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">{t('level.error', 'Error')}</h1>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <Link
+              href="/dashboard"
+              className="text-indigo-600 hover:text-indigo-700 font-medium"
+            >
+              {t('level.backToDashboard', 'Back to Dashboard')}
+            </Link>
+          </div>
+        </div>
+      </ProtectedRoute>
+    )
+  }
+
+  // Calculate progress
+  const totalLessons = lessons.length
+  const completedLessons = lessons.filter(lesson => {
+    // This would need to be updated to check actual progress
+    return false // For now, assume no lessons are completed
+  }).length
+  const progressPercentage = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0
+
+  return (
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Course Header */}
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {t('level.courseTitle', 'Chess Course')}
+            </h1>
+            <p className="text-gray-600 mb-6">
+              {t('level.courseDescription', 'Learn chess from basics to advanced')}
+            </p>
+            
+            {/* Progress */}
+            <div className="mb-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-gray-700">
+                  {t('level.levelProgress', 'Course Progress')}
+                </span>
+                <span className="text-sm text-gray-500">
+                  {progressPercentage.toFixed(1)}% {t('level.complete', 'complete')}
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3">
+                <div 
+                  className="bg-indigo-600 h-3 rounded-full transition-all duration-300"
+                  style={{ width: `${progressPercentage}%` }}
+                ></div>
+              </div>
+              <p className="text-sm text-gray-500 mt-1">
+                {completedLessons}/{totalLessons} {t('level.lessons', 'lessons')}
+              </p>
+            </div>
+          </div>
+
+          {/* Lessons List */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              {t('level.lessons', 'lessons')} ({totalLessons})
+            </h2>
+            
+            {lessons.length === 0 ? (
+              <div className="bg-white rounded-lg shadow-md p-6 text-center">
+                <p className="text-gray-500">{t('level.noLessons', 'No lessons available for this course.')}</p>
+              </div>
+            ) : (
+              lessons.map((lesson, index) => (
+                <div key={lesson.id} className="bg-white rounded-lg shadow-md p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                          <span className="text-indigo-600 font-semibold text-lg">
+                            {index + 1}
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-900">
+                          {lesson.title}
+                        </h3>
+                        <div className="flex items-center space-x-4 mt-2">
+                          <div className="flex items-center space-x-1">
+                            <span className="text-gray-400">📹</span>
+                            <span className="text-sm text-gray-600">
+                              {t('level.video', 'Video')} {t('level.notWatched', 'Not Watched')}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <span className="text-gray-400">📄</span>
+                            <span className="text-sm text-gray-600">
+                              {t('level.test', 'Test')} {t('level.notPassed', 'Not Passed')}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex-shrink-0">
+                      <Link
+                        href={`/lessons/${lesson.id}`}
+                        className="bg-indigo-600 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                      >
+                        {t('level.startLesson', 'Start Lesson')}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Navigation */}
+          <div className="mt-8 text-center">
+            <Link
+              href="/dashboard"
+              className="text-indigo-600 hover:text-indigo-700 font-medium"
+            >
+              {t('level.backToDashboard', '← Back to Dashboard')}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </ProtectedRoute>
+  )
+}
