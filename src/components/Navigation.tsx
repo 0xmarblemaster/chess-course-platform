@@ -73,12 +73,8 @@ const Navigation = () => {
   }
 
   const toggleMobileMenu = () => {
-    console.log('Mobile menu toggled, current state:', mobileMenuOpen)
-    console.log('Window width:', window.innerWidth)
     setMobileMenuOpen(!mobileMenuOpen)
   }
-
-  console.log('Navigation component rendering, mobileMenuOpen:', mobileMenuOpen)
 
   if (loading) {
     return (
@@ -173,10 +169,10 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu Button - Only visible on mobile */}
-          <div className="mobile-menu-button items-center" data-testid="mobile-menu-button" style={{ backgroundColor: 'red', minWidth: '50px', minHeight: '50px' }}>
+          <div className="mobile-menu-button items-center" data-testid="mobile-menu-button">
             <button
               onClick={toggleMobileMenu}
-              className="text-gray-700 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 rounded-md p-2"
+              className="text-gray-700 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100"
               aria-label="Toggle menu"
             >
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -192,7 +188,7 @@ const Navigation = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="mobile-menu bg-white border-t border-gray-200 py-2 space-y-1">
+          <div className="mobile-menu bg-white border-t border-gray-200 py-3 space-y-1 shadow-lg">
             <div className="space-y-1">
               {user ? (
                 <>
