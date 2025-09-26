@@ -34,6 +34,8 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
           console.error('Error fetching user role:', error)
           setUserRole(null)
         } else {
+          console.log('AdminRoute - User role data:', data)
+          console.log('AdminRoute - User role value:', data?.role)
           setUserRole(data?.role || null)
         }
       } catch (error) {

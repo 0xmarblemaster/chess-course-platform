@@ -4,12 +4,18 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import type { Level, Lesson } from '@/lib/supabaseClient'
 import AdminRoute from '@/components/AdminRoute'
+import LevelForm from '@/components/LevelForm'
+import LessonForm from '@/components/LessonForm'
 import Link from 'next/link'
 
 const AdminManage = () => {
   const [levels, setLevels] = useState<Level[]>([])
   const [lessons, setLessons] = useState<Lesson[]>([])
   const [loading, setLoading] = useState(true)
+  const [showLevelForm, setShowLevelForm] = useState(false)
+  const [showLessonForm, setShowLessonForm] = useState(false)
+  const [editingLevel, setEditingLevel] = useState<Level | undefined>()
+  const [editingLesson, setEditingLesson] = useState<Lesson | undefined>()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +36,58 @@ const AdminManage = () => {
 
     fetchData()
   }, [])
+
+  const refreshData = async () => {
+    try {
+      const [levelsResult, lessonsResult] = await Promise.all([
+        supabase.from('levels').select('*').order('order_index'),
+        supabase.from('lessons').select('*').order('level_id, order_index')
+      ])
+
+      if (levelsResult.data) setLevels(levelsResult.data)
+      if (lessonsResult.data) setLessons(lessonsResult.data)
+    } catch (error) {
+      console.error('Error refreshing data:', error)
+    }
+  }
+
+  const handleDeleteLevel = async (levelId: number) => {
+    if (!confirm('Are you sure you want to delete this level? This will also delete all associated lessons.')) {
+      return
+    }
+
+    try {
+      // First delete all lessons in this level
+      await supabase.from('lessons').delete().eq('level_id', levelId)
+      
+      // Then delete the level
+      const { error } = await supabase.from('levels').delete().eq('id', levelId)
+      
+      if (error) throw error
+      
+      await refreshData()
+    } catch (error) {
+      console.error('Error deleting level:', error)
+      alert('Error deleting level. Please try again.')
+    }
+  }
+
+  const handleDeleteLesson = async (lessonId: number) => {
+    if (!confirm('Are you sure you want to delete this lesson?')) {
+      return
+    }
+
+    try {
+      const { error } = await supabase.from('lessons').delete().eq('id', lessonId)
+      
+      if (error) throw error
+      
+      await refreshData()
+    } catch (error) {
+      console.error('Error deleting lesson:', error)
+      alert('Error deleting lesson. Please try again.')
+    }
+  }
 
   if (loading) {
     return (
@@ -73,7 +131,13 @@ const AdminManage = () => {
                 <h3 className="text-lg leading-6 font-medium text-gray-900">
                   Levels ({levels.length})
                 </h3>
-                <button className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors">
+                <button 
+                  onClick={() => {
+                    setEditingLevel(undefined)
+                    setShowLevelForm(true)
+                  }}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors"
+                >
                   Add New Level
                 </button>
               </div>
@@ -121,10 +185,19 @@ const AdminManage = () => {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button className="text-indigo-600 hover:text-indigo-900 mr-3">
+                          <button 
+                            onClick={() => {
+                              setEditingLevel(level)
+                              setShowLevelForm(true)
+                            }}
+                            className="text-indigo-600 hover:text-indigo-900 mr-3"
+                          >
                             Edit
                           </button>
-                          <button className="text-red-600 hover:text-red-900">
+                          <button 
+                            onClick={() => handleDeleteLevel(level.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
                             Delete
                           </button>
                         </td>
@@ -143,7 +216,13 @@ const AdminManage = () => {
                 <h3 className="text-lg leading-6 font-medium text-gray-900">
                   Lessons ({lessons.length})
                 </h3>
-                <button className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors">
+                <button 
+                  onClick={() => {
+                    setEditingLesson(undefined)
+                    setShowLessonForm(true)
+                  }}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors"
+                >
                   Add New Lesson
                 </button>
               </div>
@@ -205,10 +284,19 @@ const AdminManage = () => {
                             )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button className="text-indigo-600 hover:text-indigo-900 mr-3">
+                            <button 
+                              onClick={() => {
+                                setEditingLesson(lesson)
+                                setShowLessonForm(true)
+                              }}
+                              className="text-indigo-600 hover:text-indigo-900 mr-3"
+                            >
                               Edit
                             </button>
-                            <button className="text-red-600 hover:text-red-900">
+                            <button 
+                              onClick={() => handleDeleteLesson(lesson.id)}
+                              className="text-red-600 hover:text-red-900"
+                            >
                               Delete
                             </button>
                           </td>
@@ -221,6 +309,38 @@ const AdminManage = () => {
             </div>
           </div>
         </div>
+
+        {/* Forms */}
+        {showLevelForm && (
+          <LevelForm
+            level={editingLevel}
+            onSuccess={() => {
+              setShowLevelForm(false)
+              setEditingLevel(undefined)
+              refreshData()
+            }}
+            onCancel={() => {
+              setShowLevelForm(false)
+              setEditingLevel(undefined)
+            }}
+          />
+        )}
+
+        {showLessonForm && (
+          <LessonForm
+            lesson={editingLesson}
+            levels={levels}
+            onSuccess={() => {
+              setShowLessonForm(false)
+              setEditingLesson(undefined)
+              refreshData()
+            }}
+            onCancel={() => {
+              setShowLessonForm(false)
+              setEditingLesson(undefined)
+            }}
+          />
+        )}
       </div>
     </AdminRoute>
   )

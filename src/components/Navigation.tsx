@@ -48,6 +48,8 @@ const Navigation = () => {
             setUserRole(null)
           }
         } else {
+          console.log('Navigation - User role data:', data)
+          console.log('Navigation - User role value:', data?.role)
           setUserRole(data?.role || null)
         }
       } catch (error) {
