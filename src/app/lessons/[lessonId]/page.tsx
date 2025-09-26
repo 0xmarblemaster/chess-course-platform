@@ -17,7 +17,6 @@ export default function LessonPage() {
   const lessonId = parseInt(params.lessonId as string)
   
   const [lesson, setLesson] = useState<Lesson | null>(null)
-  const [allLessons, setAllLessons] = useState<Lesson[]>([])
   const [previousLesson, setPreviousLesson] = useState<Lesson | null>(null)
   const [nextLesson, setNextLesson] = useState<Lesson | null>(null)
 
@@ -63,7 +62,7 @@ export default function LessonPage() {
         return a.order_index - b.order_index
       })
       
-      setAllLessons(sortedAllLessons)
+      // Store sorted lessons for navigation
       
       // Find previous and next lessons
       const currentIndex = sortedAllLessons.findIndex(l => l.id === lessonId)

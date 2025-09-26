@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import { getLessonsForLevel, getUserProgress, getLevels, type Lesson } from '@/lib/data'
+import { getLessonsForLevel, getLevels, type Lesson } from '@/lib/data'
 import Link from 'next/link'
 
 export default function CoursesPage() {
@@ -34,8 +34,8 @@ export default function CoursesPage() {
         const levelLessons = await getLessonsForLevel(firstLevel.id)
         setLessons(levelLessons)
         
-      } catch (err: any) {
-        setError(err.message || 'Failed to load courses')
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to load courses')
       } finally {
         setLoading(false)
       }
