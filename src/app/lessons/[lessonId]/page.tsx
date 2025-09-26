@@ -253,6 +253,7 @@ export default function LessonPage() {
                   <p className="text-gray-500">{t('lesson.noChallengeAvailable', 'No challenge available')}</p>
                 </div>
               )}
+
               
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-600">

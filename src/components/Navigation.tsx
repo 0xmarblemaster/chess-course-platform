@@ -12,6 +12,7 @@ const Navigation = () => {
   const { t } = useLanguage()
   const [userRole, setUserRole] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const checkUserRole = async () => {
@@ -68,6 +69,11 @@ const Navigation = () => {
 
   const handleSignOut = async () => {
     await signOut()
+    setMobileMenuOpen(false)
+  }
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen)
   }
 
   if (loading) {
@@ -93,18 +99,20 @@ const Navigation = () => {
     <nav className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center min-h-16 py-2">
+          {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="text-lg sm:text-xl font-bold text-indigo-600 whitespace-nowrap">
               {t('nav.chessEmpire', '♔ Chess Empire')}
             </Link>
           </div>
 
-          <div className="flex items-center space-x-1 sm:space-x-4">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <>
                 <Link
                   href="/dashboard"
-                  className="text-gray-700 hover:text-indigo-600 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium"
+                  className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {t('navigation.dashboard', 'Dashboard')}
                 </Link>
@@ -112,7 +120,7 @@ const Navigation = () => {
                 {userRole === 'admin' && (
                   <Link
                     href="/admin"
-                    className="bg-indigo-600 text-white hover:bg-indigo-700 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium"
+                    className="bg-indigo-600 text-white hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium"
                   >
                     {t('navigation.admin', 'Admin')}
                   </Link>
@@ -121,10 +129,9 @@ const Navigation = () => {
                 <LanguageSwitcher />
                 
                 <div className="relative group">
-                  <button className="flex items-center text-gray-700 hover:text-indigo-600 px-1 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium max-w-32 sm:max-w-none">
-                    <span className="hidden sm:inline">{user.email}</span>
-                    <span className="sm:hidden truncate">{user.email?.split('@')[0] || 'User'}</span>
-                    <svg className="ml-1 h-3 w-3 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <button className="flex items-center text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
+                    <span>{user.email}</span>
+                    <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
@@ -146,13 +153,13 @@ const Navigation = () => {
               <>
                 <Link
                   href="/login"
-                  className="text-gray-700 hover:text-indigo-600 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium"
+                  className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {t('navigation.login', 'Login')}
                 </Link>
                 <Link
                   href="/signup"
-                  className="bg-indigo-600 text-white hover:bg-indigo-700 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium"
+                  className="bg-indigo-600 text-white hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {t('navigation.signup', 'Sign Up')}
                 </Link>
@@ -160,7 +167,89 @@ const Navigation = () => {
               </>
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <button
+              onClick={toggleMobileMenu}
+              className="text-gray-700 hover:text-indigo-600 p-2"
+              aria-label="Toggle menu"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {mobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 py-4">
+            <div className="space-y-2">
+              {user ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="block px-4 py-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md text-sm font-medium"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {t('navigation.dashboard', 'Dashboard')}
+                  </Link>
+                  
+                  {userRole === 'admin' && (
+                    <Link
+                      href="/admin"
+                      className="block px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-md text-sm font-medium"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {t('navigation.admin', 'Admin')}
+                    </Link>
+                  )}
+                  
+                  <div className="px-4 py-2">
+                    <LanguageSwitcher />
+                  </div>
+                  
+                  <div className="px-4 py-2 border-t border-gray-200">
+                    <div className="text-xs text-gray-500 mb-2">
+                      {user.email || 'User'}
+                    </div>
+                    <button
+                      onClick={handleSignOut}
+                      className="block w-full text-left px-2 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md"
+                    >
+                      {t('navigation.logout', 'Sign Out')}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="block px-4 py-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md text-sm font-medium"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {t('navigation.login', 'Login')}
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="block px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-md text-sm font-medium"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {t('navigation.signup', 'Sign Up')}
+                  </Link>
+                  <div className="px-4 py-2">
+                    <LanguageSwitcher />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   )
