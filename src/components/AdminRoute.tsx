@@ -37,6 +37,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
           console.log('AdminRoute - User role data:', data)
           console.log('AdminRoute - User role value:', data?.role)
           setUserRole(data?.role || null)
+          console.log('AdminRoute - Setting userRole to:', data?.role || null)
         }
       } catch (error) {
         console.error('Error checking user role:', error)
@@ -69,6 +70,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
 
   // Redirect to dashboard if not admin
   if (userRole !== 'admin') {
+    console.log('AdminRoute - Redirecting to dashboard. userRole:', userRole, 'user:', user?.id)
     router.push('/dashboard')
     return null
   }
