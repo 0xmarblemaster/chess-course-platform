@@ -5,23 +5,21 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabaseClient'
 
-
-interface AdminRouteProps {
+interface SimpleAdminRouteProps {
   children: React.ReactNode
 }
 
-const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
+const SimpleAdminRoute: React.FC<SimpleAdminRouteProps> = ({ children }) => {
   const { user, loading } = useAuth()
   const router = useRouter()
-  const [userRole, setUserRole] = useState<string | null>(null)
-  const [checkingRole, setCheckingRole] = useState(true)
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
 
-  console.log('AdminRoute - Render. user:', user?.id, 'loading:', loading, 'userRole:', userRole, 'checkingRole:', checkingRole)
+  console.log('SimpleAdminRoute - Render. user:', user?.id, 'loading:', loading, 'isAdmin:', isAdmin)
 
   useEffect(() => {
-    const checkUserRole = async () => {
+    const checkAdmin = async () => {
       if (!user) {
-        setCheckingRole(false)
+        setIsAdmin(false)
         return
       }
 
@@ -34,26 +32,23 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
 
         if (error) {
           console.error('Error fetching user role:', error)
-          setUserRole(null)
+          setIsAdmin(false)
         } else {
-          console.log('AdminRoute - User role data:', data)
-          console.log('AdminRoute - User role value:', data?.role)
-          setUserRole(data?.role || null)
-          console.log('AdminRoute - Setting userRole to:', data?.role || null)
+          const isUserAdmin = data?.role === 'admin'
+          console.log('SimpleAdminRoute - User role:', data?.role, 'isAdmin:', isUserAdmin)
+          setIsAdmin(isUserAdmin)
         }
       } catch (error) {
         console.error('Error checking user role:', error)
-        setUserRole(null)
-      } finally {
-        setCheckingRole(false)
+        setIsAdmin(false)
       }
     }
 
-    checkUserRole()
+    checkAdmin()
   }, [user])
 
-  // Show loading while checking authentication and role
-  if (loading || checkingRole) {
+  // Show loading while checking authentication
+  if (loading || isAdmin === null) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -71,16 +66,15 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
   }
 
   // Redirect to dashboard if not admin
-  if (userRole !== 'admin') {
-    console.log('AdminRoute - Redirecting to dashboard. userRole:', userRole, 'user:', user?.id, 'loading:', loading, 'checkingRole:', checkingRole)
+  if (!isAdmin) {
+    console.log('SimpleAdminRoute - Redirecting to dashboard. isAdmin:', isAdmin)
     router.push('/dashboard')
     return null
   }
 
-  console.log('AdminRoute - Rendering admin content. userRole:', userRole, 'user:', user?.id)
-
   // Render admin content if user is admin
+  console.log('SimpleAdminRoute - Rendering admin content. isAdmin:', isAdmin, 'user:', user?.id)
   return <>{children}</>
 }
 
-export default AdminRoute
+export default SimpleAdminRoute

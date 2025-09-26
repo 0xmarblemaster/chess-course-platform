@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabaseClient'
-import AdminRoute from '@/components/AdminRoute'
+import SimpleAdminRoute from '@/components/SimpleAdminRoute'
 import Link from 'next/link'
 
 const AdminDashboard = () => {
@@ -63,7 +63,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <AdminRoute>
+    <SimpleAdminRoute>
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <div className="bg-white shadow">
@@ -240,7 +240,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-    </AdminRoute>
+    </SimpleAdminRoute>
   )
 }
 

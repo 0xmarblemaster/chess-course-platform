@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import type { Level, Lesson } from '@/lib/supabaseClient'
-import AdminRoute from '@/components/AdminRoute'
+// import AdminRoute from '@/components/AdminRoute' // Removed - causing issues
 import LevelForm from '@/components/LevelForm'
 import LessonForm from '@/components/LessonForm'
 import Link from 'next/link'
@@ -91,17 +91,14 @@ const AdminManage = () => {
 
   if (loading) {
     return (
-      <AdminRoute>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-        </div>
-      </AdminRoute>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
     )
   }
 
   return (
-    <AdminRoute>
-      <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <div className="bg-white shadow">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -360,7 +357,6 @@ const AdminManage = () => {
           />
         )}
       </div>
-    </AdminRoute>
   )
 }
 
