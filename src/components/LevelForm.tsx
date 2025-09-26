@@ -14,6 +14,7 @@ export default function LevelForm({ level, onSuccess, onCancel }: LevelFormProps
   const [formData, setFormData] = useState({
     title: level?.title || '',
     description: level?.description || '',
+    order_index: level?.order_index || 1,
     video_url: level?.video_url || '',
     puzzle_practice_url: level?.puzzle_practice_url || '',
     pdf_url: level?.pdf_url || ''
@@ -93,6 +94,24 @@ export default function LevelForm({ level, onSuccess, onCancel }: LevelFormProps
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="Describe what students will learn in this course"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Course Order
+              </label>
+              <input
+                type="number"
+                required
+                min="1"
+                value={formData.order_index}
+                onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="1, 2, 3, etc."
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                The order this course appears in the course list
+              </p>
             </div>
 
             <div>
