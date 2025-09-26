@@ -69,7 +69,7 @@ export default function LessonPage() {
     } finally {
       setLoading(false)
     }
-  }, [user, lessonId])
+  }, [user, lessonId, t])
 
   useEffect(() => {
     if (user && lessonId) {

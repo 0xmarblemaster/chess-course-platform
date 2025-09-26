@@ -17,7 +17,7 @@ interface LanguageProviderProps {
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const [locale, setLocale] = useState('ru')
-  const [translations, setTranslations] = useState<Record<string, any>>({})
+  const [translations, setTranslations] = useState<Record<string, string | Record<string, string>>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

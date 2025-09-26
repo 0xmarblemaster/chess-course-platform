@@ -51,7 +51,7 @@ export default function LoginPage() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            {t('login.title', 'Sign in to your account')}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
@@ -59,7 +59,7 @@ export default function LoginPage() {
               onClick={() => setIsMagicLink(!isMagicLink)}
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
-              {isMagicLink ? 'use password' : 'use magic link'}
+              {isMagicLink ? t('login.emailPassword', 'use password') : t('login.magicLink', 'use magic link')}
             </button>
           </p>
         </div>
@@ -76,7 +76,7 @@ export default function LoginPage() {
                 autoComplete="email"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                placeholder={t('login.emailPlaceholder', 'Email address')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -93,7 +93,7 @@ export default function LoginPage() {
                   autoComplete="current-password"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Password"
+                  placeholder={t('login.passwordPlaceholder', 'Password')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -115,7 +115,7 @@ export default function LoginPage() {
               disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
-              {loading ? 'Signing in...' : isMagicLink ? 'Send Magic Link' : 'Sign in'}
+              {loading ? t('common.loading', 'Signing in...') : isMagicLink ? t('login.sendMagicLink', 'Send Magic Link') : t('login.signIn', 'Sign in')}
             </button>
           </div>
 
@@ -124,7 +124,7 @@ export default function LoginPage() {
               href="/signup"
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
-              Don&apos;t have an account? Sign up
+              {t('login.noAccount', 'Don\'t have an account?')} {t('login.signUp', 'Sign up')}
             </a>
           </div>
         </form>
