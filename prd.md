@@ -1,11 +1,11 @@
 # Product Requirements Document (PRD)
-**Project:** Online Chess Course Platform  
+**Project:** Online Chess Empire Platform  
 **Tech Stack:** Vercel + Next.js + Tailwind + Supabase + YouTube embeds + Lichess embeds
 
 ---
 
 ## 1. Vision & Goals
-Deliver a gamified online chess course where users progress through Levels with video lessons and Lichess challenges.
+Deliver a gamified online chess empire where users progress through Levels with video lessons and Lichess challenges.
 
 **Objectives:**
 - Track user progress per lesson and Level.

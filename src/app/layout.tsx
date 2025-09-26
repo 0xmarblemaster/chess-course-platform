@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import ClientOnly from "@/components/ClientOnly";
 import Navigation from "@/components/Navigation";
 
@@ -16,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chess Course Platform",
+  title: "Chess Empire Platform",
   description: "Learn chess with interactive lessons and challenges",
 };
 
@@ -32,10 +33,12 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ClientOnly fallback={<div>Loading...</div>}>
-          <AuthProvider>
-            <Navigation />
-            {children}
-          </AuthProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <Navigation />
+              {children}
+            </AuthProvider>
+          </LanguageProvider>
         </ClientOnly>
       </body>
     </html>

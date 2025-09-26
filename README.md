@@ -1,4 +1,4 @@
-# Chess Course Platform
+# Chess Empire Platform
 
 A gamified online chess learning platform built with Next.js, TailwindCSS, and Supabase. Students progress through structured levels with video lessons and interactive Lichess challenges.
 

@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { getLessonsForLevel, getUserProgress, getLevels, type Lesson } from '@/lib/data'
 import { markVideoWatched, markTestPassed, markLessonComplete } from '@/lib/progress'
@@ -10,6 +11,7 @@ import Link from 'next/link'
 
 export default function LessonPage() {
   const params = useParams()
+  const { t } = useLanguage()
 
   const { user } = useAuth()
   const lessonId = parseInt(params.lessonId as string)
@@ -47,7 +49,7 @@ export default function LessonPage() {
       
       if (!foundLesson) {
         console.log('LessonPage - Lesson not found for ID:', lessonId)
-        setError('Lesson not found')
+        setError(t('lesson.lessonNotFound', 'Lesson not found'))
         return
       }
       
@@ -63,7 +65,7 @@ export default function LessonPage() {
       }
     } catch (error) {
       console.error('Error loading lesson data:', error)
-      setError('Failed to load lesson data')
+      setError(t('lesson.failedToLoad', 'Failed to load lesson data'))
     } finally {
       setLoading(false)
     }
@@ -129,7 +131,7 @@ export default function LessonPage() {
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading lesson...</p>
+            <p className="mt-4 text-gray-600">{t('lesson.loading', 'Loading lesson...')}</p>
           </div>
         </div>
       </ProtectedRoute>
@@ -141,13 +143,13 @@ export default function LessonPage() {
       <ProtectedRoute>
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Error</h1>
-            <p className="text-gray-600 mb-4">{error || 'Lesson not found'}</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">{t('lesson.error', 'Error')}</h1>
+            <p className="text-gray-600 mb-4">{error || t('lesson.lessonNotFound', 'Lesson not found')}</p>
             <Link
               href="/dashboard"
               className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
             >
-              Back to Dashboard
+              {t('lesson.backToDashboard', 'Back to Dashboard')}
             </Link>
           </div>
         </div>
@@ -172,7 +174,7 @@ export default function LessonPage() {
                   {videoWatched ? '✅' : '⭕'}
                 </span>
                 <span className={videoWatched ? 'text-green-600' : 'text-gray-600'}>
-                  Video {videoWatched ? 'Watched' : 'Not Watched'}
+                  {videoWatched ? t('lesson.videoWatched', 'Video Watched') : t('lesson.videoNotWatched', 'Video Not Watched')}
                 </span>
               </div>
               <div className="flex items-center space-x-2">
@@ -180,13 +182,13 @@ export default function LessonPage() {
                   {testPassed ? '✅' : '⭕'}
                 </span>
                 <span className={testPassed ? 'text-green-600' : 'text-gray-600'}>
-                  Test {testPassed ? 'Passed' : 'Not Passed'}
+                  {testPassed ? t('lesson.testPassed', 'Test Passed') : t('lesson.testNotPassed', 'Test Not Passed')}
                 </span>
               </div>
               {isCompleted && (
                 <div className="flex items-center space-x-2">
                   <span className="text-green-600">🏆</span>
-                  <span className="text-green-600 font-medium">Lesson Completed!</span>
+                  <span className="text-green-600 font-medium">{t('lesson.lessonCompleted', 'Lesson Completed!')}</span>
                 </div>
               )}
             </div>
@@ -196,7 +198,7 @@ export default function LessonPage() {
             {/* Video Section */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                📹 Video Lesson
+                📹 {t('lesson.videoLesson', 'Video Lesson')}
               </h2>
               
               {lesson.video_url ? (
@@ -210,13 +212,13 @@ export default function LessonPage() {
                 </div>
               ) : (
                 <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                  <p className="text-gray-500">No video available</p>
+                  <p className="text-gray-500">{t('lesson.noVideoAvailable', 'No video available')}</p>
                 </div>
               )}
               
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-600">
-                  Watch the video to understand the concepts
+                  {t('lesson.watchVideoDescription', 'Watch the video to understand the concepts')}
                 </p>
                 <button
                   onClick={handleMarkVideoWatched}
@@ -227,7 +229,7 @@ export default function LessonPage() {
                       : 'bg-indigo-600 text-white hover:bg-indigo-700'
                   }`}
                 >
-                  {updating ? 'Updating...' : videoWatched ? 'Video Watched' : 'Mark Video Watched'}
+                  {updating ? t('lesson.updating', 'Updating...') : videoWatched ? t('lesson.videoWatched', 'Video Watched') : t('lesson.markVideoWatched', 'Mark Video Watched')}
                 </button>
               </div>
             </div>
@@ -235,7 +237,7 @@ export default function LessonPage() {
             {/* Lichess Challenge Section */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                🎯 Interactive Challenge
+                🎯 {t('lesson.interactiveChallenge', 'Interactive Challenge')}
               </h2>
               
               {lesson.lichess_embed_url ? (
@@ -248,13 +250,13 @@ export default function LessonPage() {
                 </div>
               ) : (
                 <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                  <p className="text-gray-500">No challenge available</p>
+                  <p className="text-gray-500">{t('lesson.noChallengeAvailable', 'No challenge available')}</p>
                 </div>
               )}
               
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-600">
-                  Complete the challenge to test your understanding
+                  {t('lesson.completeChallengeDescription', 'Complete the challenge to test your understanding')}
                 </p>
                 <button
                   onClick={handleMarkTestPassed}
@@ -265,7 +267,7 @@ export default function LessonPage() {
                       : 'bg-indigo-600 text-white hover:bg-indigo-700'
                   }`}
                 >
-                  {updating ? 'Updating...' : testPassed ? 'Test Passed' : 'Mark Test Passed'}
+                  {updating ? t('lesson.updating', 'Updating...') : testPassed ? t('lesson.testPassed', 'Test Passed') : t('lesson.markTestPassed', 'Mark Test Passed')}
                 </button>
               </div>
             </div>
@@ -275,10 +277,10 @@ export default function LessonPage() {
           <div className="bg-white rounded-lg shadow-md p-6 mt-8">
             <div className="text-center">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Complete This Lesson
+                {t('lesson.completeThisLesson', 'Complete This Lesson')}
               </h2>
               <p className="text-gray-600 mb-6">
-                Mark this lesson as complete when you&apos;ve finished both the video and challenge
+                {t('lesson.completeLessonDescription', 'Mark this lesson as complete when you\'ve finished both the video and challenge')}
               </p>
               
               <button
@@ -292,17 +294,17 @@ export default function LessonPage() {
                     : 'bg-green-600 text-white hover:bg-green-700'
                 }`}
               >
-                {updating ? 'Updating...' : isCompleted ? 'Lesson Completed!' : 'Mark Lesson Complete'}
+                {updating ? t('lesson.updating', 'Updating...') : isCompleted ? t('lesson.lessonCompleted', 'Lesson Completed!') : t('lesson.markLessonComplete', 'Mark Lesson Complete')}
               </button>
               
               {!videoWatched && (
                 <p className="text-sm text-gray-500 mt-2">
-                  Complete the video first
+                  {t('lesson.completeVideoFirst', 'Complete the video first')}
                 </p>
               )}
               {!testPassed && videoWatched && (
                 <p className="text-sm text-gray-500 mt-2">
-                  Complete the challenge first
+                  {t('lesson.completeChallengeFirst', 'Complete the challenge first')}
                 </p>
               )}
             </div>
@@ -314,13 +316,13 @@ export default function LessonPage() {
               href={`/levels/${lesson.level_id}`}
               className="text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              ← Back to Level
+              {t('lesson.backToLevel', '← Back to Level')}
             </Link>
             <Link
               href="/dashboard"
               className="text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              Dashboard →
+              {t('lesson.dashboard', 'Dashboard →')}
             </Link>
           </div>
         </div>

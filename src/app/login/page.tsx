@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -13,6 +14,7 @@ export default function LoginPage() {
   const [message, setMessage] = useState('')
   
   const { signIn, signInWithMagicLink } = useAuth()
+  const { t } = useLanguage()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {

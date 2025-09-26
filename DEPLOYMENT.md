@@ -1,4 +1,4 @@
-# Deployment Guide - Chess Course Platform
+# Deployment Guide - Chess Empire Platform
 
 ## 🚀 Deploy to Vercel
 
@@ -41,7 +41,7 @@
    ```bash
    git init
    git add .
-   git commit -m "Initial commit: Chess Course Platform"
+   git commit -m "Initial commit: Chess Empire Platform"
    git branch -M main
    git remote add origin https://github.com/yourusername/chess-course-platform.git
    git push -u origin main
@@ -129,4 +129,4 @@ Add your Supabase credentials to Vercel:
 - Monitor user analytics
 - Track error rates
 
-Your Chess Course Platform should now be live and ready for students! 🎓♟️
+Your Chess Empire Platform should now be live and ready for students! 🎓♟️

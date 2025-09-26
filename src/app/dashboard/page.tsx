@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { getLevels, getLevelProgress, getOverallProgress, getUserBadges, type Level, type Badge } from '@/lib/data'
 import Link from 'next/link'
@@ -17,6 +18,32 @@ interface LevelWithProgress extends Level {
 
 export default function DashboardPage() {
   const { user } = useAuth()
+  const { t } = useLanguage()
+
+  // Function to translate level titles and descriptions
+  const translateLevel = (level: Level) => {
+    const levelTranslations: Record<string, { title: string; description: string }> = {
+      'Beginner': {
+        title: t('dashboard.beginner', 'Beginner'),
+        description: t('dashboard.chessBasics', 'Chess basics')
+      },
+      'Intermediate': {
+        title: t('dashboard.intermediate', 'Intermediate'),
+        description: t('home.intermediateDescription', 'Advance your skills with complex tactics and positional play.')
+      },
+      'Advanced': {
+        title: t('dashboard.advanced', 'Advanced'),
+        description: t('home.advancedDescription', 'Master advanced strategies and tournament preparation.')
+      }
+    }
+
+    const translation = levelTranslations[level.title] || { title: level.title, description: level.description }
+    return {
+      ...level,
+      title: translation.title,
+      description: translation.description
+    }
+  }
   const [levels, setLevels] = useState<LevelWithProgress[]>([])
   const [badges, setBadges] = useState<Badge[]>([])
   const [overallProgress, setOverallProgress] = useState({
@@ -92,23 +119,23 @@ export default function DashboardPage() {
           {/* Welcome Section */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Welcome to Your Chess Journey
+              {t('dashboard.welcome', 'Welcome to Your Chess Journey')}
             </h1>
             <p className="text-gray-600">
-              Track your progress and continue learning
+              {t('dashboard.trackProgress', 'Track your progress and continue learning')}
             </p>
           </div>
 
           {/* Overall Progress */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Overall Progress
+              {t('dashboard.overallProgress', 'Overall Progress')}
             </h2>
             <div className="flex items-center space-x-4">
               <div className="flex-1">
                 <div className="flex justify-between text-sm text-gray-600 mb-2">
-                  <span>Course Progress</span>
-                  <span>{overallProgress.completedLessons}/{overallProgress.totalLessons} lessons</span>
+                  <span>{t('dashboard.courseProgress', 'Course Progress')}</span>
+                  <span>{overallProgress.completedLessons}/{overallProgress.totalLessons} {t('dashboard.lessons', 'lessons')}</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
@@ -117,7 +144,7 @@ export default function DashboardPage() {
                   ></div>
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
-                  {overallProgress.progressPercentage.toFixed(1)}% complete
+                  {overallProgress.progressPercentage.toFixed(1)}% {t('dashboard.complete', 'complete')}
                 </p>
               </div>
             </div>
@@ -145,10 +172,12 @@ export default function DashboardPage() {
           {/* Levels Section */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">
-              Course Levels
+              {t('dashboard.courseLevels', 'Course Levels')}
             </h2>
             <div className="space-y-6">
-              {levels.map((level, index) => (
+              {levels.map((level, index) => {
+                const translatedLevel = translateLevel(level)
+                return (
                 <div
                   key={level.id}
                   className={`border rounded-xl p-6 transition-all duration-200 ${
@@ -166,19 +195,19 @@ export default function DashboardPage() {
                           {index + 1}
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          {level.title}
+                          {translatedLevel.title}
                         </h3>
                         {!level.isUnlocked && (
-                          <span className="text-sm text-gray-500">🔒 Locked</span>
+                          <span className="text-sm text-gray-500">{t('dashboard.locked', '🔒 Locked')}</span>
                         )}
                       </div>
-                      <p className="text-gray-600 mb-4">{level.description}</p>
+                      <p className="text-gray-600 mb-4">{translatedLevel.description}</p>
                       
                       {/* Progress Bar */}
                       <div className="mb-4">
                         <div className="flex justify-between text-sm text-gray-600 mb-2">
-                          <span>Progress</span>
-                          <span>{level.progress.completedLessons}/{level.progress.totalLessons} lessons</span>
+                          <span>{t('dashboard.progress', 'Progress')}</span>
+                          <span>{level.progress.completedLessons}/{level.progress.totalLessons} {t('dashboard.lessons', 'lessons')}</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-3">
                           <div
@@ -187,7 +216,7 @@ export default function DashboardPage() {
                           ></div>
                         </div>
                         <p className="text-sm text-gray-500 mt-1">
-                          {level.progress.progressPercentage.toFixed(1)}% complete
+                          {level.progress.progressPercentage.toFixed(1)}% {t('dashboard.complete', 'complete')}
                         </p>
                       </div>
                     </div>
@@ -199,7 +228,7 @@ export default function DashboardPage() {
                             href={`/levels/${level.id}`}
                             className="bg-indigo-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors text-center shadow-sm hover:shadow-md"
                           >
-                            {level.progress.completedLessons === 0 ? 'Start Level' : 'Continue Level'}
+                            {level.progress.completedLessons === 0 ? t('dashboard.startLevel', 'Start Level') : t('dashboard.continueLevel', 'Continue Level')}
                           </Link>
                           {level.pdf_url && (
                             <a
@@ -208,7 +237,7 @@ export default function DashboardPage() {
                               rel="noopener noreferrer"
                               className="border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg text-sm font-medium hover:bg-indigo-50 transition-colors text-center shadow-sm hover:shadow-md"
                             >
-                              Download PDF
+                              {t('dashboard.downloadPDF', 'Download PDF')}
                             </a>
                           )}
                         </>
@@ -217,13 +246,14 @@ export default function DashboardPage() {
                           disabled
                           className="bg-gray-300 text-gray-500 px-6 py-3 rounded-lg text-sm font-medium cursor-not-allowed shadow-sm"
                         >
-                          Complete Previous Level
+                          {t('dashboard.completePrevious', 'Complete Previous Level')}
                         </button>
                       )}
                     </div>
                   </div>
                 </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </div>

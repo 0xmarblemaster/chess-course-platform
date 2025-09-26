@@ -1,5 +1,5 @@
 # To-Do List for Coding Agent
-**Project:** Online Chess Course MVP  
+**Project:** Online Chess Empire MVP  
 **Progress:** 95%
 
 ---

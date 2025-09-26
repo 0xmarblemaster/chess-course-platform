@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { supabase } from '@/lib/supabaseClient'
 // import SimpleAdminRoute from '@/components/SimpleAdminRoute' // Removed - causing issues
 import Link from 'next/link'
 
 const AdminDashboard = () => {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalLevels: 0,
@@ -67,16 +69,16 @@ const AdminDashboard = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+                <h1 className="text-3xl font-bold text-gray-900">{t('admin.adminDashboard', 'Admin Dashboard')}</h1>
                 <p className="mt-1 text-sm text-gray-500">
-                  Welcome back, {user?.email} - Manage your chess courses and lessons
+                  {t('admin.welcomeBack', 'Welcome back')}, {user?.email} - {t('admin.manageChessCourses', 'Manage your chess courses and lessons')}
                 </p>
               </div>
               <Link
                 href="/dashboard"
                 className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors"
               >
-                Back to Student View
+                {t('admin.backToStudentView', 'Back to Student View')}
               </Link>
             </div>
           </div>
@@ -99,7 +101,7 @@ const AdminDashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Users
+                        {t('admin.totalUsers', 'Total Users')}
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
                         {stats.totalUsers}
@@ -123,7 +125,7 @@ const AdminDashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Levels
+                        {t('admin.totalLevels', 'Total Levels')}
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
                         {stats.totalLevels}
@@ -147,7 +149,7 @@ const AdminDashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Lessons
+                        {t('admin.totalLessons', 'Total Lessons')}
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
                         {stats.totalLessons}
@@ -171,7 +173,7 @@ const AdminDashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Progress
+                        {t('admin.totalProgress', 'Total Progress')}
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
                         {stats.totalProgress}
@@ -195,7 +197,7 @@ const AdminDashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Badges
+                        {t('admin.totalBadges', 'Total Badges')}
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
                         {stats.totalBadges}
@@ -211,26 +213,26 @@ const AdminDashboard = () => {
           <div className="bg-white shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                Quick Actions
+                {t('admin.quickActions', 'Quick Actions')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Link
                   href="/admin/manage"
                   className="bg-indigo-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-indigo-700 transition-colors"
                 >
-                  Manage Courses & Lessons
+                  {t('admin.manageCourses', 'Manage Courses & Lessons')}
                 </Link>
                 <Link
                   href="/admin/stats"
                   className="bg-green-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-green-700 transition-colors"
                 >
-                  View Analytics
+                  {t('admin.viewAnalytics', 'View Analytics')}
                 </Link>
                 <Link
                   href="/dashboard"
                   className="bg-gray-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-gray-700 transition-colors"
                 >
-                  Student Dashboard
+                  {t('admin.studentDashboard', 'Student Dashboard')}
                 </Link>
               </div>
             </div>

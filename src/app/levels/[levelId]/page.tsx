@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { getLevels, getLessonsForLevel, getUserProgress, getLevelProgress, type Level, type Lesson, type Progress } from '@/lib/data'
 import Link from 'next/link'
@@ -16,6 +17,7 @@ export default function LevelPage() {
   const params = useParams()
 
   const { user } = useAuth()
+  const { t } = useLanguage()
   const levelId = parseInt(params.levelId as string)
   
   const [level, setLevel] = useState<Level | null>(null)
@@ -100,7 +102,7 @@ export default function LevelPage() {
               href="/dashboard"
               className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
             >
-              Back to Dashboard
+              {t('level.backToDashboard', 'Back to Dashboard')}
             </Link>
           </div>
         </div>
@@ -124,8 +126,8 @@ export default function LevelPage() {
                 {/* Progress Bar */}
                 <div className="mb-4">
                   <div className="flex justify-between text-sm text-gray-600 mb-2">
-                    <span>Level Progress</span>
-                    <span>{levelProgress.completedLessons}/{levelProgress.totalLessons} lessons</span>
+                    <span>{t('level.levelProgress', 'Level Progress')}</span>
+                    <span>{levelProgress.completedLessons}/{levelProgress.totalLessons} {t('level.lessons', 'lessons')}</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
                     <div
@@ -134,7 +136,7 @@ export default function LevelPage() {
                     ></div>
                   </div>
                   <p className="text-sm text-gray-500 mt-2">
-                    {levelProgress.progressPercentage.toFixed(1)}% complete
+                    {levelProgress.progressPercentage.toFixed(1)}% {t('level.complete', 'complete')}
                   </p>
                 </div>
               </div>
@@ -147,7 +149,7 @@ export default function LevelPage() {
                     rel="noopener noreferrer"
                     className="border border-indigo-600 text-indigo-600 px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-50 transition-colors text-center"
                   >
-                    📄 Download PDF
+                    📄 {t('level.downloadPDF', 'Download PDF')}
                   </a>
                 )}
               </div>
@@ -157,12 +159,12 @@ export default function LevelPage() {
           {/* Lessons List */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">
-              Lessons ({lessons.length})
+              {t('level.lessons', 'Lessons')} ({lessons.length})
             </h2>
             
             {lessons.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500">No lessons available for this level.</p>
+                <p className="text-gray-500">{t('level.noLessons', 'No lessons available for this level.')}</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -183,7 +185,7 @@ export default function LevelPage() {
                             {lesson.title}
                           </h3>
                           {lesson.isCompleted && (
-                            <span className="text-green-600 text-sm">✅ Completed</span>
+                            <span className="text-green-600 text-sm">✅ {t('level.lessonComplete', 'Completed')}</span>
                           )}
                         </div>
                         
@@ -194,7 +196,7 @@ export default function LevelPage() {
                               📹
                             </span>
                             <span className={lesson.progress?.video_watched ? 'text-green-600' : 'text-gray-400'}>
-                              Video {lesson.progress?.video_watched ? 'Watched' : 'Not Watched'}
+                              {t('level.video', 'Video')} {lesson.progress?.video_watched ? t('level.watched', 'Watched') : t('level.notWatched', 'Not Watched')}
                             </span>
                           </div>
                           <div className="flex items-center space-x-1">
@@ -202,7 +204,7 @@ export default function LevelPage() {
                               🎯
                             </span>
                             <span className={lesson.progress?.test_passed ? 'text-green-600' : 'text-gray-400'}>
-                              Test {lesson.progress?.test_passed ? 'Passed' : 'Not Passed'}
+                              {t('level.test', 'Test')} {lesson.progress?.test_passed ? t('level.passed', 'Passed') : t('level.notPassed', 'Not Passed')}
                             </span>
                           </div>
                         </div>
@@ -213,7 +215,7 @@ export default function LevelPage() {
                           href={`/lessons/${lesson.id}`}
                           className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors text-center block"
                         >
-                          {lesson.isCompleted ? 'Review Lesson' : 'Start Lesson'}
+                          {lesson.isCompleted ? t('level.reviewLesson', 'Review Lesson') : t('level.startLesson', 'Start Lesson')}
                         </Link>
                       </div>
                     </div>
@@ -229,7 +231,7 @@ export default function LevelPage() {
               href="/dashboard"
               className="text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              ← Back to Dashboard
+              ← {t('level.backToDashboard', 'Back to Dashboard')}
             </Link>
           </div>
         </div>

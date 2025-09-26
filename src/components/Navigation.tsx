@@ -4,9 +4,12 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabaseClient'
+import { useLanguage } from '@/contexts/LanguageContext'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const Navigation = () => {
   const { user, signOut } = useAuth()
+  const { t } = useLanguage()
   const [userRole, setUserRole] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -74,7 +77,7 @@ const Navigation = () => {
           <div className="flex justify-between items-center min-h-16 py-2">
             <div className="flex items-center">
               <Link href="/" className="text-lg sm:text-xl font-bold text-indigo-600 whitespace-nowrap">
-                ♔ Chess Course
+                {t('nav.chessEmpire', '♔ Chess Empire')}
               </Link>
             </div>
             <div className="flex items-center">
@@ -92,7 +95,7 @@ const Navigation = () => {
         <div className="flex justify-between items-center min-h-16 py-2">
           <div className="flex items-center">
             <Link href="/" className="text-lg sm:text-xl font-bold text-indigo-600 whitespace-nowrap">
-              ♔ Chess Course
+              {t('nav.chessEmpire', '♔ Chess Empire')}
             </Link>
           </div>
 
@@ -103,7 +106,7 @@ const Navigation = () => {
                   href="/dashboard"
                   className="text-gray-700 hover:text-indigo-600 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium"
                 >
-                  Dashboard
+                  {t('navigation.dashboard', 'Dashboard')}
                 </Link>
                 
                 {userRole === 'admin' && (
@@ -111,9 +114,11 @@ const Navigation = () => {
                     href="/admin"
                     className="bg-indigo-600 text-white hover:bg-indigo-700 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium"
                   >
-                    Admin
+                    {t('navigation.admin', 'Admin')}
                   </Link>
                 )}
+                
+                <LanguageSwitcher />
                 
                 <div className="relative group">
                   <button className="flex items-center text-gray-700 hover:text-indigo-600 px-1 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium max-w-32 sm:max-w-none">
@@ -132,7 +137,7 @@ const Navigation = () => {
                       onClick={handleSignOut}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Sign Out
+                      {t('navigation.logout', 'Sign Out')}
                     </button>
                   </div>
                 </div>
@@ -143,14 +148,15 @@ const Navigation = () => {
                   href="/login"
                   className="text-gray-700 hover:text-indigo-600 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium"
                 >
-                  Login
+                  {t('navigation.login', 'Login')}
                 </Link>
                 <Link
                   href="/signup"
                   className="bg-indigo-600 text-white hover:bg-indigo-700 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium"
                 >
-                  Sign Up
+                  {t('navigation.signup', 'Sign Up')}
                 </Link>
+                <LanguageSwitcher />
               </>
             )}
           </div>
