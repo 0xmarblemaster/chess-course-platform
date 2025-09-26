@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabaseClient'
 import type { Level, Lesson } from '@/lib/supabaseClient'
 import AdminRoute from '@/components/AdminRoute'

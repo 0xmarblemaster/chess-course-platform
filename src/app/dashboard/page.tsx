@@ -16,7 +16,7 @@ interface LevelWithProgress extends Level {
 }
 
 export default function DashboardPage() {
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
   const [levels, setLevels] = useState<LevelWithProgress[]>([])
   const [badges, setBadges] = useState<Badge[]>([])
   const [overallProgress, setOverallProgress] = useState({
