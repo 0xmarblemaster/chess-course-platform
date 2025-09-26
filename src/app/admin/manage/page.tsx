@@ -8,7 +8,6 @@ import AdminRoute from '@/components/AdminRoute'
 import Link from 'next/link'
 
 const AdminManage = () => {
-  const { user } = useAuth()
   const [levels, setLevels] = useState<Level[]>([])
   const [lessons, setLessons] = useState<Lesson[]>([])
   const [loading, setLoading] = useState(true)

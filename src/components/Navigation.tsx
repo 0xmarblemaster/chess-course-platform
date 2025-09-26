@@ -28,7 +28,6 @@ const Navigation = () => {
           .single()
 
         console.log('User role query result:', { data, error })
-        console.log('Supabase client URL:', supabase.supabaseUrl)
 
         if (error) {
           console.error('Error fetching user role:', error)

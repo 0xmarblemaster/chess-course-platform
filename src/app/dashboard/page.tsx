@@ -70,9 +70,7 @@ export default function DashboardPage() {
     }
   }, [user, loadDashboardData])
 
-  const handleSignOut = async () => {
-    await signOut()
-  }
+
 
   if (loading) {
     return (
