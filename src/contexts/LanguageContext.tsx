@@ -17,7 +17,8 @@ interface LanguageProviderProps {
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const [locale, setLocale] = useState('ru')
-  const [translations, setTranslations] = useState<Record<string, string | Record<string, string>>>({})
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [translations, setTranslations] = useState<Record<string, any>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
