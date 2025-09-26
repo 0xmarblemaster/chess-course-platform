@@ -151,15 +151,15 @@ export default function DashboardPage() {
               {levels.map((level, index) => (
                 <div
                   key={level.id}
-                  className={`border rounded-lg p-6 ${
+                  className={`border rounded-xl p-6 transition-all duration-200 ${
                     level.isUnlocked
-                      ? 'border-gray-200 hover:border-indigo-300'
+                      ? 'border-gray-200 hover:border-indigo-300 hover:shadow-lg bg-white'
                       : 'border-gray-300 bg-gray-50 opacity-75'
                   }`}
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-2">
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
+                    <div className="flex-1 mb-4 lg:mb-0">
+                      <div className="flex items-center space-x-3 mb-3">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
                           level.isUnlocked ? 'bg-indigo-600' : 'bg-gray-400'
                         }`}>
@@ -180,9 +180,9 @@ export default function DashboardPage() {
                           <span>Progress</span>
                           <span>{level.progress.completedLessons}/{level.progress.totalLessons} lessons</span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-gray-200 rounded-full h-3">
                           <div
-                            className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                            className="bg-indigo-600 h-3 rounded-full transition-all duration-300"
                             style={{ width: `${level.progress.progressPercentage}%` }}
                           ></div>
                         </div>
@@ -192,12 +192,12 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     
-                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 lg:ml-6">
                       {level.isUnlocked ? (
                         <>
                           <Link
                             href={`/levels/${level.id}`}
-                            className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors text-center"
+                            className="bg-indigo-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors text-center shadow-sm hover:shadow-md"
                           >
                             {level.progress.completedLessons === 0 ? 'Start Level' : 'Continue Level'}
                           </Link>
@@ -206,7 +206,7 @@ export default function DashboardPage() {
                               href={level.pdf_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="border border-indigo-600 text-indigo-600 px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-50 transition-colors text-center"
+                              className="border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg text-sm font-medium hover:bg-indigo-50 transition-colors text-center shadow-sm hover:shadow-md"
                             >
                               Download PDF
                             </a>
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                       ) : (
                         <button
                           disabled
-                          className="bg-gray-300 text-gray-500 px-4 py-2 rounded-md text-sm font-medium cursor-not-allowed"
+                          className="bg-gray-300 text-gray-500 px-6 py-3 rounded-lg text-sm font-medium cursor-not-allowed shadow-sm"
                         >
                           Complete Previous Level
                         </button>
