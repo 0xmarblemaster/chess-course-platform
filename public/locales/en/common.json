@@ -199,7 +199,21 @@
     "completeVideoFirst": "Complete the video first",
     "completeChallengeFirst": "Complete the challenge first",
     "backToLevel": "← Back to Level",
-    "dashboard": "Dashboard →"
+    "dashboard": "Dashboard →",
+    "previousLesson": "← Previous Lesson",
+    "nextLesson": "Next Lesson →",
+    "backToDashboard": "Back to Dashboard →"
+  },
+  "login": {
+    "title": "Sign in to your account",
+    "emailPassword": "use password",
+    "magicLink": "use magic link",
+    "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "sendMagicLink": "Send Magic Link",
+    "signIn": "Sign in",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up"
   },
   "common": {
     "loading": "Loading...",

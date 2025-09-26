@@ -164,7 +164,10 @@
     "completeVideoFirst": "Сначала завершите видео",
     "completeChallengeFirst": "Сначала завершите задание",
     "backToLevel": "← Назад к Уровню",
-    "dashboard": "Панель управления →"
+    "dashboard": "Панель управления →",
+    "previousLesson": "← Предыдущий Урок",
+    "nextLesson": "Следующий Урок →",
+    "backToDashboard": "Назад к Панели →"
   },
   "signup": {
     "title": "Создать аккаунт",
@@ -178,6 +181,17 @@
     "passwordTooShort": "Пароль должен содержать не менее 6 символов",
     "checkEmail": "Проверьте свою электронную почту для подтверждения аккаунта!",
     "unexpectedError": "Произошла неожиданная ошибка"
+  },
+  "login": {
+    "title": "Войти в аккаунт",
+    "emailPassword": "использовать пароль",
+    "magicLink": "использовать магическую ссылку",
+    "emailPlaceholder": "Адрес электронной почты",
+    "passwordPlaceholder": "Пароль",
+    "sendMagicLink": "Отправить магическую ссылку",
+    "signIn": "Войти",
+    "noAccount": "Нет аккаунта?",
+    "signUp": "Зарегистрироваться"
   },
   "common": {
     "loading": "Загрузка...",

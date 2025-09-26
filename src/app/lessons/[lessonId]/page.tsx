@@ -17,6 +17,9 @@ export default function LessonPage() {
   const lessonId = parseInt(params.lessonId as string)
   
   const [lesson, setLesson] = useState<Lesson | null>(null)
+  const [allLessons, setAllLessons] = useState<Lesson[]>([])
+  const [previousLesson, setPreviousLesson] = useState<Lesson | null>(null)
+  const [nextLesson, setNextLesson] = useState<Lesson | null>(null)
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -35,16 +38,45 @@ export default function LessonPage() {
       const levels = await getLevels()
       console.log('LessonPage - Available levels:', levels)
       let foundLesson: Lesson | null = null
+      const allLessonsList: Lesson[] = []
       
       for (const level of levels) {
         const lessons = await getLessonsForLevel(level.id)
         console.log(`LessonPage - Lessons for level ${level.id}:`, lessons)
+        
+        // Add lessons to the complete list, sorted by order_index
+        const sortedLessons = lessons.sort((a, b) => a.order_index - b.order_index)
+        allLessonsList.push(...sortedLessons)
+        
         const targetLesson = lessons.find(l => l.id === lessonId)
         if (targetLesson) {
           foundLesson = targetLesson
           console.log('LessonPage - Found lesson:', targetLesson)
-          break
         }
+      }
+      
+      // Sort all lessons by level_id and order_index
+      const sortedAllLessons = allLessonsList.sort((a, b) => {
+        if (a.level_id !== b.level_id) {
+          return a.level_id - b.level_id
+        }
+        return a.order_index - b.order_index
+      })
+      
+      setAllLessons(sortedAllLessons)
+      
+      // Find previous and next lessons
+      const currentIndex = sortedAllLessons.findIndex(l => l.id === lessonId)
+      if (currentIndex > 0) {
+        setPreviousLesson(sortedAllLessons[currentIndex - 1])
+      } else {
+        setPreviousLesson(null)
+      }
+      
+      if (currentIndex < sortedAllLessons.length - 1) {
+        setNextLesson(sortedAllLessons[currentIndex + 1])
+      } else {
+        setNextLesson(null)
       }
       
       if (!foundLesson) {
@@ -313,18 +345,32 @@ export default function LessonPage() {
 
           {/* Navigation */}
           <div className="mt-8 flex justify-between">
-            <Link
-              href={`/levels/${lesson.level_id}`}
-              className="text-indigo-600 hover:text-indigo-700 font-medium"
-            >
-              {t('lesson.backToLevel', '← Back to Level')}
-            </Link>
-            <Link
-              href="/dashboard"
-              className="text-indigo-600 hover:text-indigo-700 font-medium"
-            >
-              {t('lesson.dashboard', 'Dashboard →')}
-            </Link>
+            {previousLesson ? (
+              <Link
+                href={`/lessons/${previousLesson.id}`}
+                className="text-indigo-600 hover:text-indigo-700 font-medium"
+              >
+                {t('lesson.previousLesson', '← Previous Lesson')}
+              </Link>
+            ) : (
+              <div></div>
+            )}
+            
+            {nextLesson ? (
+              <Link
+                href={`/lessons/${nextLesson.id}`}
+                className="text-indigo-600 hover:text-indigo-700 font-medium"
+              >
+                {t('lesson.nextLesson', 'Next Lesson →')}
+              </Link>
+            ) : (
+              <Link
+                href="/dashboard"
+                className="text-indigo-600 hover:text-indigo-700 font-medium"
+              >
+                {t('lesson.backToDashboard', 'Back to Dashboard →')}
+              </Link>
+            )}
           </div>
         </div>
       </div>

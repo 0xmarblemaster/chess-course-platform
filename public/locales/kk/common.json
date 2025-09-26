@@ -165,7 +165,10 @@
     "completeVideoFirst": "Алдымен бейнені аяқтаңыз",
     "completeChallengeFirst": "Алдымен тапсырманы аяқтаңыз",
     "backToLevel": "← Деңгейге Оралу",
-    "dashboard": "Басқару тақтасы →"
+    "dashboard": "Басқару тақтасы →",
+    "previousLesson": "← Алдыңғы Сабақ",
+    "nextLesson": "Келесі Сабақ →",
+    "backToDashboard": "Басқару тақтасына оралу →"
   },
   "signup": {
     "title": "Аккаунт жасау",
@@ -219,6 +222,17 @@
     "totalProgress": "Барлық прогресс",
     "totalBadges": "Барлық белгілер",
     "quickActions": "Жылдам әрекеттер"
+  },
+  "login": {
+    "title": "Аккаунтыңызға кіру",
+    "emailPassword": "құпия сөзді пайдалану",
+    "magicLink": "сиқырлы сілтемені пайдалану",
+    "emailPlaceholder": "Электрондық пошта мекенжайы",
+    "passwordPlaceholder": "Құпия сөз",
+    "sendMagicLink": "Сиқырлы сілтемені жіберу",
+    "signIn": "Кіру",
+    "noAccount": "Аккаунтыңыз жоқ па?",
+    "signUp": "Тіркелу"
   },
   "common": {
     "loading": "Жүктелуде...",
