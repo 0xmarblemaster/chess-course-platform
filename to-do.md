@@ -1,6 +1,6 @@
 # To-Do List for Coding Agent
 **Project:** Online Chess Course MVP  
-**Progress:** 90%
+**Progress:** 95%
 
 ---
 
@@ -57,6 +57,9 @@
 16. [x] Implement role-based access control
 17. [x] Create admin authentication middleware
 18. [x] Add admin user creation functionality
+19. [x] Fix RLS policies and authentication issues
+20. [x] Deploy to Vercel with proper environment variables
+21. [x] Fix Supabase redirect URLs for production
 
 ---
 

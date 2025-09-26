@@ -1,0 +1,42 @@
+// Simple test to check Supabase connection
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'https://vqrilwkbkfslriwlsowu.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxcmlsd2tia2ZzbHJpd2xzb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4NTA4ODUsImV4cCI6MjA3MzQyNjg4NX0.Am4ZsggfFqJ7VdFWUoUXAmFIvt_j4l46_f-6X1Xu6Z0'
+
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+async function testConnection() {
+  console.log('Testing Supabase connection...')
+  
+  try {
+    // Test 1: Check if we can connect
+    const { data, error } = await supabase
+      .from('levels')
+      .select('*')
+      .limit(1)
+    
+    if (error) {
+      console.error('Connection test failed:', error)
+    } else {
+      console.log('Connection test successful:', data)
+    }
+    
+    // Test 2: Check user table
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('*')
+      .limit(1)
+    
+    if (userError) {
+      console.error('User table test failed:', userError)
+    } else {
+      console.log('User table test successful:', userData)
+    }
+    
+  } catch (err) {
+    console.error('Exception during test:', err)
+  }
+}
+
+testConnection()

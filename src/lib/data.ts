@@ -4,17 +4,24 @@ import { supabase, type Level, type Lesson, type Progress, type Badge } from './
 export type { Level, Lesson, Progress, Badge }
 
 export async function getLevels(): Promise<Level[]> {
-  const { data, error } = await supabase
-    .from('levels')
-    .select('*')
-    .order('order_index')
+  try {
+    console.log('Fetching levels...')
+    const { data, error } = await supabase
+      .from('levels')
+      .select('*')
+      .order('order_index')
 
-  if (error) {
-    console.error('Error fetching levels:', error)
+    if (error) {
+      console.error('Error fetching levels:', error)
+      return []
+    }
+
+    console.log('Levels fetched successfully:', data)
+    return data || []
+  } catch (err) {
+    console.error('Exception fetching levels:', err)
     return []
   }
-
-  return data || []
 }
 
 export async function getLessonsForLevel(levelId: number): Promise<Lesson[]> {
@@ -47,17 +54,23 @@ export async function getUserProgress(userId: string): Promise<Progress[]> {
 }
 
 export async function getUserBadges(userId: string): Promise<Badge[]> {
-  const { data, error } = await supabase
-    .from('badges')
-    .select('*')
-    .eq('user_id', userId)
+  try {
+    console.log('Fetching badges for user:', userId)
+    const { data, error } = await supabase
+      .from('badges')
+      .select('*')
+      .eq('user_id', userId)
 
-  if (error) {
-    console.error('Error fetching badges:', error)
+    if (error) {
+      console.error('Error fetching badges:', error)
+      return []
+    }
+
+    return data || []
+  } catch (err) {
+    console.error('Exception fetching badges:', err)
     return []
   }
-
-  return data || []
 }
 
 export async function getLevelProgress(userId: string, levelId: number): Promise<{

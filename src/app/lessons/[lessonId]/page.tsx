@@ -154,33 +154,6 @@ export default function LessonPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        {/* Navigation */}
-        <nav className="bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center space-x-4">
-                <Link href="/dashboard" className="text-2xl font-bold text-indigo-600">
-                  ♔ Chess Master
-                </Link>
-                <span className="text-gray-400">/</span>
-                <Link href={`/levels/${lesson.level_id}`} className="text-gray-700 hover:text-indigo-600">
-                  Level {lesson.level_id}
-                </Link>
-                <span className="text-gray-400">/</span>
-                <span className="text-gray-700">{lesson.title}</span>
-              </div>
-              <div className="flex items-center space-x-4">
-                <Link
-                  href={`/levels/${lesson.level_id}`}
-                  className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Back to Level
-                </Link>
-              </div>
-            </div>
-          </div>
-        </nav>
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Lesson Header */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">

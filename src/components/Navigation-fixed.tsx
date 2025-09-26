@@ -28,7 +28,6 @@ const Navigation = () => {
           .single()
 
         console.log('User role query result:', { data, error })
-        console.log('Supabase client URL:', supabase.supabaseUrl)
 
         if (error) {
           console.error('Error fetching user role:', error)
@@ -91,7 +90,7 @@ const Navigation = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold text-indigo-600">
-              ♔ Chess Course
+              Chess Course
             </Link>
           </div>
 
