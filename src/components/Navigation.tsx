@@ -73,6 +73,7 @@ const Navigation = () => {
   }
 
   const toggleMobileMenu = () => {
+    console.log('Mobile menu toggled, current state:', mobileMenuOpen)
     setMobileMenuOpen(!mobileMenuOpen)
   }
 
@@ -169,10 +170,10 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center">
             <button
               onClick={toggleMobileMenu}
-              className="text-gray-700 hover:text-indigo-600 p-2"
+              className="text-gray-700 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 rounded-md p-2"
               aria-label="Toggle menu"
             >
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -188,8 +189,8 @@ const Navigation = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4">
-            <div className="space-y-2">
+          <div className="md:hidden bg-white border-t border-gray-200 py-2 space-y-1">
+            <div className="space-y-1">
               {user ? (
                 <>
                   <Link
