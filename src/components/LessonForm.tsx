@@ -15,7 +15,7 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
   const [formData, setFormData] = useState({
     title: lesson?.title || '',
     level_id: lesson?.level_id || 1,
-    order: lesson?.order || 1,
+    order_index: lesson?.order_index || 1,
     video_url: lesson?.video_url || '',
     lichess_embed_url: lesson?.lichess_embed_url || ''
   })
@@ -113,8 +113,8 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
                 type="number"
                 required
                 min="1"
-                value={formData.order}
-                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                value={formData.order_index}
+                onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="1, 2, 3, etc."
               />

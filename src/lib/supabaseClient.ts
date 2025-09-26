@@ -34,7 +34,7 @@ export interface Lesson {
   title: string
   video_url: string
   lichess_embed_url: string
-  order: number
+  order_index: number
 }
 
 export interface Progress {
