@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import type { Lesson, Level } from '@/lib/supabaseClient'
 
@@ -14,7 +14,7 @@ interface LessonFormProps {
 export default function LessonForm({ lesson, levels, onSuccess, onCancel }: LessonFormProps) {
   const [formData, setFormData] = useState({
     title: lesson?.title || '',
-    level_id: lesson?.level_id || 1,
+    level_id: lesson?.level_id || (levels.length > 0 ? levels[0].id : 1),
     order_index: lesson?.order_index || 1,
     video_url: lesson?.video_url || '',
     lichess_embed_url: lesson?.lichess_embed_url || ''
@@ -23,6 +23,16 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
   const [error, setError] = useState('')
 
   console.log('LessonForm - Initialized with:', { lesson, levels, formData })
+
+  // Update level_id when levels change or when creating a new lesson
+  useEffect(() => {
+    if (!lesson && levels.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        level_id: levels[0].id
+      }))
+    }
+  }, [levels, lesson])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
