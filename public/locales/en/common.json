@@ -49,7 +49,7 @@
     "readyToStart": "Ready to Start Your Chess Journey?",
     "joinThousands": "Join thousands of students learning chess with our structured approach",
     "getStartedFree": "Get Started Free",
-    "copyright": "© 2024 Chess Empire. All rights reserved."
+    "copyright": "© 2025 Chess Empire. All rights reserved."
   },
   "dashboard": {
     "welcome": "Welcome to your chess journey",
@@ -171,7 +171,9 @@
     "test": "Test",
     "passed": "Passed",
     "notPassed": "Not Passed",
-    "reviewLesson": "Review Lesson"
+    "reviewLesson": "Review Lesson",
+    "courseTitle": "Chess Empire",
+    "courseDescription": "Learn chess from basics to advanced"
   },
   "lesson": {
     "loading": "Loading lesson...",
@@ -196,6 +198,9 @@
     "completeThisLesson": "Complete This Lesson",
     "completeLessonDescription": "Mark this lesson as complete when you've finished both the video and challenge",
     "markLessonComplete": "Mark Lesson Complete",
+    "openInLichess": "Open in Lichess",
+    "additionalChallenge": "Additional Challenge",
+    "lichessDirectLink": "Direct link to challenge:",
     "completeVideoFirst": "Complete the video first",
     "completeChallengeFirst": "Complete the challenge first",
     "backToLevel": "← Back to Level",

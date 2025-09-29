@@ -52,10 +52,10 @@ export default function LessonPage() {
         .select('*')
         .eq('user_id', user.id)
         .eq('lesson_id', lessonId)
-        .maybeSingle()
+        .single()
 
-      if (error) throw error
-      setProgress(data || null)
+      if (error && error.code !== 'PGRST116') throw error
+      setProgress(data)
     } catch (err) {
       console.error('Error fetching progress:', err)
     }
@@ -92,8 +92,6 @@ export default function LessonPage() {
           lesson_id: lesson.id,
           video_watched: true,
           test_passed: progress?.test_passed || false
-        }, {
-          onConflict: 'user_id,lesson_id'
         })
 
       if (error) throw error
@@ -120,8 +118,6 @@ export default function LessonPage() {
           lesson_id: lesson.id,
           video_watched: progress?.video_watched || false,
           test_passed: true
-        }, {
-          onConflict: 'user_id,lesson_id'
         })
 
       if (error) throw error
@@ -149,8 +145,6 @@ export default function LessonPage() {
           video_watched: true,
           test_passed: true,
           completed_at: new Date().toISOString()
-        }, {
-          onConflict: 'user_id,lesson_id'
         })
 
       if (error) throw error
@@ -207,44 +201,54 @@ export default function LessonPage() {
   const previousLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null
   const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null
 
-  // Default thumbnail for Lichess challenges
+  // Default chess challenge thumbnail (base64 encoded SVG)
   const defaultThumbnail = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNDBMMTIwIDYwTDEwMCA4MEw4MCA2MEwxMDAgNDBaIiBmaWxsPSIjNjM2NkY3Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkI3MjgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjUwMCI+Q2hlc3MgQ2hhbGxlbmdlPC90ZXh0Pgo8L3N2Zz4="
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
           {/* Lesson Header */}
           <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
               {lesson.title}
             </h1>
             
+            {lesson.description && (
+              <div className="mb-6">
+                <p className="text-gray-600 text-base leading-relaxed">
+                  {lesson.description}
+                </p>
+              </div>
+            )}
+            
             {/* Progress Indicators */}
-            <div className="flex flex-wrap items-center gap-4 mb-4">
-              <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${videoWatched ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                <span className="text-sm font-medium text-gray-700">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-3 sm:gap-4 mb-6">
+              <div className="flex items-center space-x-2 text-sm">
+                <span className={videoWatched ? 'text-indigo-600' : 'text-gray-400'}>
+                  {videoWatched ? '✅' : '⭕'}
+                </span>
+                <span className={videoWatched ? 'text-indigo-600' : 'text-gray-600'}>
                   {videoWatched ? t('lesson.videoWatched', 'Video Watched') : t('lesson.videoNotWatched', 'Video Not Watched')}
                 </span>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${testPassed ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                <span className="text-sm font-medium text-gray-700">
+              <div className="flex items-center space-x-2 text-sm">
+                <span className={testPassed ? 'text-indigo-600' : 'text-gray-400'}>
+                  {testPassed ? '✅' : '⭕'}
+                </span>
+                <span className={testPassed ? 'text-indigo-600' : 'text-gray-600'}>
                   {testPassed ? t('lesson.testPassed', 'Test Passed') : t('lesson.testNotPassed', 'Test Not Passed')}
                 </span>
               </div>
+              {isCompleted && (
+                <div className="flex items-center space-x-2 text-sm">
+                  <span className="text-emerald-600">🎉</span>
+                  <span className="text-emerald-600">
+                    {t('lesson.completed', 'Completed')}
+                  </span>
+                </div>
+              )}
             </div>
-
-            {/* Description */}
-            {lesson.description && (
-              <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">
-                  {t('lesson.descriptionTitle', 'Lesson Description')}
-                </h2>
-                <p className="text-gray-700 whitespace-pre-wrap">{lesson.description}</p>
-              </div>
-            )}
           </div>
 
           {/* Video Section */}
@@ -337,8 +341,11 @@ export default function LessonPage() {
               </div>
             )}
 
-            {/* Test Passed Button */}
-            <div className="flex justify-end">
+            
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
+              <p className="text-sm text-gray-600">
+                {t('lesson.completeChallengeDescription', 'Complete the challenge to test your understanding')}
+              </p>
               <button
                 onClick={handleMarkTestPassed}
                 disabled={testPassed || updating}

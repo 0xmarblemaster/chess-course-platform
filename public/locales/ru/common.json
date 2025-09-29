@@ -41,7 +41,7 @@
     "readyToStart": "Готовы начать свое шахматное путешествие?",
     "joinThousands": "Присоединяйтесь к тысячам студентов, изучающих шахматы с нашим структурированным подходом",
     "getStartedFree": "Начать бесплатно",
-    "copyright": "© 2024 Chess Empire. Все права защищены."
+    "copyright": "© 2025 Chess Empire. Все права защищены."
   },
   "dashboard": {
     "welcome": "Добро пожаловать в ваше шахматное путешествие",
@@ -136,7 +136,9 @@
     "test": "Тест",
     "passed": "Пройден",
     "notPassed": "Не пройден",
-    "reviewLesson": "Повторить урок"
+    "reviewLesson": "Повторить урок",
+    "courseTitle": "Chess Empire",
+    "courseDescription": "Изучайте шахматы от основ до продвинутого уровня"
   },
   "lesson": {
     "loading": "Загрузка урока...",
@@ -149,6 +151,9 @@
     "testPassed": "Тест Пройден",
     "testNotPassed": "Тест Не Пройден",
     "lessonCompleted": "Урок Завершен!",
+    "openInLichess": "Открыть в Lichess",
+    "additionalChallenge": "Дополнительное задание",
+    "lichessDirectLink": "Прямая ссылка на задание:",
     "videoLesson": "Видео Урок",
     "noVideoAvailable": "Видео недоступно",
     "watchVideoDescription": "Посмотрите видео, чтобы понять концепции",

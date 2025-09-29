@@ -92,8 +92,6 @@ export default function LessonPage() {
           lesson_id: lesson.id,
           video_watched: true,
           test_passed: progress?.test_passed || false
-        }, {
-          onConflict: 'user_id,lesson_id'
         })
 
       if (error) throw error
@@ -120,8 +118,6 @@ export default function LessonPage() {
           lesson_id: lesson.id,
           video_watched: progress?.video_watched || false,
           test_passed: true
-        }, {
-          onConflict: 'user_id,lesson_id'
         })
 
       if (error) throw error
@@ -149,8 +145,6 @@ export default function LessonPage() {
           video_watched: true,
           test_passed: true,
           completed_at: new Date().toISOString()
-        }, {
-          onConflict: 'user_id,lesson_id'
         })
 
       if (error) throw error

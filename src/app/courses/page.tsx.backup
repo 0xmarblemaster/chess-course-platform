@@ -4,26 +4,16 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import { getLessonsForLevel, getLevels, getUserProgress, getLevelProgress, type Lesson, type Progress } from '@/lib/data'
+import { getLessonsForLevel, getLevels, type Lesson } from '@/lib/data'
 import Link from 'next/link'
-
-interface LessonWithProgress extends Lesson {
-  progress?: Progress
-  isCompleted: boolean
-}
 
 export default function CoursesPage() {
   const { t } = useLanguage()
   const { user } = useAuth()
   
-  const [lessons, setLessons] = useState<LessonWithProgress[]>([])
+  const [lessons, setLessons] = useState<Lesson[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [levelProgress, setLevelProgress] = useState({
-    totalLessons: 0,
-    completedLessons: 0,
-    progressPercentage: 0
-  })
 
   useEffect(() => {
     const loadCourses = async () => {
@@ -42,20 +32,7 @@ export default function CoursesPage() {
         
         const firstLevel = levels[0]
         const levelLessons = await getLessonsForLevel(firstLevel.id)
-        const userProgress = await getUserProgress(user.id)
-        const progress = await getLevelProgress(user.id, firstLevel.id)
-        
-        const lessonsWithProgress: LessonWithProgress[] = levelLessons.map(lesson => {
-          const lessonProgress = userProgress.find(p => p.lesson_id === lesson.id)
-          return {
-            ...lesson,
-            progress: lessonProgress,
-            isCompleted: lessonProgress ? lessonProgress.video_watched && lessonProgress.test_passed : false
-          }
-        })
-        
-        setLessons(lessonsWithProgress)
-        setLevelProgress(progress)
+        setLessons(levelLessons)
         
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Failed to load courses')
@@ -73,7 +50,7 @@ export default function CoursesPage() {
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading courses...</p>
+            <p className="mt-4 text-gray-600">{t('level.loading', 'Loading courses...')}</p>
           </div>
         </div>
       </ProtectedRoute>
@@ -85,13 +62,13 @@ export default function CoursesPage() {
       <ProtectedRoute>
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Error</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">{t('level.error', 'Error')}</h1>
             <p className="text-gray-600 mb-4">{error}</p>
             <Link
               href="/dashboard"
-              className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700"
+              className="text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              Back to Dashboard
+              {t('level.backToDashboard', 'Back to Dashboard')}
             </Link>
           </div>
         </div>
@@ -99,19 +76,25 @@ export default function CoursesPage() {
     )
   }
 
-  const { totalLessons, completedLessons, progressPercentage } = levelProgress
+  // Calculate progress
+  const totalLessons = lessons.length
+  const completedLessons = lessons.filter(lesson => {
+    // This would need to be updated to check actual progress
+    return false // For now, assume no lessons are completed
+  }).length
+  const progressPercentage = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
           {/* Course Header */}
           <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {t('level.courseTitle', 'Chess Empire')}
             </h1>
             <p className="text-gray-600 mb-6">
-              {t('level.courseDescription', 'Master chess with interactive lessons and challenges')}
+              {t('level.courseDescription', 'Learn chess from basics to advanced')}
             </p>
             
             {/* Progress */}
@@ -164,19 +147,15 @@ export default function CoursesPage() {
                         </h3>
                         <div className="flex flex-col space-y-1 mt-2">
                           <div className="flex items-center space-x-1">
-                            <span className={lesson.progress?.video_watched ? 'text-green-600' : 'text-gray-400'}>
-                              📹
-                            </span>
-                            <span className={lesson.progress?.video_watched ? 'text-green-600' : 'text-gray-400'}>
-                              {t('level.video', 'Video')} {lesson.progress?.video_watched ? t('level.watched', 'Watched') : t('level.notWatched', 'Not Watched')}
+                            <span className="text-gray-400 text-sm">📹</span>
+                            <span className="text-xs text-gray-600">
+                              {t('level.video', 'Video')} {t('level.notWatched', 'Not Watched')}
                             </span>
                           </div>
                           <div className="flex items-center space-x-1">
-                            <span className={lesson.progress?.test_passed ? 'text-green-600' : 'text-gray-400'}>
-                              🎯
-                            </span>
-                            <span className={lesson.progress?.test_passed ? 'text-green-600' : 'text-gray-400'}>
-                              {t('level.test', 'Test')} {lesson.progress?.test_passed ? t('level.passed', 'Passed') : t('level.notPassed', 'Not Passed')}
+                            <span className="text-gray-400 text-sm">📄</span>
+                            <span className="text-xs text-gray-600">
+                              {t('level.test', 'Test')} {t('level.notPassed', 'Not Passed')}
                             </span>
                           </div>
                         </div>
@@ -187,7 +166,7 @@ export default function CoursesPage() {
                         href={`/lessons/${lesson.id}`}
                         className="block w-full text-center bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
                       >
-                        {lesson.isCompleted ? t('level.reviewLesson', 'Review Lesson') : t('level.startLesson', 'Start Lesson')}
+                        {t('level.startLesson', 'Start Lesson')}
                       </Link>
                     </div>
                   </div>

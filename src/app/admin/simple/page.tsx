@@ -11,7 +11,7 @@ const SimpleAdminPage = () => {
           <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
             Add New Course
           </button>
-          <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+          <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
             Add New Lesson
           </button>
         </div>

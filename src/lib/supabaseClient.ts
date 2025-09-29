@@ -32,8 +32,12 @@ export interface Lesson {
   id: number
   level_id: number
   title: string
+  description?: string
   video_url: string
   lichess_embed_url: string
+  lichess_image_url?: string
+  lichess_image_url_2?: string
+  lichess_embed_url_2?: string
   order_index: number
 }
 

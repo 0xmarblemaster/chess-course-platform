@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabaseClient'
+import { createClient } from '@supabase/supabase-js'
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
@@ -15,6 +15,12 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     try {
+      // Create a new Supabase client for server-side operations
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
+
       // Exchange code for session
       const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
       
@@ -43,8 +49,8 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // Redirect to dashboard on success
-      return NextResponse.redirect(`${requestUrl.origin}/dashboard`)
+      // Redirect to dashboard with a success parameter to help client-side auth state
+      return NextResponse.redirect(`${requestUrl.origin}/dashboard?auth=success`)
     } catch (error) {
       console.error('Auth callback exception:', error)
       return NextResponse.redirect(`${requestUrl.origin}/login?error=${encodeURIComponent('Authentication failed')}`)

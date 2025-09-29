@@ -36,6 +36,15 @@ body {
   display: none;
 }
 
+/* Force remove any red background from mobile menu button */
+.mobile-menu-button,
+.mobile-menu-button *,
+[data-testid="mobile-menu-button"],
+[data-testid="mobile-menu-button"] * {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
 @media (max-width: 767px) {
   .desktop-nav {
     display: none !important;

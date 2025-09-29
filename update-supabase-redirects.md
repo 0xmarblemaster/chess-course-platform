@@ -1,10 +1,10 @@
-# Supabase Redirect URL Configuration
+# Update Supabase Redirect URLs
 
-## Issue
-The signup process fails after clicking the email link because the redirect URL in Supabase doesn't match the Vercel deployment URL.
+## Current Issue
+Magic links are redirecting to old deployment URLs because Supabase auth configuration is outdated.
 
 ## Solution
-You need to update the redirect URLs in your Supabase project settings.
+Update Supabase authentication settings to use the latest deployment URLs.
 
 ## Steps to Fix:
 
@@ -31,17 +31,10 @@ You need to update the redirect URLs in your Supabase project settings.
 ### 3. Save Changes
 - Click **Save** to apply the changes
 
-## Alternative: Update via SQL
-You can also update these settings via SQL in the Supabase SQL Editor:
-
-```sql
--- Update the site URL
-UPDATE auth.config 
-SET site_url = 'https://chess-course-artdrive.vercel.app'
-WHERE id = 1;
-
--- Add redirect URLs (this might need to be done through the dashboard)
-```
+## Current Deployment URLs:
+- **Main alias**: `https://chess-course-artdrive.vercel.app`
+- **Latest deployment**: `https://chess-course-m1w67d72d-artdrive.vercel.app`
+- **Local development**: `http://localhost:3000`
 
 ## Verification
 After updating the redirect URLs:
@@ -49,11 +42,6 @@ After updating the redirect URLs:
 2. Check your email for the magic link
 3. Click the magic link - it should redirect properly to the dashboard
 4. The user should be created in both `auth.users` and `public.users` tables
-
-## Current Deployment URLs (as of latest deployment):
-- **Main alias**: `https://chess-course-artdrive.vercel.app`
-- **Latest deployment**: `https://chess-course-m1w67d72d-artdrive.vercel.app`
-- **Local development**: `http://localhost:3000`
 
 ## Common Issues:
 - **Wrong redirect URL**: Make sure the URL in Supabase matches your Vercel deployment URL exactly

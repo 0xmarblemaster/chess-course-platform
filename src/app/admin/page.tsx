@@ -224,7 +224,7 @@ const AdminDashboard = () => {
                 </Link>
                 <Link
                   href="/admin/stats"
-                  className="bg-green-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-green-700 transition-colors"
+                  className="bg-indigo-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-indigo-700 transition-colors"
                 >
                   {t('admin.viewAnalytics', 'View Analytics')}
                 </Link>

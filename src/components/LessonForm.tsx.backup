@@ -14,19 +14,13 @@ interface LessonFormProps {
 export default function LessonForm({ lesson, levels, onSuccess, onCancel }: LessonFormProps) {
   const [formData, setFormData] = useState({
     title: lesson?.title || '',
-    description: lesson?.description || '',
     level_id: lesson?.level_id || (levels.length > 0 ? levels[0].id : 1),
     order_index: lesson?.order_index || 1,
     video_url: lesson?.video_url || '',
-    lichess_embed_url: lesson?.lichess_embed_url || '',
-    lichess_embed_url_2: lesson?.lichess_embed_url_2 || '',
-    lichess_image_url: lesson?.lichess_image_url || '',
-    lichess_image_url_2: lesson?.lichess_image_url_2 || ''
+    lichess_embed_url: lesson?.lichess_embed_url || ''
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [uploadingImage1, setUploadingImage1] = useState(false)
-  const [uploadingImage2, setUploadingImage2] = useState(false)
 
   console.log('LessonForm - Initialized with:', { lesson, levels, formData })
 
@@ -39,49 +33,6 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
       }))
     }
   }, [levels, lesson])
-
-  const handleImageUpload = async (file: File, imageField: 'lichess_image_url' | 'lichess_image_url_2') => {
-    if (!file) return
-
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Math.random()}.${fileExt}`
-    const filePath = `lesson-images/${fileName}`
-
-    try {
-      if (imageField === 'lichess_image_url') {
-        setUploadingImage1(true)
-      } else {
-        setUploadingImage2(true)
-      }
-
-      const { error: uploadError } = await supabase.storage
-        .from('lesson-images')
-        .upload(filePath, file)
-
-      if (uploadError) {
-        throw uploadError
-      }
-
-      const { data } = supabase.storage
-        .from('lesson-images')
-        .getPublicUrl(filePath)
-
-      setFormData(prev => ({
-        ...prev,
-        [imageField]: data.publicUrl
-      }))
-
-    } catch (error) {
-      console.error('Error uploading image:', error)
-      setError('Failed to upload image')
-    } finally {
-      if (imageField === 'lichess_image_url') {
-        setUploadingImage1(false)
-      } else {
-        setUploadingImage2(false)
-      }
-    }
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -183,22 +134,6 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
-              </label>
-              <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                rows={3}
-                placeholder="Brief description of what this lesson covers..."
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Optional description of the lesson content and objectives
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Lesson Number
               </label>
               <input
@@ -233,7 +168,7 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Lichess Challenge URL (Primary)
+                Lichess Challenge URL
               </label>
               <input
                 type="url"
@@ -243,85 +178,7 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
                 placeholder="https://lichess.org/training/CHALLENGE_ID or https://lichess.org/study/STUDY_ID"
               />
               <p className="text-xs text-gray-500 mt-1">
-                Main Lichess training puzzle, study, or game analysis URL
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Primary Challenge Thumbnail
-              </label>
-              <div className="flex items-center space-x-4">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file) handleImageUpload(file, 'lichess_image_url')
-                  }}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  disabled={uploadingImage1}
-                />
-                {formData.lichess_image_url && (
-                  <img
-                    src={formData.lichess_image_url}
-                    alt="Primary challenge thumbnail"
-                    className="w-16 h-16 object-cover rounded border"
-                  />
-                )}
-                {uploadingImage1 && (
-                  <div className="text-sm text-gray-500">Uploading...</div>
-                )}
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Optional thumbnail image for the primary Lichess challenge
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Lichess Challenge URL (Secondary)
-              </label>
-              <input
-                type="url"
-                value={formData.lichess_embed_url_2}
-                onChange={(e) => setFormData({ ...formData, lichess_embed_url_2: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="https://lichess.org/training/CHALLENGE_ID or https://lichess.org/study/STUDY_ID"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Optional additional Lichess challenge for extra practice
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Secondary Challenge Thumbnail
-              </label>
-              <div className="flex items-center space-x-4">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file) handleImageUpload(file, 'lichess_image_url_2')
-                  }}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  disabled={uploadingImage2}
-                />
-                {formData.lichess_image_url_2 && (
-                  <img
-                    src={formData.lichess_image_url_2}
-                    alt="Secondary challenge thumbnail"
-                    className="w-16 h-16 object-cover rounded border"
-                  />
-                )}
-                {uploadingImage2 && (
-                  <div className="text-sm text-gray-500">Uploading...</div>
-                )}
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Optional thumbnail image for the secondary Lichess challenge
+                Supports Lichess training puzzles, studies, or game analysis URLs
               </p>
             </div>
 

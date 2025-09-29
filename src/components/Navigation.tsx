@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabaseClient'
+
 import { useLanguage } from '@/contexts/LanguageContext'
 import LanguageSwitcher from './LanguageSwitcher'
-
 const Navigation = () => {
   const { user, signOut } = useAuth()
   const { t } = useLanguage()
@@ -82,9 +82,7 @@ const Navigation = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center min-h-16 py-2">
             <div className="flex items-center">
-              <Link href="/" className="text-lg sm:text-xl font-bold text-indigo-600 whitespace-nowrap">
-                {t('nav.chessEmpire', '♔ Chess Empire')}
-              </Link>
+              <Link href="/" className="text-indigo-600 hover:text-indigo-700 font-bold text-xl">♔ Chess Empire</Link>
             </div>
             <div className="flex items-center">
               <div className="animate-pulse bg-gray-200 h-6 w-16 sm:h-8 sm:w-20 rounded"></div>
@@ -101,9 +99,7 @@ const Navigation = () => {
         <div className="flex justify-between items-center min-h-16 py-2">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="text-lg sm:text-xl font-bold text-indigo-600 whitespace-nowrap">
-              {t('nav.chessEmpire', '♔ Chess Empire')}
-            </Link>
+              <Link href="/" className="text-indigo-600 hover:text-indigo-700 font-bold text-xl">♔ Chess Empire</Link>
           </div>
 
           {/* Desktop Navigation - Hidden on mobile */}
