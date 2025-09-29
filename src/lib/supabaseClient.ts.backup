@@ -38,8 +38,6 @@ export interface Lesson {
   lichess_image_url?: string
   lichess_image_url_2?: string
   lichess_embed_url_2?: string
-  lichess_description?: string
-  lichess_description_2?: string
   order_index: number
 }
 

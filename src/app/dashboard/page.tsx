@@ -117,7 +117,7 @@ export default function DashboardPage() {
       <ProtectedRoute>
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-progress mx-auto"></div>
             <p className="mt-4 text-gray-600">Loading dashboard...</p>
           </div>
         </div>
@@ -152,7 +152,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
-                    className="bg-emerald-600 h-3 rounded-full transition-all duration-300"
+                    className="bg-progress h-3 rounded-full transition-all duration-300"
                     style={{ width: `${overallProgress.progressPercentage}%` }}
                   ></div>
                 </div>
@@ -224,7 +224,7 @@ export default function DashboardPage() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-3">
                           <div
-                            className="bg-emerald-600 h-3 rounded-full transition-all duration-300"
+                            className="bg-progress h-3 rounded-full transition-all duration-300"
                             style={{ width: `${level.progress.progressPercentage}%` }}
                           ></div>
                         </div>
