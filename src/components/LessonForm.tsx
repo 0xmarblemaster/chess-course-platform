@@ -94,9 +94,9 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
         lichess_embed_url: formData.lichess_embed_url
       }
 
-      // Only include fields that exist in the current database schema
+      // Add optional fields only if they have values (to avoid database errors)
+      if (formData.description) lessonData.description = formData.description
       // TODO: Add these fields back once database migration is complete
-      // if (formData.description) lessonData.description = formData.description
       // if (formData.lichess_embed_url_2) lessonData.lichess_embed_url_2 = formData.lichess_embed_url_2
       // if (formData.lichess_image_url) lessonData.lichess_image_url = formData.lichess_image_url
       // if (formData.lichess_image_url_2) lessonData.lichess_image_url_2 = formData.lichess_image_url_2
