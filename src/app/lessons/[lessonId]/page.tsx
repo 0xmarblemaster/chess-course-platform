@@ -203,13 +203,22 @@ export default function LessonPage() {
   const isCompleted = progress?.completed_at !== null
 
   // Find previous and next lessons
-  // Sort lessons by order_index first, then by id as a tiebreaker to ensure consistent ordering
-  const sortedLessons = [...allLessons].sort((a, b) => {
-    if (a.order_index !== b.order_index) {
-      return a.order_index - b.order_index;
-    }
-    return a.id - b.id;
-  });
+  // Define the correct lesson order based on the admin panel sequence
+  const correctLessonOrder = [
+    1, 2, 17, 18, 19, 20,  // Основы шахмат (Chess Fundamentals)
+    22, 23,                // Шах и Мат (Check and Checkmate)
+    25,                    // Шахматная нотация (Chess Notation)
+    26, 27,                // Рокировка (Castling)
+    29, 28, 31, 30, 32,    // Ничья (Draw)
+    33,                    // Сравнительная сила фигур (Piece Values)
+    34,                    // Мат тяжелыми фигурами (Checkmate with Heavy Pieces)
+    35, 36                 // Связка (Pin)
+  ];
+  
+  // Sort lessons according to the correct order
+  const sortedLessons = correctLessonOrder
+    .map(lessonId => allLessons.find(lesson => lesson.id === lessonId))
+    .filter(Boolean); // Remove any undefined lessons
   
   const currentIndex = sortedLessons.findIndex(l => l.id === lesson.id)
   const previousLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null
