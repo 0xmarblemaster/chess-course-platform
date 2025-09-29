@@ -85,19 +85,24 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
     setError('')
 
     try {
-      const lessonData = {
+      // Start with basic required fields that definitely exist in the database
+      const lessonData: any = {
         title: formData.title,
-        description: formData.description,
         level_id: formData.level_id,
         order_index: formData.order_index,
         video_url: formData.video_url,
-        lichess_embed_url: formData.lichess_embed_url,
-        lichess_embed_url_2: formData.lichess_embed_url_2,
-        lichess_image_url: formData.lichess_image_url,
-        lichess_image_url_2: formData.lichess_image_url_2,
-        lichess_description: formData.lichess_description,
-        lichess_description_2: formData.lichess_description_2
+        lichess_embed_url: formData.lichess_embed_url
       }
+
+      // Add optional fields only if they have values (to avoid database errors)
+      if (formData.description) lessonData.description = formData.description
+      if (formData.lichess_embed_url_2) lessonData.lichess_embed_url_2 = formData.lichess_embed_url_2
+      if (formData.lichess_image_url) lessonData.lichess_image_url = formData.lichess_image_url
+      if (formData.lichess_image_url_2) lessonData.lichess_image_url_2 = formData.lichess_image_url_2
+      if (formData.lichess_description) lessonData.lichess_description = formData.lichess_description
+      if (formData.lichess_description_2) lessonData.lichess_description_2 = formData.lichess_description_2
+
+      console.log('Saving lesson data:', lessonData)
 
       if (lesson) {
         // Update existing lesson
@@ -119,7 +124,17 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
       onSuccess()
     } catch (error) {
       console.error('Error saving lesson:', error)
-      setError('Failed to save lesson')
+      console.error('Error details:', JSON.stringify(error, null, 2))
+      
+      // Show more specific error message
+      let errorMessage = 'Failed to save lesson'
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = `Failed to save lesson: ${error.message}`
+      } else if (error && typeof error === 'string') {
+        errorMessage = `Failed to save lesson: ${error}`
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
