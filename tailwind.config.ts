@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        progress: "#98FB98",
+        progress: "#32CD32",
         background: 'var(--background)',
         foreground: 'var(--foreground)',
       },

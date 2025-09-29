@@ -187,7 +187,7 @@ export default function LessonPage() {
               {t('lesson.notFoundDescription', 'The lesson you are looking for does not exist.')}
             </p>
             <button
-              onClick={() => router.push('/courses')}
+              onClick={() => router.push(lesson ? `/levels/${lesson.level_id}` : '/courses')}
               className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700"
             >
               {t('lesson.backToCourses', 'Back to Courses')}
@@ -203,9 +203,17 @@ export default function LessonPage() {
   const isCompleted = progress?.completed_at !== null
 
   // Find previous and next lessons
-  const currentIndex = allLessons.findIndex(l => l.id === lesson.id)
-  const previousLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null
-  const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null
+  // Sort lessons by order_index first, then by id as a tiebreaker to ensure consistent ordering
+  const sortedLessons = [...allLessons].sort((a, b) => {
+    if (a.order_index !== b.order_index) {
+      return a.order_index - b.order_index;
+    }
+    return a.id - b.id;
+  });
+  
+  const currentIndex = sortedLessons.findIndex(l => l.id === lesson.id)
+  const previousLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null
+  const nextLesson = currentIndex < sortedLessons.length - 1 ? sortedLessons[currentIndex + 1] : null
 
   // Default thumbnail for Lichess challenges
   const defaultThumbnail = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNDBMMTIwIDYwTDEwMCA4MEw4MCA2MEwxMDAgNDBaIiBmaWxsPSIjNjM2NkY3Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkI3MjgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjUwMCI+Q2hlc3MgQ2hhbGxlbmdlPC90ZXh0Pgo8L3N2Zz4="
@@ -292,7 +300,7 @@ export default function LessonPage() {
               <div>
                 {/* Thumbnail with custom image or default */}
                 <div 
-                  className="aspect-video bg-gray-100 rounded-lg overflow-hidden mb-4 relative cursor-pointer"
+                  className="w-64 h-40 bg-gray-100 rounded-lg overflow-hidden mb-4 relative cursor-pointer mx-auto"
                   onClick={() => window.open(lesson.lichess_embed_url, '_blank')}
                   style={{
                     backgroundImage: `url(${lesson.lichess_image_url || defaultThumbnail})`,
@@ -363,7 +371,7 @@ export default function LessonPage() {
               <div>
                 {/* Thumbnail with custom image or default */}
                 <div 
-                  className="aspect-video bg-gray-100 rounded-lg overflow-hidden mb-4 relative cursor-pointer"
+                  className="w-64 h-40 bg-gray-100 rounded-lg overflow-hidden mb-4 relative cursor-pointer mx-auto"
                   onClick={() => window.open(lesson.lichess_embed_url_2, '_blank')}
                   style={{
                     backgroundImage: `url(${lesson.lichess_image_url_2 || defaultThumbnail})`,
@@ -448,7 +456,7 @@ export default function LessonPage() {
             
             <div className="flex-1 text-center">
               <button
-                onClick={() => router.push('/courses')}
+                onClick={() => router.push(lesson ? `/levels/${lesson.level_id}` : '/courses')}
                 className="text-gray-600 hover:text-gray-800 font-medium"
               >
                 {t('lesson.backToCourses', 'Back to Courses')}

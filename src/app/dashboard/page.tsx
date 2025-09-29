@@ -152,8 +152,8 @@ export default function DashboardPage() {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
-                    className="bg-progress h-3 rounded-full transition-all duration-300"
-                    style={{ width: `${overallProgress.progressPercentage}%` }}
+                    className="h-3 rounded-full transition-all duration-300"
+                    style={{ width: `${overallProgress.progressPercentage}%`, backgroundColor: '#32CD32' }}
                   ></div>
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
@@ -224,8 +224,8 @@ export default function DashboardPage() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-3">
                           <div
-                            className="bg-progress h-3 rounded-full transition-all duration-300"
-                            style={{ width: `${level.progress.progressPercentage}%` }}
+                            className="h-3 rounded-full transition-all duration-300"
+                            style={{ width: `${level.progress.progressPercentage}%`, backgroundColor: '#32CD32' }}
                           ></div>
                         </div>
                         <p className="text-sm text-gray-500 mt-1">
@@ -238,7 +238,7 @@ export default function DashboardPage() {
                       {level.isUnlocked ? (
                         <>
                           <Link
-                            href="/courses"
+                            href={`/levels/${level.id}`}
                             className="bg-indigo-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors text-center shadow-sm hover:shadow-md"
                           >
                             {level.progress.completedLessons === 0 ? t('dashboard.startLevel', 'Start Level') : t('dashboard.continueLevel', 'Continue Level')}

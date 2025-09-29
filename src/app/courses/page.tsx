@@ -126,8 +126,8 @@ export default function CoursesPage() {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3">
                 <div 
-                  className="bg-progress h-3 rounded-full transition-all duration-300"
-                  style={{ width: `${progressPercentage}%` }}
+                  className="h-3 rounded-full transition-all duration-300"
+                  style={{ width: `${progressPercentage}%`, backgroundColor: '#32CD32' }}
                 ></div>
               </div>
               <p className="text-sm text-gray-500 mt-1">
