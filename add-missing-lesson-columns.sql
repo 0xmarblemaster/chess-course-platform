@@ -1,7 +1,7 @@
 -- Add missing columns to lessons table
 -- These columns are being used in the LessonForm but don't exist in the database
 
--- Add description column
+-- Add description column for lesson description
 ALTER TABLE public.lessons 
 ADD COLUMN IF NOT EXISTS description TEXT;
 
@@ -9,13 +9,13 @@ ADD COLUMN IF NOT EXISTS description TEXT;
 ALTER TABLE public.lessons 
 ADD COLUMN IF NOT EXISTS lichess_embed_url_2 TEXT;
 
--- Add Lichess image URLs
+-- Add Lichess image URLs for thumbnails
 ALTER TABLE public.lessons 
 ADD COLUMN IF NOT EXISTS lichess_image_url TEXT;
 ALTER TABLE public.lessons 
 ADD COLUMN IF NOT EXISTS lichess_image_url_2 TEXT;
 
--- Add Lichess descriptions
+-- Add Lichess descriptions for challenge descriptions
 ALTER TABLE public.lessons 
 ADD COLUMN IF NOT EXISTS lichess_description TEXT;
 ALTER TABLE public.lessons 
