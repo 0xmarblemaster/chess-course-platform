@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import LoadingScreen from "@/components/LoadingScreen"
+import { getDashboardData } from "@/lib/data"
 import { getLevels, getLevelProgress, getOverallProgress, getUserBadges, type Level, type Badge } from '@/lib/data'
 import Link from 'next/link'
 
@@ -66,41 +67,23 @@ export default function DashboardPage() {
     progressPercentage: 0
   })
   const [dashboardLoading, setDashboardLoading] = useState(true)
-
   const loadDashboardData = useCallback(async () => {
     if (!user) return
 
     try {
       setDashboardLoading(true)
       
-      // Load levels and their progress
-      const levelsData = await getLevels()
-      const badgesData = await getUserBadges(user.id)
-      const overallProgressData = await getOverallProgress(user.id)
-      
-      const levelsWithProgress: LevelWithProgress[] = []
-      let previousLevelCompleted = true
-      
-      for (let i = 0; i < levelsData.length; i++) {
-        const level = levelsData[i]
-        const progress = await getLevelProgress(user.id, level.id)
-        
-        levelsWithProgress.push({
-          ...level,
-          progress,
-          isUnlocked: previousLevelCompleted
-        })
-        
-        // Check if this level is completed
-        previousLevelCompleted = progress.progressPercentage === 100
-      }
+      // Use optimized parallel data loading
+      const { levels: levelsData, badges: badgesData, overallProgress: overallProgressData, levelsWithProgress } = await getDashboardData(user.id)
       
       setLevels(levelsWithProgress)
       setBadges(badgesData)
       setOverallProgress(overallProgressData)
-    } catch (error) {
-      console.error('Error loading dashboard data:', error)
     } finally {
+      setDashboardLoading(false)
+    }
+    } catch (error) {
+      console.error("Error loading dashboard data:", error)
       setDashboardLoading(false)
     }
   }, [user])

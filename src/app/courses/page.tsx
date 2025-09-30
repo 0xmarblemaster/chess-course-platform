@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { getLessonsForLevel, getLevels, getUserProgress, getLevelProgress, type Lesson, type Progress } from '@/lib/data'
+import { getCoursesData } from "@/lib/data"
 import Link from 'next/link'
 
 interface LessonWithProgress extends Lesson {
@@ -28,30 +29,11 @@ export default function CoursesPage() {
 
   useEffect(() => {
     const loadCourses = async () => {
-      if (!user) return
-
-      try {
-        setLoading(true)
-        setError('')
+        // Use optimized parallel data loading
+        const { lessons: levelLessons, levelProgress: progress, lessonsWithProgress } = await getCoursesData(user.id)
         
-        // Get the first level (assuming it's the main course)
-        const levels = await getLevels()
-        if (levels.length === 0) {
-          setError('No courses available')
-          return
-        }
-        
-        const firstLevel = levels[0]
-        const levelLessons = await getLessonsForLevel(firstLevel.id)
-        const userProgress = await getUserProgress(user.id)
-        const progress = await getLevelProgress(user.id, firstLevel.id)
-        
-        const lessonsWithProgress: LessonWithProgress[] = levelLessons.map(lesson => {
-          const lessonProgress = userProgress.find(p => p.lesson_id === lesson.id)
-          return {
-            ...lesson,
-            progress: lessonProgress,
-            isCompleted: lessonProgress ? lessonProgress.video_watched && lessonProgress.test_passed : false
+        setLessons(lessonsWithProgress)
+        setLevelProgress(progress)
           }
         })
         
