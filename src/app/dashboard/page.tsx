@@ -7,7 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import LoadingScreen from "@/components/LoadingScreen"
 import { getDashboardData } from "@/lib/data"
-import { getLevels, getLevelProgress, getOverallProgress, getUserBadges, type Level, type Badge } from '@/lib/data'
+import { type Level, type Badge } from '@/lib/data'
 import Link from 'next/link'
 
 interface LevelWithProgress extends Level {
@@ -20,7 +20,7 @@ interface LevelWithProgress extends Level {
 }
 
 export default function DashboardPage() {
-  const { user, loading } = useAuth()
+  const { user } = useAuth()
   const { t } = useLanguage()
   const searchParams = useSearchParams()
   const authSuccess = searchParams.get('auth')
@@ -74,7 +74,7 @@ export default function DashboardPage() {
       setDashboardLoading(true)
       
       // Use optimized parallel data loading
-      const { levels: levelsData, badges: badgesData, overallProgress: overallProgressData, levelsWithProgress } = await getDashboardData(user.id)
+      const { badges: badgesData, overallProgress: overallProgressData, levelsWithProgress } = await getDashboardData(user.id)
       
       setLevels(levelsWithProgress)
       setBadges(badgesData)

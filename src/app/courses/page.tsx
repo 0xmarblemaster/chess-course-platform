@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import { getLessonsForLevel, getLevels, getUserProgress, getLevelProgress, type Lesson, type Progress } from '@/lib/data'
+import { type Lesson, type Progress } from '@/lib/data'
 import { getCoursesData } from "@/lib/data"
 import Link from 'next/link'
 
