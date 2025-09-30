@@ -4,6 +4,17 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import type { Lesson, Level } from '@/lib/supabaseClient'
 
+interface LessonDataUpdate {
+  title: string
+  level_id: number
+  order_index: number
+  video_url: string
+  lichess_embed_url: string
+  description?: string
+  lichess_description?: string
+  lichess_description_2?: string
+}
+
 interface LessonFormProps {
   lesson?: Lesson
   levels: Level[]
@@ -86,7 +97,7 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
 
     try {
       // Start with basic required fields that definitely exist in the database
-      const lessonData: any = {
+      const lessonData: LessonDataUpdate = {
         title: formData.title,
         level_id: formData.level_id,
         order_index: formData.order_index,
