@@ -79,6 +79,7 @@ export default function LevelPage() {
     }
   }, [user, levelId, loadLevelData])
 
+  if (loading) {
     return (
       <ProtectedRoute>
         <LoadingScreen isVisible={true} />

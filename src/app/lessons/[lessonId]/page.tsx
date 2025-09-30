@@ -163,6 +163,7 @@ export default function LessonPage() {
     }
   }
 
+  if (loading) {
     return (
       <ProtectedRoute>
         <LoadingScreen isVisible={true} />

@@ -67,6 +67,7 @@ export default function CoursesPage() {
 
     loadCourses()
   }, [user])
+  if (loading) {
 
     return (
       <ProtectedRoute>
