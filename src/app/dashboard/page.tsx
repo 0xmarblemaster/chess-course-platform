@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
+import LoadingScreen from "@/components/LoadingScreen"
 import { getLevels, getLevelProgress, getOverallProgress, getUserBadges, type Level, type Badge } from '@/lib/data'
 import Link from 'next/link'
 
@@ -111,16 +112,10 @@ export default function DashboardPage() {
   }, [user, loadDashboardData])
 
 
-
   if (dashboardLoading) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-progress mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading dashboard...</p>
-          </div>
-        </div>
+        <LoadingScreen isVisible={true} />
       </ProtectedRoute>
     )
   }
