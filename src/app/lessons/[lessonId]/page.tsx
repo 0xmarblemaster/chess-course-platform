@@ -333,6 +333,15 @@ export default function LessonPage() {
                   </div>
                 </div>
                 
+                {/* Challenge Description */}
+                {lesson.lichess_description && (
+                  <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                    <p className="text-sm text-gray-700">
+                      {lesson.lichess_description}
+                    </p>
+                  </div>
+                )}
+                
                 {/* Always show the direct link as well */}
                 <div className="mb-4 p-3 bg-indigo-50 rounded-lg">
                   <p className="text-sm text-indigo-700 mb-2">
@@ -403,6 +412,15 @@ export default function LessonPage() {
                     </div>
                   </div>
                 </div>
+                
+                {/* Challenge Description */}
+                {lesson.lichess_description_2 && (
+                  <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                    <p className="text-sm text-gray-700">
+                      {lesson.lichess_description_2}
+                    </p>
+                  </div>
+                )}
                 
                 {/* Always show the direct link as well */}
                 <div className="mb-4 p-3 bg-indigo-50 rounded-lg">
