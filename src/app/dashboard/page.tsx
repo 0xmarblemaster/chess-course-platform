@@ -82,10 +82,6 @@ export default function DashboardPage() {
     } finally {
       setDashboardLoading(false)
     }
-    } catch (error) {
-      console.error("Error loading dashboard data:", error)
-      setDashboardLoading(false)
-    }
   }, [user])
 
   useEffect(() => {

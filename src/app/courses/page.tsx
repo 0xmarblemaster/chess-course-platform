@@ -29,19 +29,20 @@ export default function CoursesPage() {
 
   useEffect(() => {
     const loadCourses = async () => {
+      if (!user) return
+
+      try {
+        setLoading(true)
+        setError("")
+        
         // Use optimized parallel data loading
         const { lessons: levelLessons, levelProgress: progress, lessonsWithProgress } = await getCoursesData(user.id)
         
         setLessons(lessonsWithProgress)
         setLevelProgress(progress)
-          }
-        })
-        
-        setLessons(lessonsWithProgress)
-        setLevelProgress(progress)
         
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Failed to load courses')
+        setError(err instanceof Error ? err.message : "Failed to load courses")
       } finally {
         setLoading(false)
       }
@@ -49,7 +50,6 @@ export default function CoursesPage() {
 
     loadCourses()
   }, [user])
-  if (loading) {
 
     return (
       <ProtectedRoute>
