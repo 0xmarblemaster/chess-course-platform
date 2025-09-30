@@ -10,10 +10,9 @@ import { getCoursesData } from "@/lib/data"
 import Link from 'next/link'
 
 interface LessonWithProgress extends Lesson {
-  progress?: Progress
+  progress?: Progress | null
   isCompleted: boolean
 }
-
 export default function CoursesPage() {
   const { t } = useLanguage()
   const { user } = useAuth()
