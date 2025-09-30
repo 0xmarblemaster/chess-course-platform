@@ -84,7 +84,6 @@ export default function LevelPage() {
         <LoadingScreen isVisible={true} />
       </ProtectedRoute>
     )
-    )
   }
 
   if (error || !level) {

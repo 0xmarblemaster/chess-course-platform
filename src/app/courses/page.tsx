@@ -73,7 +73,6 @@ export default function CoursesPage() {
         <LoadingScreen isVisible={true} />
       </ProtectedRoute>
     )
-    )
   }
 
   if (error) {

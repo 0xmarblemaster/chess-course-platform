@@ -168,7 +168,6 @@ export default function LessonPage() {
         <LoadingScreen isVisible={true} />
       </ProtectedRoute>
     )
-    )
   }
 
   if (error || !lesson) {
