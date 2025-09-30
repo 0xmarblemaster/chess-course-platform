@@ -218,7 +218,7 @@ export default function LessonPage() {
   // Sort lessons according to the correct order
   const sortedLessons = correctLessonOrder
     .map(lessonId => allLessons.find(lesson => lesson.id === lessonId))
-    .filter(Boolean); // Remove any undefined lessons
+    .filter((l): l is Lesson => l !== undefined); // Remove any undefined lessons
   
   const currentIndex = sortedLessons.findIndex(l => l.id === lesson.id)
   const previousLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null
