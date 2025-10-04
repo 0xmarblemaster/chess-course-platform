@@ -109,8 +109,8 @@ export default function DashboardPage() {
       if (user) {
         const { levelsWithProgress } = await getDashboardData(user.id)
         const firstIncomplete = levelsWithProgress.find(l => l.progress.progressPercentage < 100)
-        if (firstIncomplete && (firstIncomplete as any).level_group_id) {
-          setSelectedGroupId((firstIncomplete as any).level_group_id)
+        if (firstIncomplete?.level_group_id) {
+          setSelectedGroupId(firstIncomplete.level_group_id)
           return
         }
       }
