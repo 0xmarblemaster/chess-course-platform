@@ -107,7 +107,7 @@ export default function DashboardPage() {
 
       // Otherwise, determine current group by first incomplete course
       if (user) {
-        const { levels: allLevels, levelsWithProgress } = await getDashboardData(user.id)
+        const { levelsWithProgress } = await getDashboardData(user.id)
         const firstIncomplete = levelsWithProgress.find(l => l.progress.progressPercentage < 100)
         if (firstIncomplete && (firstIncomplete as any).level_group_id) {
           setSelectedGroupId((firstIncomplete as any).level_group_id)

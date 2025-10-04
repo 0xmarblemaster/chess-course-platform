@@ -253,7 +253,7 @@ export async function getDashboardData(userId: string, groupId?: number): Promis
     ])
 
     // Filter by group if provided
-    const visibleLevels = groupId ? (levels as any[]).filter((l: any) => l.level_group_id === groupId) : levels
+    const visibleLevels: Level[] = groupId ? levels.filter((l: Level) => l.level_group_id === groupId) : levels
 
     // Process levels with progress
     const levelsWithProgress = visibleLevels.map((level, index) => {

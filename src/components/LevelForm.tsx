@@ -19,7 +19,7 @@ export default function LevelForm({ level, onSuccess, onCancel, levelGroups }: L
     video_url: level?.video_url || '',
     puzzle_practice_url: level?.puzzle_practice_url || '',
     pdf_url: level?.pdf_url || '',
-    level_group_id: (level as any)?.level_group_id || null as number | null
+    level_group_id: (level as Level & { level_group_id?: number })?.level_group_id || null as number | null
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
