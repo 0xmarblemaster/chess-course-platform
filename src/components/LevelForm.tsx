@@ -1,26 +1,42 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
-import type { Level } from '@/lib/supabaseClient'
+import type { Level, LevelGroup } from '@/lib/supabaseClient'
 
 interface LevelFormProps {
   level?: Level
   onSuccess: () => void
   onCancel: () => void
+  levelGroups?: LevelGroup[]
 }
 
-export default function LevelForm({ level, onSuccess, onCancel }: LevelFormProps) {
+export default function LevelForm({ level, onSuccess, onCancel, levelGroups }: LevelFormProps) {
   const [formData, setFormData] = useState({
     title: level?.title || '',
     description: level?.description || '',
     order_index: level?.order_index || 1,
     video_url: level?.video_url || '',
     puzzle_practice_url: level?.puzzle_practice_url || '',
-    pdf_url: level?.pdf_url || ''
+    pdf_url: level?.pdf_url || '',
+    level_group_id: (level as any)?.level_group_id || null as number | null
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [groups, setGroups] = useState<LevelGroup[]>(levelGroups || [])
+
+  // Load groups if not provided
+  useEffect(() => {
+    const load = async () => {
+      if (levelGroups && levelGroups.length > 0) return
+      const { data, error } = await supabase
+        .from('level_groups')
+        .select('*')
+        .order('order_index')
+      if (!error && data) setGroups(data)
+    }
+    load()
+  }, [levelGroups])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -157,6 +173,24 @@ export default function LevelForm({ level, onSuccess, onCancel }: LevelFormProps
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="https://example.com/level-guide.pdf"
               />
+            </div>
+
+            {/* Level Group Selector */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Level Group
+              </label>
+              <select
+                value={formData.level_group_id ?? ''}
+                onChange={(e) => setFormData({ ...formData, level_group_id: e.target.value ? parseInt(e.target.value, 10) : null })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">Unassigned</option>
+                {groups.map((g) => (
+                  <option key={g.id} value={g.id}>{g.title}</option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">Choose which Level Group this course belongs to.</p>
             </div>
 
             <div className="flex justify-end space-x-3 pt-4">

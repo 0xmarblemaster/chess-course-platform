@@ -87,7 +87,7 @@ const AdminDashboard = () => {
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
@@ -215,7 +215,7 @@ const AdminDashboard = () => {
               <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
                 {t('admin.quickActions', 'Quick Actions')}
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Link
                   href="/admin/manage"
                   className="bg-indigo-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-indigo-700 transition-colors"
@@ -227,6 +227,12 @@ const AdminDashboard = () => {
                   className="bg-indigo-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-indigo-700 transition-colors"
                 >
                   {t('admin.viewAnalytics', 'View Analytics')}
+                </Link>
+                <Link
+                  href="/admin/levels"
+                  className="bg-indigo-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-indigo-700 transition-colors"
+                >
+                  Manage Level Groups
                 </Link>
                 <Link
                   href="/dashboard"

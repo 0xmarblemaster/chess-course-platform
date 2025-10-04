@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import { type Lesson, type Progress } from '@/lib/data'
-import { getCoursesData } from "@/lib/data"
+import { type Lesson, type Progress, type LevelGroup } from '@/lib/data'
+import { getCoursesData, getLevelGroups } from "@/lib/data"
 import Link from 'next/link'
 
 interface LessonWithProgress extends Lesson {
@@ -25,6 +25,8 @@ export default function CoursesPage() {
     completedLessons: 0,
     progressPercentage: 0
   })
+  const [levelGroups, setLevelGroups] = useState<LevelGroup[]>([])
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
 
   useEffect(() => {
     const loadCourses = async () => {
@@ -34,8 +36,8 @@ export default function CoursesPage() {
         setLoading(true)
         setError("")
         
-        // Use optimized parallel data loading
-        const { lessons: levelLessons, levelProgress: progress, lessonsWithProgress } = await getCoursesData(user.id)
+        // Use optimized parallel data loading (respect selected group)
+        const { lessons: levelLessons, levelProgress: progress, lessonsWithProgress } = await getCoursesData(user.id, selectedGroupId ?? undefined)
         
         setLessons(lessonsWithProgress)
         setLevelProgress(progress)
@@ -48,7 +50,19 @@ export default function CoursesPage() {
     }
 
     loadCourses()
-  }, [user])
+  }, [user, selectedGroupId])
+
+  // Load level groups once and default to first if none selected
+  useEffect(() => {
+    const loadGroups = async () => {
+      const groups = await getLevelGroups()
+      setLevelGroups(groups)
+      if (!selectedGroupId && groups.length > 0) {
+        setSelectedGroupId(groups[0].id)
+      }
+    }
+    loadGroups()
+  }, [])
 
   if (loading) {
     return (
@@ -91,6 +105,22 @@ export default function CoursesPage() {
             <p className="text-gray-600 mb-6">
               {t('level.courseDescription', 'Master chess with interactive lessons and challenges')}
             </p>
+
+            {/* Level Group Selector */}
+            {levelGroups.length > 0 && (
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('dashboard.levelGroup', 'Level Group')}</label>
+                <select
+                  className="border rounded-md px-3 py-2"
+                  value={selectedGroupId ?? ''}
+                  onChange={(e) => setSelectedGroupId(e.target.value ? parseInt(e.target.value, 10) : null)}
+                >
+                  {levelGroups.map((g) => (
+                    <option key={g.id} value={g.id}>{g.title}</option>
+                  ))}
+                </select>
+              </div>
+            )}
             
             {/* Progress */}
             <div className="mb-4">

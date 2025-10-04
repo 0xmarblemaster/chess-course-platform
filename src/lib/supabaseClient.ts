@@ -23,9 +23,18 @@ export interface Level {
   title: string
   description: string
   order_index: number
+  level_group_id?: number
   video_url?: string
   puzzle_practice_url?: string
   pdf_url?: string
+}
+
+// Higher-level category that contains Courses (existing `levels`)
+export interface LevelGroup {
+  id: number
+  title: string
+  description: string
+  order_index: number
 }
 
 export interface Lesson {

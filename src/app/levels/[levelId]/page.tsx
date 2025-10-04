@@ -168,6 +168,7 @@ export default function LevelPage() {
                   <div
                     key={lesson.id}
                     className="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition-colors"
+                    style={lesson.isCompleted ? { backgroundColor: '#E9FBEC' } : undefined}
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex-1">

@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabaseClient'
 import type { Level, Lesson } from '@/lib/supabaseClient'
 // import AdminRoute from '@/components/AdminRoute' // Removed - causing issues
 import LevelForm from '@/components/LevelForm'
+import { getLevelGroups, type LevelGroup } from '@/lib/data'
 import LessonForm from '@/components/LessonForm'
 import Link from 'next/link'
 
@@ -15,18 +16,21 @@ const AdminManage = () => {
   const [showLevelForm, setShowLevelForm] = useState(false)
   const [showLessonForm, setShowLessonForm] = useState(false)
   const [editingLevel, setEditingLevel] = useState<Level | undefined>()
+  const [levelGroups, setLevelGroups] = useState<LevelGroup[]>([])
   const [editingLesson, setEditingLesson] = useState<Lesson | undefined>()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [levelsResult, lessonsResult] = await Promise.all([
+        const [levelsResult, lessonsResult, groups] = await Promise.all([
           supabase.from('levels').select('*').order('order_index'),
-          supabase.from('lessons').select('*').order('level_id, order_index')
+          supabase.from('lessons').select('*').order('level_id, order_index'),
+          getLevelGroups()
         ])
 
         if (levelsResult.data) setLevels(levelsResult.data)
         if (lessonsResult.data) setLessons(lessonsResult.data)
+        setLevelGroups(groups)
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
@@ -329,6 +333,7 @@ const AdminManage = () => {
         {showLevelForm && (
           <LevelForm
             level={editingLevel}
+            levelGroups={levelGroups}
             onSuccess={() => {
               setShowLevelForm(false)
               setEditingLevel(undefined)
