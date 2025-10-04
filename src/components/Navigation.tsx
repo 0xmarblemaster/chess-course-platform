@@ -78,7 +78,12 @@ const Navigation = () => {
 
   if (loading) {
     return (
-      <nav className="bg-white shadow-sm border-b">
+      <nav
+        className="shadow-sm border-b"
+        style={{
+          backgroundColor: '#ffffff'
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center min-h-16 py-2">
             <div className="flex items-center">
@@ -94,7 +99,12 @@ const Navigation = () => {
   }
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav
+      className="shadow-sm border-b"
+      style={{
+        backgroundColor: '#ffffff'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center min-h-16 py-2">
           {/* Logo */}
