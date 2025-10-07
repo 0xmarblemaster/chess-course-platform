@@ -10,6 +10,9 @@ interface LessonDataUpdate {
   order_index: number
   video_url: string
   lichess_embed_url: string
+  lichess_embed_url_2?: string
+  lichess_image_url?: string
+  lichess_image_url_2?: string
   description?: string
   lichess_description?: string
   lichess_description_2?: string
@@ -109,10 +112,9 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
       if (formData.description) lessonData.description = formData.description
       if (formData.lichess_description) lessonData.lichess_description = formData.lichess_description
       if (formData.lichess_description_2) lessonData.lichess_description_2 = formData.lichess_description_2
-      // TODO: Add these fields back once database migration is complete
-      // if (formData.lichess_embed_url_2) lessonData.lichess_embed_url_2 = formData.lichess_embed_url_2
-      // if (formData.lichess_image_url) lessonData.lichess_image_url = formData.lichess_image_url
-      // if (formData.lichess_image_url_2) lessonData.lichess_image_url_2 = formData.lichess_image_url_2
+      if (formData.lichess_embed_url_2) lessonData.lichess_embed_url_2 = formData.lichess_embed_url_2
+      if (formData.lichess_image_url) lessonData.lichess_image_url = formData.lichess_image_url
+      if (formData.lichess_image_url_2) lessonData.lichess_image_url_2 = formData.lichess_image_url_2
 
       console.log('Saving lesson data:', lessonData)
 
@@ -153,8 +155,8 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={onCancel}>
+      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">
             {lesson ? 'Edit Lesson' : 'Create New Lesson'}

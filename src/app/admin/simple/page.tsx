@@ -2,7 +2,13 @@
 
 const SimpleAdminPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div
+      className="min-h-screen p-8"
+      style={{
+        backgroundImage:
+          'linear-gradient(107.7deg, rgba(235,230,44,0.55) 8.4%, rgba(252,152,15,1) 90.3%)'
+      }}
+    >
       <h1 className="text-3xl font-bold text-gray-900">Simple Admin Page</h1>
       <p className="mt-4 text-gray-600">This is a simple admin page without any AdminRoute wrapper.</p>
       <div className="mt-8">

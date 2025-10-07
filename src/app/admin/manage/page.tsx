@@ -102,7 +102,13 @@ const AdminManage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundImage:
+          'linear-gradient(107.7deg, rgba(235,230,44,0.55) 8.4%, rgba(252,152,15,1) 90.3%)'
+      }}
+    >
         {/* Header */}
         <div className="bg-white shadow">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -305,15 +311,24 @@ const AdminManage = () => {
                               <span className="text-gray-400">No Video</span>
                             )}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {lesson.lichess_embed_url ? (
-                              <a href={lesson.lichess_embed_url} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-900">
-                                View Challenge
-                              </a>
-                            ) : (
-                              <span className="text-gray-400">No Challenge</span>
-                            )}
-                          </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {(lesson.lichess_embed_url || lesson.lichess_embed_url_2) ? (
+                            <div className="flex flex-col gap-1">
+                              {lesson.lichess_embed_url && (
+                                <a href={lesson.lichess_embed_url} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-900">
+                                  View Challenge
+                                </a>
+                              )}
+                              {lesson.lichess_embed_url_2 && (
+                                <a href={lesson.lichess_embed_url_2} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-900">
+                                  View Challenge 2
+                                </a>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-gray-400">No Challenge</span>
+                          )}
+                        </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <button 
                               onClick={() => {

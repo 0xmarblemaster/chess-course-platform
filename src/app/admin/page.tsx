@@ -71,7 +71,13 @@ const AdminDashboard = () => {
       }}
     >
         {/* Header */}
-        <div className="bg-white shadow">
+        <div
+          className="shadow"
+          style={{
+            backgroundImage:
+              'linear-gradient(107.7deg, rgba(235,230,44,0.55) 8.4%, rgba(252,152,15,1) 90.3%)'
+          }}
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <div>

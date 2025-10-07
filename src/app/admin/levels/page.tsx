@@ -68,7 +68,13 @@ export default function AdminLevelGroupsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div
+        className="min-h-screen"
+        style={{
+          backgroundImage:
+            'linear-gradient(107.7deg, rgba(235,230,44,0.55) 8.4%, rgba(252,152,15,1) 90.3%)'
+        }}
+      >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('admin.manageLevelGroups', 'Manage Level Groups')}</h1>
 
