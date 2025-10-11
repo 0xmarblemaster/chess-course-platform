@@ -15,7 +15,7 @@ export default function LevelForm({ level, onSuccess, onCancel, levelGroups }: L
   const [formData, setFormData] = useState({
     title: level?.title || '',
     description: level?.description || '',
-    order_index: level?.order_index || 1,
+    order_index: (level?.order_index ?? 1) as number | null,
     video_url: level?.video_url || '',
     puzzle_practice_url: level?.puzzle_practice_url || '',
     pdf_url: level?.pdf_url || '',
@@ -44,11 +44,13 @@ export default function LevelForm({ level, onSuccess, onCancel, levelGroups }: L
     setError('')
 
     try {
+      const safeOrderIndex = typeof formData.order_index === 'number' && formData.order_index >= 1 ? formData.order_index : 1
+      const payload = { ...formData, order_index: safeOrderIndex }
       if (level) {
         // Update existing level
         const { error } = await supabase
           .from('levels')
-          .update(formData)
+          .update(payload)
           .eq('id', level.id)
 
         if (error) throw error
@@ -56,7 +58,7 @@ export default function LevelForm({ level, onSuccess, onCancel, levelGroups }: L
         // Create new level
         const { error } = await supabase
           .from('levels')
-          .insert([formData])
+          .insert([payload])
 
         if (error) throw error
       }
@@ -120,8 +122,16 @@ export default function LevelForm({ level, onSuccess, onCancel, levelGroups }: L
                 type="number"
                 required
                 min="1"
-                value={formData.order_index}
-                onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
+                value={formData.order_index ?? ''}
+                onChange={(e) => {
+                  const v = e.target.value
+                  if (v === '') {
+                    setFormData({ ...formData, order_index: null })
+                  } else {
+                    const parsed = parseInt(v, 10)
+                    setFormData({ ...formData, order_index: Number.isNaN(parsed) ? null : parsed })
+                  }
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="1, 2, 3, etc."
               />

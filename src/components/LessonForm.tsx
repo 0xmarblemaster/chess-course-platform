@@ -8,14 +8,14 @@ interface LessonDataUpdate {
   title: string
   level_id: number
   order_index: number
-  video_url: string
-  lichess_embed_url: string
-  lichess_embed_url_2?: string
-  lichess_image_url?: string
-  lichess_image_url_2?: string
-  description?: string
-  lichess_description?: string
-  lichess_description_2?: string
+  video_url: string | null
+  lichess_embed_url: string | null
+  lichess_embed_url_2?: string | null
+  lichess_image_url?: string | null
+  lichess_image_url_2?: string | null
+  description?: string | null
+  lichess_description?: string | null
+  lichess_description_2?: string | null
 }
 
 interface LessonFormProps {
@@ -30,7 +30,7 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
     title: lesson?.title || '',
     description: lesson?.description || '',
     level_id: lesson?.level_id || (levels.length > 0 ? levels[0].id : 1),
-    order_index: lesson?.order_index || 1,
+    order_index: (lesson?.order_index ?? 1) as number | null,
     video_url: lesson?.video_url || '',
     lichess_embed_url: lesson?.lichess_embed_url || '',
     lichess_embed_url_2: lesson?.lichess_embed_url_2 || '',
@@ -99,22 +99,21 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
     setError('')
 
     try {
-      // Start with basic required fields that definitely exist in the database
+      // Build payload, explicitly nulling cleared optional fields so deletes are saved
+      const safeOrderIndex = typeof formData.order_index === 'number' && formData.order_index >= 1 ? formData.order_index : 1
       const lessonData: LessonDataUpdate = {
         title: formData.title,
         level_id: formData.level_id,
-        order_index: formData.order_index,
-        video_url: formData.video_url,
-        lichess_embed_url: formData.lichess_embed_url
+        order_index: safeOrderIndex,
+        video_url: formData.video_url?.trim() ? formData.video_url : null,
+        lichess_embed_url: formData.lichess_embed_url?.trim() ? formData.lichess_embed_url : null,
+        description: formData.description?.trim() ? formData.description : null,
+        lichess_description: formData.lichess_description?.trim() ? formData.lichess_description : null,
+        lichess_description_2: formData.lichess_description_2?.trim() ? formData.lichess_description_2 : null,
+        lichess_embed_url_2: formData.lichess_embed_url_2?.trim() ? formData.lichess_embed_url_2 : null,
+        lichess_image_url: formData.lichess_image_url?.trim() ? formData.lichess_image_url : null,
+        lichess_image_url_2: formData.lichess_image_url_2?.trim() ? formData.lichess_image_url_2 : null
       }
-
-      // Add optional fields only if they have values (to avoid database errors)
-      if (formData.description) lessonData.description = formData.description
-      if (formData.lichess_description) lessonData.lichess_description = formData.lichess_description
-      if (formData.lichess_description_2) lessonData.lichess_description_2 = formData.lichess_description_2
-      if (formData.lichess_embed_url_2) lessonData.lichess_embed_url_2 = formData.lichess_embed_url_2
-      if (formData.lichess_image_url) lessonData.lichess_image_url = formData.lichess_image_url
-      if (formData.lichess_image_url_2) lessonData.lichess_image_url_2 = formData.lichess_image_url_2
 
       console.log('Saving lesson data:', lessonData)
 
@@ -230,8 +229,16 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
                 type="number"
                 required
                 min="1"
-                value={formData.order_index}
-                onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
+                value={formData.order_index ?? ''}
+                onChange={(e) => {
+                  const v = e.target.value
+                  if (v === '') {
+                    setFormData({ ...formData, order_index: null })
+                  } else {
+                    const parsed = parseInt(v, 10)
+                    setFormData({ ...formData, order_index: Number.isNaN(parsed) ? null : parsed })
+                  }
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="1, 2, 3, etc."
               />

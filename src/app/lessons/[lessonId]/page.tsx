@@ -2,6 +2,18 @@
 import LoadingScreen from "@/components/LoadingScreen"
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  HomeIcon,
+  ChevronRightIcon,
+  BookmarkIcon as BookmarkOutlineIcon,
+  BookOpenIcon,
+  ChevronLeftIcon,
+  VideoCameraIcon,
+  PuzzlePieceIcon
+} from '@heroicons/react/24/outline'
+import { BookmarkIcon as BookmarkSolidIcon, CheckCircleIcon } from '@heroicons/react/24/solid'
 import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { useLanguage } from '@/contexts/LanguageContext'
@@ -18,6 +30,10 @@ export default function LessonPage() {
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState('')
+  const [showCelebration, setShowCelebration] = useState(false)
+  const [isBookmarked, setIsBookmarked] = useState(false)
+  const [notesOpen, setNotesOpen] = useState(false)
+  const [difficultyRating, setDifficultyRating] = useState<'easy' | 'medium' | 'hard' | null>(null)
 
   const lessonId = parseInt(params.lessonId as string)
 
@@ -228,13 +244,68 @@ export default function LessonPage() {
       <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Lesson Header */}
-          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-              {lesson.title}
-            </h1>
-            
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8"
+          >
+            {/* Breadcrumb */}
+            <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4" aria-label="Breadcrumb">
+              <Link
+                href="/dashboard"
+                className="flex items-center hover:text-indigo-600 transition-colors"
+                aria-label="Go to dashboard"
+              >
+                <HomeIcon className="w-4 h-4" />
+              </Link>
+              <ChevronRightIcon className="w-4 h-4 text-gray-400" />
+              <Link
+                href={`/levels/${lesson.level_id}`}
+                className="hover:text-indigo-600 transition-colors"
+              >
+                {t('breadcrumb.level', 'Level')}
+              </Link>
+              <ChevronRightIcon className="w-4 h-4 text-gray-400" />
+              <span className="text-gray-900 font-medium">{lesson.title}</span>
+            </nav>
+
+            {/* Title and actions */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                  {lesson.title}
+                </h1>
+              </div>
+              <div className="flex items-center gap-2 ml-4">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsBookmarked(!isBookmarked)}
+                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                  aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                >
+                  {isBookmarked ? (
+                    <BookmarkSolidIcon className="w-6 h-6 text-indigo-600" />
+                  ) : (
+                    <BookmarkOutlineIcon className="w-6 h-6 text-gray-400" />
+                  )}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setNotesOpen(!notesOpen)}
+                  className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors"
+                  aria-label="Open notes panel"
+                >
+                  <BookOpenIcon className="w-5 h-5" />
+                  <span className="hidden sm:inline">{t('lesson.notes', 'Notes')}</span>
+                </motion.button>
+              </div>
+            </div>
+
             {/* Progress Indicators */}
-            <div className="flex flex-wrap items-center gap-4 mb-4">
+            <div className="flex flex-wrap items-center gap-4 mt-2">
               <div className="flex items-center space-x-2">
                 <div className={`w-3 h-3 rounded-full ${videoWatched ? 'bg-green-500' : 'bg-red-500'}`}></div>
                 <span className="text-sm font-medium text-gray-700">
@@ -251,20 +322,26 @@ export default function LessonPage() {
 
             {/* Description */}
             {lesson.description && (
-              <div className="bg-gray-50 rounded-lg p-4 mb-4">
+              <div className="bg-gray-50 rounded-lg p-4 mt-4">
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">
                   {t('lesson.descriptionTitle', 'Lesson Description')}
                 </h2>
                 <p className="text-gray-700 whitespace-pre-wrap">{lesson.description}</p>
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* Video Section */}
           {lesson.video_url && (
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
-                📹 {t('lesson.videoLesson', 'Video Lesson')}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8"
+            >
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <VideoCameraIcon className="w-6 h-6 text-indigo-600" />
+                {t('lesson.video', 'Video')}
               </h2>
               
               <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden mb-4">
@@ -292,13 +369,19 @@ export default function LessonPage() {
                   {updating ? t('lesson.updating', 'Updating...') : videoWatched ? t('lesson.videoWatched', 'Video Watched') : t('lesson.markVideoWatched', 'Mark Video Watched')}
                 </button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* Primary Lichess Challenge Section */}
-          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
-              🎯 {t('lesson.lichessChallenge', 'Lichess Challenge')}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8"
+          >
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <PuzzlePieceIcon className="w-6 h-6 text-indigo-600" />
+              {t('lesson.lichessChallenge', 'Lichess Challenge')}
             </h2>
             
             {lesson.lichess_embed_url ? (
@@ -373,13 +456,19 @@ export default function LessonPage() {
                 {updating ? t('lesson.updating', 'Updating...') : testPassed ? t('lesson.testPassed', 'Test Passed') : t('lesson.markTestPassed', 'Mark Test Passed')}
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Second Lichess Challenge Section */}
           {lesson.lichess_embed_url_2 && (
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
-                🎯 {t('lesson.additionalChallenge', 'Additional Challenge')}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8"
+            >
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <PuzzlePieceIcon className="w-6 h-6 text-indigo-600" />
+                {t('lesson.additionalChallenge', 'Additional Challenge')}
               </h2>
               
               <div>
@@ -433,8 +522,73 @@ export default function LessonPage() {
                   </a>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
+
+          {/* Difficulty Rating */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8"
+          >
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+              {t('lesson.howWasLesson', 'How was this lesson?')}
+            </h3>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setDifficultyRating('easy')}
+                className={`flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all min-h-[44px] ${
+                  difficultyRating === 'easy'
+                    ? 'bg-green-500 text-white shadow-lg scale-105'
+                    : 'bg-gray-100 text-gray-700 hover:bg-green-50 hover:text-green-700'
+                }`}
+                aria-label="Rate lesson as too easy"
+              >
+                <span className="text-2xl mr-2">😄</span>
+                {t('lesson.tooEasy', 'Too Easy')}
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setDifficultyRating('medium')}
+                className={`flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all min-h-[44px] ${
+                  difficultyRating === 'medium'
+                    ? 'bg-indigo-500 text-white shadow-lg scale-105'
+                    : 'bg-gray-100 text-gray-700 hover:bg-indigo-50 hover:text-indigo-700'
+                }`}
+                aria-label="Rate lesson as just right"
+              >
+                <span className="text-2xl mr-2">🙂</span>
+                {t('lesson.justRight', 'Just Right')}
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setDifficultyRating('hard')}
+                className={`flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all min-h-[44px] ${
+                  difficultyRating === 'hard'
+                    ? 'bg-orange-500 text-white shadow-lg scale-105'
+                    : 'bg-gray-100 text-gray-700 hover:bg-orange-50 hover:text-orange-700'
+                }`}
+                aria-label="Rate lesson as too hard"
+              >
+                <span className="text-2xl mr-2">😅</span>
+                {t('lesson.tooHard', 'Too Hard')}
+              </motion.button>
+            </div>
+            {difficultyRating && (
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center text-sm text-gray-600 mt-4"
+              >
+                {t('lesson.thanksFeedback', 'Thanks for your feedback!')}
+              </motion.p>
+            )}
+          </motion.div>
 
           {/* Complete Lesson Section */}
           <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mt-6 sm:mt-8">
@@ -445,65 +599,205 @@ export default function LessonPage() {
               <p className="text-gray-600 mb-6">
                 {t('lesson.completeDescription', 'Mark this lesson as complete when you have finished both the video and the challenge')}
               </p>
-              <button
-                onClick={handleMarkLessonComplete}
+              <motion.button
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: '0 10px 25px rgba(99, 102, 241, 0.3)'
+                }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  setShowCelebration(true)
+                  setTimeout(() => setShowCelebration(false), 3000)
+                  handleMarkLessonComplete()
+                }}
                 disabled={isCompleted || updating}
-                className={`px-6 py-3 rounded-lg text-base font-medium transition-colors ${
+                className={`px-8 py-4 rounded-xl text-base font-semibold transition-all shadow-lg min-h-[44px] ${
                   isCompleted
-                    ? 'bg-indigo-100 text-indigo-700 cursor-not-allowed'
-                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                    ? 'bg-green-500 text-white cursor-not-allowed'
+                    : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700'
                 }`}
+                aria-label={isCompleted ? 'Lesson completed' : 'Mark lesson as complete'}
               >
-                {updating ? t('lesson.updating', 'Updating...') : isCompleted ? t('lesson.completed', 'Completed') : t('lesson.markLessonComplete', 'Mark Lesson Complete')}
-              </button>
+                {isCompleted && <CheckCircleIcon className="w-5 h-5 inline mr-2" />}
+                {isCompleted
+                  ? t('lesson.completed', 'Completed')
+                  : t('lesson.completeLesson', 'Complete Lesson')}
+              </motion.button>
             </div>
           </div>
 
           {/* Navigation */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8">
-            <div className="flex-1">
-              {previousLesson ? (
-                <button
-                  onClick={() => router.push(`/lessons/${previousLesson.id}`)}
-                  className="flex items-center space-x-2 text-indigo-600 hover:text-indigo-800 font-medium"
+          <div className="flex flex-col sm:flex-row gap-4 justify-between items-stretch sm:items-center mt-8">
+            {previousLesson ? (
+              <motion.div whileHover={{ x: -5 }} className="flex-1">
+                <Link
+                  href={`/lessons/${previousLesson.id}`}
+                  className="flex items-center gap-2 px-6 py-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                  <span>{t('lesson.previousLesson', 'Previous Lesson')}</span>
-                </button>
-              ) : (
-                <div></div>
-              )}
-            </div>
-            
+                  <ChevronLeftIcon className="w-5 h-5 text-gray-600" />
+                  <div className="flex-1 text-left">
+                    <div className="text-xs text-gray-500 mb-1">
+                      {t('lesson.previous', 'Previous')}
+                    </div>
+                    <div className="font-medium text-gray-900 line-clamp-1">
+                      {previousLesson.title}
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ) : (
+              <div className="flex-1" />
+            )}
+
             <div className="flex-1 text-center">
-              <button
-                onClick={() => router.push(lesson ? `/levels/${lesson.level_id}` : '/courses')}
-                className="text-gray-600 hover:text-gray-800 font-medium"
+              <Link
+                href={lesson ? `/levels/${lesson.level_id}` : '/courses'}
+                className="inline-block px-6 py-4 text-gray-600 hover:text-gray-800 font-medium"
               >
                 {t('lesson.backToCourses', 'Back to Courses')}
-              </button>
+              </Link>
             </div>
-            
-            <div className="flex-1 text-right">
-              {nextLesson ? (
-                <button
-                  onClick={() => router.push(`/lessons/${nextLesson.id}`)}
-                  className="flex items-center space-x-2 text-indigo-600 hover:text-indigo-800 font-medium ml-auto"
+
+            {nextLesson ? (
+              <motion.div whileHover={{ x: 5 }} className="flex-1">
+                <Link
+                  href={`/lessons/${nextLesson.id}`}
+                  className="flex items-center gap-2 px-6 py-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-all justify-end"
                 >
-                  <span>{t('lesson.nextLesson', 'Next Lesson')}</span>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              ) : (
-                <div></div>
-              )}
-            </div>
+                  <div className="flex-1 text-right">
+                    <div className="text-xs text-indigo-600 mb-1">
+                      {t('lesson.next', 'Next')}
+                    </div>
+                    <div className="font-medium text-gray-900 line-clamp-1">
+                      {nextLesson.title}
+                    </div>
+                  </div>
+                  <ChevronRightIcon className="w-5 h-5 text-indigo-600" />
+                </Link>
+              </motion.div>
+            ) : (
+              <div className="flex-1" />
+            )}
           </div>
         </div>
       </div>
+
+      {/* Celebration Modal */}
+      <AnimatePresence>
+        {showCelebration && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              onClick={() => setShowCelebration(false)}
+              aria-hidden="true"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, y: 50 }}
+              transition={{ type: 'spring', duration: 0.5 }}
+              className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-2xl shadow-2xl p-8 text-center max-w-md mx-4"
+              role="dialog"
+              aria-labelledby="celebration-title"
+            >
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 10, -10, 0], scale: [1, 1.2, 1.2, 1.2, 1.2, 1] }}
+                transition={{ duration: 0.6 }}
+                className="text-6xl mb-4"
+                aria-hidden="true"
+              >
+                🎉
+              </motion.div>
+              <h3 id="celebration-title" className="text-2xl font-bold text-gray-900 mb-2">
+                {t('lesson.greatJob', 'Great Job!')}
+              </h3>
+              <p className="text-gray-600 mb-6">
+                {t('lesson.lessonComplete', "You've completed this lesson!")}
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowCelebration(false)}
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+              >
+                {t('lesson.continue', 'Continue')}
+              </motion.button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Notes Sliding Panel */}
+      <AnimatePresence>
+        {notesOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              onClick={() => setNotesOpen(false)}
+              aria-hidden="true"
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 overflow-y-auto"
+              role="dialog"
+              aria-labelledby="notes-title"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 id="notes-title" className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <BookOpenIcon className="w-6 h-6 text-indigo-600" />
+                    {t('lesson.myNotes', 'My Notes')}
+                  </h3>
+                  <motion.button
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setNotesOpen(false)}
+                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                    aria-label="Close notes panel"
+                  >
+                    <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </motion.button>
+                </div>
+                <div className="space-y-4">
+                  <textarea
+                    className="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                    placeholder={t('lesson.writeNotes', 'Write your notes here...')}
+                    aria-label="Lesson notes textarea"
+                  />
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-md"
+                  >
+                    {t('lesson.saveNotes', 'Save Notes')}
+                  </motion.button>
+                  <div className="mt-8">
+                    <h4 className="text-sm font-semibold text-gray-700 mb-3">
+                      {t('lesson.previousNotes', 'Previous Notes')}
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="p-3 bg-gray-50 rounded-lg text-sm text-gray-600 italic">
+                        {t('lesson.noNotes', 'No notes yet for this lesson')}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </ProtectedRoute>
   )
 }
