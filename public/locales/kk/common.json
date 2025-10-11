@@ -115,6 +115,9 @@
     "videoWatched": "Бейне көрілді",
     "testPassed": "Тест өтті"
   },
+  "breadcrumb": {
+    "level": "Деңгей"
+  },
   "level": {
     "lessons": "Сабақтар",
     "progress": "Прогресс",
@@ -171,7 +174,21 @@
     "dashboard": "Басқару тақтасы →",
     "previousLesson": "← Алдыңғы Сабақ",
     "nextLesson": "Келесі Сабақ →",
-    "backToDashboard": "Басқару тақтасына оралу →"
+    "backToDashboard": "Басқару тақтасына оралу →",
+    "video": "Бейне",
+    "notes": "Жазбалар",
+    "howWasLesson": "Бұл сабақ қалай болды?",
+    "tooEasy": "Өте оңай",
+    "justRight": "Дәл солай",
+    "tooHard": "Өте қиын",
+    "thanksFeedback": "Пікірііңіз үшін рахмет!",
+    "completeLesson": "Сабақты аяқтау",
+    "continue": "Жалғастыру",
+    "myNotes": "Менің жазбаларым",
+    "saveNotes": "Жазбаларды сақтау",
+    "previousNotes": "Алдыңғы жазбалар",
+    "noNotes": "Бұл сабақ бойынша жазбалар жоқ",
+    "writeNotes": "Жазбаларыңызды осында жазыңыз..."
   },
   "signup": {
     "title": "Аккаунт жасау",

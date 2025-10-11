@@ -154,6 +154,9 @@
     "totalBadges": "Total Badges",
     "quickActions": "Quick Actions"
   },
+  "breadcrumb": {
+    "level": "Level"
+  },
   "level": {
     "notFound": "Level not found",
     "backToDashboard": "Back to Dashboard",
@@ -208,7 +211,21 @@
     "dashboard": "Dashboard →",
     "previousLesson": "← Previous Lesson",
     "nextLesson": "Next Lesson →",
-    "backToDashboard": "Back to Dashboard →"
+    "backToDashboard": "Back to Dashboard →",
+    "video": "Video",
+    "notes": "Notes",
+    "howWasLesson": "How was this lesson?",
+    "tooEasy": "Too Easy",
+    "justRight": "Just Right",
+    "tooHard": "Too Hard",
+    "thanksFeedback": "Thanks for your feedback!",
+    "completeLesson": "Complete Lesson",
+    "continue": "Continue",
+    "myNotes": "My Notes",
+    "saveNotes": "Save Notes",
+    "previousNotes": "Previous Notes",
+    "noNotes": "No notes yet for this lesson",
+    "writeNotes": "Write your notes here..."
   },
   "login": {
     "title": "Sign in to your account",

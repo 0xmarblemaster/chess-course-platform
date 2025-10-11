@@ -119,6 +119,9 @@
     "totalBadges": "Всего значков",
     "quickActions": "Быстрые действия"
   },
+  "breadcrumb": {
+    "level": "Уровень"
+  },
   "level": {
     "notFound": "Уровень не найден",
     "backToDashboard": "Назад к панели управления",
@@ -173,7 +176,21 @@
     "dashboard": "Панель управления →",
     "previousLesson": "← Предыдущий Урок",
     "nextLesson": "Следующий Урок →",
-    "backToDashboard": "Назад к Панели →"
+    "backToDashboard": "Назад к Панели →",
+    "video": "Видео",
+    "notes": "Заметки",
+    "howWasLesson": "Как вам этот урок?",
+    "tooEasy": "Слишком легко",
+    "justRight": "В самый раз",
+    "tooHard": "Слишком сложно",
+    "thanksFeedback": "Спасибо за обратную связь!",
+    "completeLesson": "Завершить урок",
+    "continue": "Продолжить",
+    "myNotes": "Мои заметки",
+    "saveNotes": "Сохранить заметки",
+    "previousNotes": "Предыдущие заметки",
+    "noNotes": "Пока нет заметок по этому уроку",
+    "writeNotes": "Запишите свои заметки здесь..."
   },
   "signup": {
     "title": "Создать аккаунт",
