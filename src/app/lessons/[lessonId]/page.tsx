@@ -40,7 +40,6 @@ export default function LessonPage() {
   useEffect(() => {
     fetchLesson()
     fetchProgress()
-    fetchAllLessons()
   }, [lessonId])
 
   const fetchLesson = async () => {
@@ -78,21 +77,35 @@ export default function LessonPage() {
     }
   }
 
-  const fetchAllLessons = async () => {
+  const fetchAllLessonsForLevel = async (levelId: number) => {
     try {
       const { data, error } = await supabase
         .from('lessons')
         .select('*')
+        .eq('level_id', levelId)
         .order('order_index')
 
       if (error) throw error
-      setAllLessons(data || [])
+      setAllLessons((data || []).sort((a, b) => {
+        if ((a.order_index ?? 0) !== (b.order_index ?? 0)) {
+          return (a.order_index ?? 0) - (b.order_index ?? 0)
+        }
+        return a.id - b.id
+      }))
     } catch (err) {
       console.error('Error fetching lessons:', err)
     } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (lesson?.level_id) {
+      setLoading(true)
+      fetchAllLessonsForLevel(lesson.level_id)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lesson?.level_id])
 
   const handleMarkVideoWatched = async () => {
     if (!lesson) return
@@ -214,23 +227,13 @@ export default function LessonPage() {
   const testPassed = progress?.test_passed || false
   const isCompleted = progress?.completed_at !== null
 
-  // Find previous and next lessons
-  // Define the correct lesson order based on the admin panel sequence
-  const correctLessonOrder = [
-    1, 2, 17, 18, 19, 20,  // Основы шахмат (Chess Fundamentals)
-    22, 23,                // Шах и Мат (Check and Checkmate)
-    25,                    // Шахматная нотация (Chess Notation)
-    26, 27,                // Рокировка (Castling)
-    29, 28, 31, 30, 32,    // Ничья (Draw)
-    33,                    // Сравнительная сила фигур (Piece Values)
-    34,                    // Мат тяжелыми фигурами (Checkmate with Heavy Pieces)
-    35, 36                 // Связка (Pin)
-  ];
-  
-  // Sort lessons according to the correct order
-  const sortedLessons = correctLessonOrder
-    .map(lessonId => allLessons.find(lesson => lesson.id === lessonId))
-    .filter((l): l is Lesson => l !== undefined); // Remove any undefined lessons
+  // Previous/Next navigation within the same level, ordered by admin-defined order_index
+  const sortedLessons = [...allLessons].sort((a, b) => {
+    if ((a.order_index ?? 0) !== (b.order_index ?? 0)) {
+      return (a.order_index ?? 0) - (b.order_index ?? 0)
+    }
+    return a.id - b.id
+  })
   
   const currentIndex = sortedLessons.findIndex(l => l.id === lesson.id)
   const previousLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null
