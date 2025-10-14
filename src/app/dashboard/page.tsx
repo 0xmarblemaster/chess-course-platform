@@ -266,15 +266,19 @@ export default function DashboardPage() {
             {!showFavorites && levelGroups.length > 0 && (
               <div className="mb-6">
                 <div className="flex items-center gap-2 overflow-x-auto py-1">
-                  {levelGroups.map(g => (
-                    <button
-                      key={g.id}
-                      onClick={() => setSelectedGroupId(g.id)}
-                      className={`whitespace-nowrap px-4 py-2 rounded-full text-sm transition-colors ${selectedGroupId === g.id ? 'bg-indigo-600 text-white shadow-sm' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                    >
-                      {g.title}
-                    </button>
-                  ))}
+                  {levelGroups.map(g => {
+                    const match = /^Level\s*(\d+)$/i.exec(g.title?.trim?.() || '')
+                    const displayTitle = match ? `${t('dashboard.levelWord', 'Level')} ${match[1]}` : g.title
+                    return (
+                      <button
+                        key={g.id}
+                        onClick={() => setSelectedGroupId(g.id)}
+                        className={`whitespace-nowrap px-4 py-2 rounded-full text-sm transition-colors ${selectedGroupId === g.id ? 'bg-indigo-600 text-white shadow-sm' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                      >
+                        {displayTitle}
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
             )}
