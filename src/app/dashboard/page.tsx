@@ -9,6 +9,48 @@ import LoadingScreen from "@/components/LoadingScreen"
 import { getDashboardData, getLevelGroups } from "@/lib/data"
 import { type Level, type Badge, type LevelGroup } from '@/lib/data'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabaseClient'
+
+function FavoritesList() {
+  const [favorites, setFavorites] = useState<{ id: number; title: string; level_id: number }[]>([])
+  const { t } = useLanguage()
+
+  useEffect(() => {
+    const load = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const key = `bookmarkedLessons:${user.id}`
+      const raw = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null
+      const ids: number[] = raw ? JSON.parse(raw) : []
+      if (ids.length === 0) {
+        setFavorites([])
+        return
+      }
+      const { data } = await supabase
+        .from('lessons')
+        .select('id,title,level_id')
+        .in('id', ids)
+        .order('level_id')
+      setFavorites(data || [])
+    }
+    load()
+  }, [])
+
+  if (favorites.length === 0) {
+    return <div className="text-sm text-gray-600">{t('dashboard.noFavorites', 'No favorite lessons yet')}</div>
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {favorites.map((l) => (
+        <Link key={l.id} href={`/lessons/${l.id}`} className="block rounded-lg border border-gray-200 bg-white p-4 hover:shadow-md transition-shadow">
+          <div className="text-xs text-gray-500 mb-1">{t('dashboard.level', 'Level')} {l.level_id}</div>
+          <div className="font-medium text-gray-900">{l.title}</div>
+        </Link>
+      ))}
+    </div>
+  )
+}
 
 interface LevelWithProgress extends Level {
   progress: {
@@ -63,6 +105,7 @@ export default function DashboardPage() {
   const [badges, setBadges] = useState<Badge[]>([])
   const [levelGroups, setLevelGroups] = useState<LevelGroup[]>([])
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
+  const [showFavorites, setShowFavorites] = useState(false)
   const [overallProgress, setOverallProgress] = useState({
     totalLessons: 0,
     completedLessons: 0,
@@ -200,11 +243,27 @@ export default function DashboardPage() {
 
           {/* Levels Section */}
           <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
-              {t('dashboard.courseLevels', 'Course Levels')}
-            </h2>
-            {/* Level Group Tabs */}
-            {levelGroups.length > 0 && (
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-gray-900">
+                {t('dashboard.courseLevels', 'Course Levels')}
+              </h2>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowFavorites(false)}
+                  className={`px-3 py-1.5 rounded-full text-sm transition-colors ${!showFavorites ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                >
+                  {t('dashboard.levelsTab', 'Levels')}
+                </button>
+                <button
+                  onClick={() => setShowFavorites(true)}
+                  className={`px-3 py-1.5 rounded-full text-sm transition-colors ${showFavorites ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                >
+                  {t('dashboard.favoriteLessons', 'Favorite Lessons')}
+                </button>
+              </div>
+            </div>
+            {/* Level Group Tabs (hidden when showing favorites) */}
+            {!showFavorites && levelGroups.length > 0 && (
               <div className="mb-6">
                 <div className="flex items-center gap-2 overflow-x-auto py-1">
                   {levelGroups.map(g => (
@@ -220,7 +279,8 @@ export default function DashboardPage() {
               </div>
             )}
 
-            {/* Course Cards Grid */}
+            {/* Course Cards Grid OR Favorites */}
+            {!showFavorites ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {levels.map((level, index) => {
                 const translatedLevel = translateLevel(level)
@@ -274,6 +334,9 @@ export default function DashboardPage() {
                 )
               })}
             </div>
+            ) : (
+              <FavoritesList />
+            )}
           </div>
         </div>
       </div>

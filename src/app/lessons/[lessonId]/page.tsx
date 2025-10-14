@@ -58,6 +58,42 @@ export default function LessonPage() {
     }
   }
 
+  // Bookmark helpers (persist per-user in localStorage)
+  const loadBookmarkState = useCallback(async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user || !lesson) return
+      const key = `bookmarkedLessons:${user.id}`
+      const raw = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null
+      if (!raw) {
+        setIsBookmarked(false)
+        return
+      }
+      const ids: number[] = JSON.parse(raw)
+      setIsBookmarked(ids.includes(lesson.id))
+    } catch {
+      /* ignore */
+    }
+  }, [lesson])
+
+  const toggleBookmark = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user || !lesson) return
+    const key = `bookmarkedLessons:${user.id}`
+    const raw = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null
+    const ids: number[] = raw ? JSON.parse(raw) : []
+    const exists = ids.includes(lesson.id)
+    const next = exists ? ids.filter(id => id !== lesson.id) : [...ids, lesson.id]
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(key, JSON.stringify(next))
+    }
+    setIsBookmarked(!exists)
+  }, [lesson])
+
+  useEffect(() => {
+    loadBookmarkState()
+  }, [loadBookmarkState])
+
   const fetchProgress = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser()
@@ -284,7 +320,7 @@ export default function LessonPage() {
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => setIsBookmarked(!isBookmarked)}
+                  onClick={toggleBookmark}
                   className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
                   aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
                 >
