@@ -19,6 +19,7 @@ export default function AccessOverridesPage() {
 
   const [overrides, setOverrides] = useState<any[]>([])
   const userId = searchedUser?.id || null
+  const canEdit = !!userId
 
   // Load groups initially
   useEffect(() => {
@@ -62,8 +63,8 @@ export default function AccessOverridesPage() {
       (payload.lesson_id && o.lesson_id === payload.lesson_id)
     ))
     if (exists) {
-      await supabase.from('access_overrides').delete().eq('id', exists.id)
-      setOverrides(prev => prev.filter(o => o.id !== exists.id))
+      const { error } = await supabase.from('access_overrides').delete().eq('id', exists.id)
+      if (!error) setOverrides(prev => prev.filter(o => o.id !== exists.id))
     } else {
       const { data, error } = await supabase
         .from('access_overrides')
@@ -80,7 +81,7 @@ export default function AccessOverridesPage() {
       const q = query.trim()
       if (!q) return
       // Search by email first, then by id
-      let { data } = await supabase.from('users').select('id,email,role').ilike('email', q)
+      let { data } = await supabase.from('users').select('id,email,role').ilike('email', `%${q}%`)
       if (!data || data.length === 0) {
         const byId = await supabase.from('users').select('id,email,role').eq('id', q)
         data = byId.data || []
@@ -107,6 +108,13 @@ export default function AccessOverridesPage() {
           )}
         </div>
 
+        {/* Tip: require a user before editing */}
+        {!canEdit && (
+          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-md px-4 py-3 mb-4 text-sm">
+            Select a user to enable override checkboxes.
+          </div>
+        )}
+
         {/* Group selection and overrides */}
         <div className="bg-white rounded-lg shadow p-4 mb-6">
           <div className="flex items-center justify-between mb-3">
@@ -120,7 +128,7 @@ export default function AccessOverridesPage() {
           {selectedGroupId && (
             <div className="mt-4">
               <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={hasGroupOverride(selectedGroupId)} onChange={() => toggleOverride({ level_group_id: selectedGroupId })} />
+                <input type="checkbox" checked={hasGroupOverride(selectedGroupId)} onChange={() => toggleOverride({ level_group_id: selectedGroupId })} disabled={!canEdit} title={!canEdit ? 'Select a user first' : undefined} />
                 <span>Unlock entire group for this user</span>
               </label>
             </div>
@@ -132,13 +140,13 @@ export default function AccessOverridesPage() {
           <div className="bg-white rounded-lg shadow p-4 mb-6">
             <h2 className="font-semibold mb-3">Courses in selected group</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {levels.map(l => (
+              {levels.map((l, idx) => (
                 <div key={l.id} className={`border rounded p-3 ${selectedLevelId === l.id ? 'border-indigo-400' : 'border-gray-200'}`}>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium">{l.title}</div>
+                      <div className="font-medium">{idx + 1}. {l.title}</div>
                       <label className="flex items-center gap-2 text-sm mt-1">
-                        <input type="checkbox" checked={hasLevelOverride(l.id)} onChange={() => toggleOverride({ level_id: l.id })} />
+                        <input type="checkbox" checked={hasLevelOverride(l.id)} onChange={() => toggleOverride({ level_id: l.id })} disabled={!canEdit} title={!canEdit ? 'Select a user first' : undefined} />
                         <span>Unlock course</span>
                       </label>
                     </div>
@@ -157,7 +165,7 @@ export default function AccessOverridesPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {lessons.map(ls => (
                 <label key={ls.id} className="border rounded p-3 flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked={hasLessonOverride(ls.id)} onChange={() => toggleOverride({ lesson_id: ls.id })} />
+                  <input type="checkbox" checked={hasLessonOverride(ls.id)} onChange={() => toggleOverride({ lesson_id: ls.id })} disabled={!canEdit} title={!canEdit ? 'Select a user first' : undefined} />
                   <span>{ls.order_index}. {ls.title}</span>
                 </label>
               ))}
@@ -168,5 +176,6 @@ export default function AccessOverridesPage() {
     </div>
   )
 }
+
 
 

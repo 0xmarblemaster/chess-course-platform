@@ -1,0 +1,67 @@
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /home/marblemaster/Desktop/Cursor/package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * /home/marblemaster/Desktop/Cursor/chess-course/package-lock.json
+
+   ▲ Next.js 15.5.4
+   - Local:        http://localhost:3010
+   - Network:      http://192.168.0.13:3010
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1919ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1973ms (779 modules)
+⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
+ GET / 200 in 2811ms
+ ✓ Compiled /favicon.ico in 401ms (485 modules)
+ GET /favicon.ico 200 in 530ms
+⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
+ GET / 200 in 220ms
+ GET /favicon.ico 200 in 19ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 536ms (805 modules)
+ GET /login 200 in 682ms
+ GET /login 200 in 30ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 511ms (804 modules)
+ GET /dashboard 200 in 608ms
+ ✓ Compiled /admin in 354ms (811 modules)
+ GET /admin 200 in 417ms
+ ✓ Compiled /admin/access in 340ms (818 modules)
+ GET /admin/access 200 in 398ms
+⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
+ GET /dashboard 200 in 186ms
+ GET /admin/access 200 in 81ms
+ GET /favicon.ico 200 in 30ms
+ ✓ Compiled in 849ms (815 modules)
+ GET /dashboard 200 in 201ms
+ GET /admin/access 200 in 201ms
+ ✓ Compiled in 373ms (815 modules)
+ GET /dashboard 200 in 144ms
+ GET /admin/access 200 in 145ms
+⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
+ GET /admin/access 200 in 126ms
+ ✓ Compiled /favicon.ico in 213ms (509 modules)
+ GET /favicon.ico 200 in 302ms
+⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
+ GET /dashboard 200 in 226ms
+ GET /favicon.ico 200 in 21ms
+ ○ Compiling /levels/[levelId] ...
+ ✓ Compiled /levels/[levelId] in 758ms (825 modules)
+ GET /levels/37 200 in 1306ms
+⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
+ GET /dashboard 200 in 184ms
+ GET /favicon.ico 200 in 27ms
+ ✓ Compiled in 628ms (817 modules)
+ GET /dashboard 200 in 175ms
+ GET /admin/access 200 in 175ms
+⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
+ GET /admin/access 200 in 132ms
+ ✓ Compiled /favicon.ico in 158ms (509 modules)
+ GET /favicon.ico 200 in 260ms
+ ✓ Compiled in 355ms (834 modules)
+ GET /dashboard 200 in 162ms
+ GET /admin/access 200 in 163ms
