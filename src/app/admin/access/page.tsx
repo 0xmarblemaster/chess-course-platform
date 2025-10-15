@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { getLevelGroups, getLevelsByGroup, getLessonsForLevel, type LevelGroup, type Level, type Lesson } from '@/lib/data'
 
@@ -17,7 +17,7 @@ export default function AccessOverridesPage() {
   const [selectedLevelId, setSelectedLevelId] = useState<number | null>(null)
   const [lessons, setLessons] = useState<Lesson[]>([])
 
-  const [overrides, setOverrides] = useState<any[]>([])
+  const [overrides, setOverrides] = useState<{ id: number; level_group_id: number | null; level_id: number | null; lesson_id: number | null }[]>([])
   const userId = searchedUser?.id || null
   const canEdit = !!userId
 
