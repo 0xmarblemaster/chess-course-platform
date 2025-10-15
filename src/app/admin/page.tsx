@@ -247,6 +247,12 @@ const AdminDashboard = () => {
                   Manage Level Groups
                 </Link>
                 <Link
+                  href="/admin/access"
+                  className="bg-indigo-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-indigo-700 transition-colors"
+                >
+                  Manage Access
+                </Link>
+                <Link
                   href="/dashboard"
                   className="bg-gray-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-gray-700 transition-colors"
                 >
