@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>galshir-icon-sketching</title>
+    <g id="galshir-icon-sketching" stroke="none" fill="none" stroke-width="1">
+        <g id="Group" fill-rule="evenodd" transform="translate(68.5, 61.5) rotate(-135) translate(-68.5, -61.5)translate(58, 24)">
+            <path d="M1.19361602,15.0674788 L8.79840401,2.75496494 C9.37884741,1.81519943 10.6112202,1.5239113 11.5509858,2.10435471 C11.8154722,2.26771397 12.0382367,2.49047853 12.201596,2.75496494 L19.806384,15.0674788 C20.5867064,16.3308579 21,17.7864876 21,19.2714219 L21,58.5147186 C21,62.9329966 17.418278,66.5147186 13,66.5147186 L8,66.5147186 C3.581722,66.5147186 5.95079541e-13,62.9329966 5.95079541e-13,58.5147186 L5.96855898e-13,19.2714219 C5.97744076e-13,17.7864876 0.413293641,16.3308579 1.19361602,15.0674788 Z" id="Rectangle" stroke="#000000" fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="round"></path>
+            <polygon id="Rectangle-2" stroke="#000000" fill="#000000" points="-8.62435123e-13 44.5147186 21 44.5147186 21 52.5147186 1.52498847e-12 52.5147186"></polygon>
+            <path d="M0,19 L1.79865584,20.7815258 C3.11237716,22.0827355 5.14674766,22.3139181 6.71893606,21.3406586 L8.39458154,20.3033543 C9.68460489,19.5047684 11.3153951,19.5047684 12.6054185,20.3033543 L14.2810639,21.3406586 C15.8532523,22.3139181 17.8876228,22.0827355 19.2013442,20.7815258 L21,19 L21,19" id="Path" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"></path>
+            <line x1="7" y1="6" x2="14" y2="6" id="Path" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"></line>
+            <path d="M14.2995508,6.29955079 L6.96446609,6.38730163 L8.82595508,3.03662146 C9.36238145,2.071054 10.579988,1.7231664 11.5455555,2.25959277 C11.8499153,2.42868158 12.1048606,2.67429673 12.2851741,2.97214396 L14.2995508,6.29955079 L14.2995508,6.29955079 Z" id="Path-2" fill="#000000"></path>
+        </g>
+        <path d="M44.4246735,87.3827488 C17.4246735,87.3827488 19,78 44,78" id="Path" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M68,77 C87,77 98,72 81,72" id="Path" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"></path>
+    </g>
+</svg>

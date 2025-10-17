@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+<title>60 Tips for Logo Design | E-Book by Gal Shir</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+<link rel="shortcut icon" href="favicon.svg">
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="60 Tips for Logo Design | E-Book by Gal Shir">
+<meta name="description" content="A practical guide to creating logos that win clients. From first sketch to final presentation, learn how to design logos that sell.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://galshir.com/60">
+<meta property="og:title" content="60 Tips for Logo Design | E-Book by Gal Shir">
+<meta property="og:description" content="A practical guide to creating logos that win clients. From first sketch to final presentation, learn how to design logos that sell.">
+<meta property="og:image" content="https://galshir.com/60/social-preview.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://galshir.com/60">
+<meta property="twitter:title" content="60 Tips for Logo Design | E-Book by Gal Shir">
+<meta property="twitter:description" content="A practical guide to creating logos that win clients. From first sketch to final presentation, learn how to design logos that sell.">
+<meta property="twitter:image" content="https://galshir.com/60/social-preview.png">
+
+<!-- Additional Meta Tags -->
+<meta name="author" content="Gal Shir">
+<meta name="keywords" content="logo design, branding, graphic design, design tips, logo tutorial, brand identity">
+<meta name="theme-color" content="#efece5">
+
+<script src="https://gumroad.com/js/gumroad.js"></script>
+
+<style>
+body {
+  margin:0;
+  color:#181818;
+  text-align: center;
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size:16px;
+  padding-top:100vh;
+  padding-bottom:200px;
+  line-height:1.5;
+}
+body.scrolled {
+  background:#ececec
+}
+* {
+  animation-timing-function: cubic-bezier(1,0,0,1);
+  animation-fill-mode: both;
+  transition: all 1s cubic-bezier(1,0,0,1);
+  box-sizing: border-box;
+}
+a {
+  color:black;
+  text-decoration: none;
+}
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.margin {
+  margin-bottom:240px
+}
+.noise {
+  position: fixed;
+  top:0;
+  width:100%;
+  height:100%;
+  background:url(noise.png);
+  background-size: 170px;
+  z-index: 10;
+  pointer-events: none;
+  opacity:0.05;
+  mix-blend-mode: multiply;
+}
+.scrolled .noise {
+  opacity:0;
+}
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 2/1;
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  gap: 0.5px;
+  z-index: -1;
+  background:rgba(0,0,0,0.15);
+  mix-blend-mode: multiply;
+}
+.scrolled .background {
+  opacity: 0;
+}
+.background > div {
+  background:rgba(255,255,255,0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.background > div > * {
+  box-sizing: content-box;
+  width:80%;
+  border:20px solid white;
+}
+.background:after {
+  display: block;
+  content: '';
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:linear-gradient(to top, white, rgba(255,255,255,0.0));
+}
+.header {
+  position: fixed;
+  z-index:12;
+  top:8px;
+  left:8px;
+  background:white;
+  border:1px solid rgba(0,0,0,0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  width:36px;
+  text-align: left;
+  justify-content: flex-start;
+}
+.header * {
+  flex-shrink: 0;
+}
+.scrolled .header, .header:hover {
+  width:250px;
+}
+.avatar {
+  width:32px;
+  height:32px;
+  border-radius: 50%;
+  margin-right:6px;
+}
+.socials {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  font-size:13px;
+  margin-left:8px;
+}
+.socials a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 200ms;
+  opacity:0.7;
+  padding:0 8px;
+  height:36px;
+  border-left:1px solid rgba(0,0,0,0.1);
+}
+.socials a:hover {
+  background:rgba(0,0,0,0.05);
+  opacity:1
+}
+.socials img {
+  width:20px;
+  filter: brightness(0);
+}
+.hero {
+  width:100vw;
+  height:100vh;
+  flex-direction: column;
+  position: fixed;
+  z-index: 2;
+  top:0;
+  bottom:0;
+  margin-bottom:-100vh;
+  background-size: 170px;
+  transition: all 1s cubic-bezier(1,0,0,1), margin 0s;
+  pointer-events: none;
+}
+.hero > * {
+  position: absolute;
+}
+.book-header {
+  position: absolute;
+  left:0;
+  right:0;
+  text-align: center;
+  margin:0 auto;
+  top:60px;
+  font-size:9px;
+  opacity:0.8;
+  letter-spacing: 1px;
+  opacity:0
+}
+.scrolled .book-header {
+  top:40px;
+  opacity:1
+}
+.book {
+  background:url(book.png?2);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  width:300px;
+  height:auto;
+  background-size: cover;
+  opacity:0;
+  height:400px;
+  position: relative;
+}
+.scrolled .book {
+  opacity:1;
+}
+.new-badge {
+  position: absolute;
+  width: 72px;
+  height: 56px;
+  background: #FF8744;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  color: white;
+  transform: rotate(-10deg);
+  font-size: 14px;
+  right: 0px;
+  top: 80px;
+  z-index: 3;
+  transform:scale(0);
+  transition-delay: 0.5s;
+}
+.new-badge:after {
+  content: '';
+  position: absolute;
+  top:3px;
+  left:3px;
+  width:62px;
+  height:46px;
+  border:2px solid white;
+  border-radius: 100%;
+}
+.scrolled .new-badge {
+  transform:scale(0.8) rotate(-10deg);
+}
+.scrolled .book-title {
+  transform: scale(0.3);
+  opacity:0.9
+}
+.logo {
+  width:300px;
+  height:192px;
+  display: flex;
+  justify-content: space-between;
+}
+.logo > * {
+  mix-blend-mode: multiply;
+}
+.logo .digit {
+  background:#181818;
+  height:100%;
+  width:144px;
+  animation-name:digit-base;
+  animation-duration: 2s;
+  position: relative;
+  overflow: hidden;
+  align-items: baseline;
+}
+.logo .digit.zero, .logo .digit.zero * {
+  animation-delay:250ms
+}
+@keyframes digit-base {
+  0% { width:0px; border-radius: 0px; }
+  30% { width:144px; }
+  100% {border-radius: 48px; }
+}
+.scrolled .digit {
+  opacity:0;
+}
+.logo .hole {
+  animation-name:hole;
+  animation-duration: 2s;
+  background:white;
+  border-radius: 48px;
+  position: absolute;
+  top:6px;
+}
+@keyframes hole {
+  0% { height:0; width:12px;}
+  50% { height:180px; width:12px }
+  100% { height:180px; width:48px }
+}
+.logo .hole.upper {
+  animation-name:upper-hole;
+  animation-duration: 2s;
+  top:6px;
+}
+@keyframes upper-hole {
+  0% { height:0; width:12px;}
+  33% { height:180px; width:12px; border-radius: 24px 24px 24px 24px}
+  66% { height:78px; width:48px;  }
+  100% { height:78px; width:48px; border-radius: 24px 24px 0 24px }
+}
+.logo .hole.lower {
+  animation-name:lower-hole;
+  animation-duration: 2s;
+  top:auto;
+  bottom:6px;
+}
+@keyframes lower-hole {
+  0% { height:0; width:12px;}
+  50% { height:0px; width:12px }
+  100% { height:96px; width:48px }
+}
+.logo .gap {
+  width:0px;
+  height:0;
+  background:white;
+  position: absolute;
+  bottom:108px;
+  right:0;
+  animation-delay: 0.5s;
+  animation-duration: 2s;
+  animation-name:gap;
+}
+@keyframes gap {
+  0% { height:0;}
+  100% { height:36px;width:72px}
+}
+.logo .ball {
+  width:48px;
+  height:48px;
+  background:#181818;
+  border-radius: 50%;
+  position: absolute;
+  right:0;
+  bottom:108px;
+  animation-delay: 0.5s;
+  animation-duration: 2s;
+  animation-name:ball;
+}
+@keyframes ball {
+  0% { bottom:84px; border-radius: 24px 24px 0px 0px; }
+  100% { bottom:120px; border-radius: 24px 24px 24px 24px; }
+}
+.logo .knee {
+  width:48px;
+  height:48px;
+  background:white;
+  position: absolute;
+  bottom:60px;
+  right:0;
+  overflow: hidden;
+}
+.logo .knee-inner {
+  width:96px;
+  height:96px;
+  background:#181818;
+  border-radius: 0 50% 0 0;
+  position: absolute;
+  top:0;
+  right:0;
+  animation-delay: 1s;
+  animation-duration: 2s;
+  animation-name:knee-inner;
+}
+@keyframes knee-inner {
+  0% { border-radius: 0 0 0 0; }
+  100% { border-radius: 0 50% 0 0; }
+}
+.logo-effects {
+  position: absolute;
+  width: 324px;
+  left: -12px;
+  top: -14px;
+  z-index: 10;
+  opacity:0;
+}
+.scrolled .logo-effects {
+  opacity:1;
+}
+h1 {
+  font-family: "Caveat", cursive;
+  font-size: 42px;
+  margin:0;
+  letter-spacing: -1px;
+  height:42px;
+}
+.content {
+  padding:0 64px;
+}
+h2 {
+  font-size:60px;
+  letter-spacing: -2px;
+  line-height:100%;
+  margin:0;
+  margin-bottom:32px;
+  font-weight:600;
+}
+p {
+  max-width:700px;
+  margin:0 auto;
+  opacity:0.7;
+  margin-bottom:16px;
+  font-size: 14px;
+}
+p.subtitle {
+  font-size:22px;
+  margin:0 auto;
+  margin-bottom:32px;
+}
+.train {
+  margin-top:80px;
+  display: flex;
+  overflow: hidden;
+}
+.train img {
+  height:324px;
+  animation-name:train;
+  animation-duration: 60s;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@keyframes train {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+.chapters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 48px;
+  margin:0 auto;
+  max-width:1300px;
+  font-size: 14px;
+}
+.chapter {
+  position: relative;
+}
+.chapter img {
+  opacity:0.8;
+}
+.chapter-title {
+  font-weight: 600;
+  margin-bottom:8px;
+  letter-spacing: 1px;
+}
+.bonus-badge {
+  background: #FF8744;
+    display: inline-block;
+    position: absolute;
+    color: white;
+    font-weight: 600;
+    border-radius: 10px;
+    font-size: 8px;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: fit-content;
+    top: 112px;
+}
+.footer {
+  position: fixed;
+  z-index: 11;
+  bottom:48px;
+  padding:8px 8px 8px 16px;
+  background:white;
+  border-radius: 20px;
+  width:460px;
+  justify-content: space-between;
+  left:0;
+  right:0;
+  margin:0 auto;
+  text-align: left;
+  border:1px solid rgba(0,0,0,0.1);
+  animation-name:footer-in;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  box-shadow: 0 0 128px rgba(0,0,0,0.2);
+}
+@keyframes footer-in {
+  0% { opacity:0; transform: translateY(100px); }
+  100% { opacity:1; transform: translateY(0); }
+}
+.button {
+  background-color:#181818;
+  color:white;
+  height:60px;
+  border-radius: 12px;
+  padding:0 32px;
+  font-size:14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.button:hover {
+  background-color:#282828;
+}
+.price {
+  font-weight: 600;
+}
+.strike-through {
+  text-decoration: line-through;
+  opacity:0.5;
+  font-weight: 400;
+}
+.discount {
+  font-size:10px;
+  background:#D7F2BA;
+  padding:3px 7px;
+  border-radius: 4px;
+  margin-left:2px;
+  position: relative;
+  top: -1.5px;
+  letter-spacing: 1px;
+}
+.timer {
+  color:rgba(0,0,0,0.5);
+  font-size:12px;
+  margin-top:4px;
+  position: relative;
+  padding-left:12px
+}
+.timer:before {
+  content: '';
+  position: absolute;
+  top:5px;
+  left:0;
+  width:8px;
+  height:8px;
+  background:#c5e7a0;
+  border-radius: 100%;
+}
+@media screen and (max-width: 800px) {
+  .background {
+    aspect-ratio: 1/2;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(16, 1fr);
+  }
+  body { padding-top:800px }
+  .hero { height:800px }
+  .header { left:0; right:0; margin:auto; }
+  .content { padding:0 20px; }
+  h2 { font-size:42px; letter-spacing: -1px; line-height:110%; max-width: 370px; margin:0 auto 32px; }
+  p.subtitle { font-size:16px; }
+  .chapters { grid-template-columns: repeat(2, 1fr); grid-gap: 24px;}
+  .margin { margin-bottom:180px }
+  .footer { width: auto; margin: 0 16px; bottom:16px; }
+  .footer .button { margin-left:16px}
+  .discount {display: block; margin-top:5px; margin-left:0; left:-2px; font-size:9px}
+  .timer {margin-top:3px; font-size:10px}
+}
+
+</style>
+
+</head><body>
+
+<div class="background"></div>
+
+<div class="header flex">
+  <a href="https://www.chessempire.kz/" class="flex">
+    <img class="avatar" src="chess-empire-logo.svg" />
+    <div class="header-text-name">Chess Empire</div>
+  </a>
+  <div class="socials">
+    <a href="https://www.instagram.com/chessempire.kz/" target="_blank"><img src="https://galshir.com/studio-img/i-instagram.png" style="margin-right:2px">5.6k</a>
+    <a href="https://api.whatsapp.com/send/?phone=77077872210&text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%0A%0A%D0%9F%D0%B8%D1%88%D1%83+%D0%B8%D0%B7+%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F+2%D0%93%D0%98%D0%A1.%0A%0A&type=phone_number&app_absent=0" target="_blank"><img src="whatsapp-icon.png" style="margin-right:2px"></a>
+  </div>
+</div>
+
+<div class="hero flex">
+  <div class="book">
+    <div class="book-header">CHESS EMPIRE</div>
+    <div class="new-badge">NEW</div>
+  </div>
+
+  <div class="book-title">
+    <div class="logo">
+      <div class="digit six flex">
+        <div class="hole upper"></div>
+        <div class="hole lower"></div>
+        <div class="gap"></div>
+        <div class="ball"></div>
+        <div class="knee">
+          <div class="knee-inner"></div>
+        </div>
+      </div>
+      <div class="digit zero flex">
+        <div class="hole"></div>
+      </div>
+      <img src="galshir-60.svg" class="logo-effects" />
+    </div>
+    <h1>Шагов до 4 разряда</h1>
+  </div>
+</div>
+
+<div class="noise"></div>
+
+
+<div class="content">
+  <h2>Присоединяйся к Шахматной Империи</h2>
+  <p class="subtitle"><b>60 Шагов до 4 разряда</b> это интерактивный онлайн курс в которым вы шаг за шагом пройдете путь от базовых правил, до продвинутых тактический приемов. В конце путешествия вас ждет лайв турнир на 4 разряд, для закрепления знаний на всю оставшуюся жизнь.</p>
+  <div class="chapters">
+    <div class="chapter">
+      <img src="icons/galshir-icon-preparing.svg" />
+      <div class="chapter-title">PREPARING</div>
+      <p class="chapter-content">Understanding the purpose of a logo to set yourself for success</p>
+    </div>
+    <div class="chapter">
+      <img src="icons/galshir-icon-researching.svg" />
+      <div class="chapter-title">RESEARCHING</div>
+      <p class="chapter-content">Learning the right stuff about the brand to ensure a successful process</p>
+    </div>
+    <div class="chapter">
+      <img src="icons/galshir-icon-sketching.svg" />
+      <div class="chapter-title">SKETCHING</div>
+      <p class="chapter-content">Coming up with ideas and finding relevant concepts and associations</p>
+    </div>
+    <div class="chapter">
+      <img src="icons/galshir-icon-polishing.svg" />
+      <div class="chapter-title">POLISHING</div>
+      <p class="chapter-content">Cleaning, simplifying, and polishing a sketch to a pixel-perfect logo</p>
+    </div>
+    <div class="chapter">
+      <img src="icons/galshir-icon-characterizing.svg" />
+      <div class="chapter-title">CHARACTERIZING</div>
+      <p class="chapter-content">Matching the right colors, shapes, and weights to add personality to the logo</p>
+    </div>
+    <div class="chapter">
+      <img src="icons/galshir-icon-lettering.svg" />
+      <div class="bonus-badge">BONUS</div>
+      <div class="chapter-title">LETTERING</div>
+      <p class="chapter-content">Choosing and customizing a wordmark that matches the logo and the brand</p>
+    </div>
+    <div class="chapter">
+      <img src="icons/galshir-icon-testing.svg" />
+      <div class="chapter-title">TESTING</div>
+      <p class="chapter-content">Making sure everything looks neat in all contexts and sizes</p>
+    </div>
+    <div class="chapter">
+      <img src="icons/galshir-icon-presenting.svg" />
+      <div class="chapter-title">PRESENTING</div>
+      <p class="chapter-content">Showcasing the logo in all its glory in a way clients can't reject</p>
+    </div>
+  </div>
+</div>
+
+<div class="margin"></div>
+
+
+<div class="content">
+  <h2>Make an impact</h2>
+  <p class="subtitle">Design logos that not only look great, but also hold real value for the companies behind them.</p>
+</div>
+
+<div class="train">
+  <img src="galshir-logos-train.webp" /><img src="galshir-logos-train.webp" />
+</div>
+
+<div class="margin"></div>
+
+<div class="content">
+  <img style="width:120px; height:120px; margin-bottom:24px; border-radius: 100%;" src="galshir-photo.jpg">
+  <p class="subtitle">Gal Shir is a brand design specialist creating logos since 2010</p>
+  <p>Slow-cooked over a year, this book is a culmination of everything I've learned about logo design through my 15-year career. It's a hands-on guide created to help you become a succesfull logo designer and make a living doing a fulfilling and meaningful work.</p>
+  <p>In this book, you'll find step-by-step instructions, clear explanations, and plenty of examples. Whether you're just starting out or looking to sharpen your craft, this book will inspire, motivate, and provide you with everything you need to take your logo design skills to the next level.</p>
+  <img src="heart.png?2" style="width:60px; margin-top:24px" />
+</div>
+
+<div class="footer flex">
+  <div class="info">
+    <div class="price">
+      <span class="strike-through">$60</span>
+      <span class="price">$29</span>
+      <span class="discount">50% LAUNCH DISCOUNT</span>
+    </div>
+    <div class="timer">
+      8 days and 12 hours left
+    </div>
+  </div>
+  <a class="button tracked-button" href="https://galshir.gumroad.com/l/60?wanted=true">DOWNLOAD</a>
+</div>
+
+<script>
+
+referral = "";
+if ( referral != "" ) {
+  localStorage.setItem('referral', referral);
+} else {
+  referral = localStorage.getItem('referral');
+}
+
+if ( localStorage.getItem('referral') != null ) {
+  $('.tracked-button').each(function() {
+    href = $(this).attr('href');
+    $(this).attr('href', href+"&ref="+referral);
+  });
+}
+
+const text = document.querySelector('h1');
+const originalText = text.textContent;
+text.innerHTML = originalText.split('').map(char =>
+  `<span style="opacity: 0">${char}</span>`
+).join('');
+
+const chars = text.querySelectorAll('span');
+let charIndex = 0;
+
+function fadeInNextChar() {
+  if (charIndex < chars.length) {
+    chars[charIndex].style.transition = 'opacity 0.3s';
+    chars[charIndex].style.opacity = '1';
+    charIndex++;
+    setTimeout(fadeInNextChar, 30);
+  }
+}
+
+setTimeout(fadeInNextChar, 1000);
+
+let lastScrollY = window.scrollY;
+let ticking = false;
+
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      // Add/remove scrolled class
+      if (window.scrollY > 0) {
+        document.body.classList.add('scrolled');
+      } else {
+        document.body.classList.remove('scrolled');
+      }
+
+      // Calculate hero movement
+      const hero = document.querySelector('.hero');
+      hero.style.transition = 'none'; // Set transition to none
+      const scrollThreshold = window.innerHeight/2 - 280;
+
+      if (window.scrollY > scrollThreshold) {
+        // Use transform instead of margin for better performance
+        const offset = window.scrollY - scrollThreshold;
+        hero.style.transform = `translateY(-${offset}px)`;
+      } else {
+        hero.style.transform = 'translateY(0)';
+      }
+
+      lastScrollY = window.scrollY;
+      ticking = false;
+    });
+
+    ticking = true;
+  }
+});
+
+// Get background grid and create cells
+const backgroundGrid = document.querySelector('.background');
+const cells = Array.from({length: 128}, () => {
+  const div = document.createElement('div');
+  backgroundGrid.appendChild(div);
+  return div;
+});
+
+// Create array of random unique positions for sketches, excluding first position (0)
+const positions = Array.from({length: 127}, (_, i) => i + 1) // Start from index 1
+  .sort(() => Math.random() - 0.5)
+  .slice(0, 30);
+
+// Track visible and hidden sketches, and recently shown sketches
+let visibleSketches = [];
+let hiddenSketches = [];
+let recentlyShown = new Set();
+
+// Add sketches to random positions
+positions.forEach((position, i) => {
+  const img = document.createElement('img');
+  img.src = "logo-sketches/" + (i + 1) + ".png";
+  img.style.objectFit = 'contain';
+  img.style.opacity = i < 20 ? '1' : '0';
+  img.style.transition = 'opacity 0.5s';
+  cells[position].appendChild(img);
+
+  if (i < 20) {
+    visibleSketches.push(img);
+  } else {
+    hiddenSketches.push(img);
+  }
+});
+
+let intervalCount = 0;
+
+// Swap visibility of sketches every 500ms
+setInterval(() => {
+  if (visibleSketches.length && hiddenSketches.length) {
+    // Filter out recently shown sketches from visible ones
+    const availableVisible = visibleSketches.filter(sketch => !recentlyShown.has(sketch));
+
+    if (availableVisible.length === 0) return;
+
+    const randomVisible = Math.floor(Math.random() * availableVisible.length);
+    const randomHidden = Math.floor(Math.random() * hiddenSketches.length);
+
+    const toHide = availableVisible[randomVisible];
+    const toShow = hiddenSketches[randomHidden];
+
+    toHide.style.opacity = '0';
+    toShow.style.opacity = '1';
+
+    // Remove from their current arrays
+    visibleSketches = visibleSketches.filter(sketch => sketch !== toHide);
+    hiddenSketches = hiddenSketches.filter(sketch => sketch !== toShow);
+
+    // Add to their new arrays
+    visibleSketches.push(toShow);
+    hiddenSketches.push(toHide);
+
+    // Add newly shown sketch to recently shown set
+    recentlyShown.add(toShow);
+
+    // Remove from recently shown after 6 intervals
+    setTimeout(() => {
+      recentlyShown.delete(toShow);
+    }, 3000); // 6 intervals * 500ms = 3000ms
+  }
+}, 500);
+
+
+
+// Countdown timer to September 1st
+function updateTimer() {
+  const targetDate = new Date('2025-10-30T00:00:00');
+  const now = new Date();
+  const diff = targetDate - now;
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  const timerElements = document.querySelectorAll('.timer');
+  const timerText = days + " days and " + hours + " hours left";
+
+  timerElements.forEach(timer => {
+    timer.textContent = timerText;
+  });
+}
+
+// Update timer immediately and every minute
+updateTimer();
+setInterval(updateTimer, 60000);
+
+
+// Fade in content elements and chapters when they enter viewport
+const contentElements = document.querySelectorAll('.content > *, .chapter');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      let index;
+      let parentElement = entry.target.parentElement;
+
+      if (entry.target.classList.contains('chapter')) {
+        index = Array.from(parentElement.children).indexOf(entry.target);
+      } else {
+        index = Array.from(parentElement.children).indexOf(entry.target);
+      }
+
+      const delay = index * 200; // 200ms delay between each element
+
+      entry.target.style.opacity = '0';
+      entry.target.style.transform = 'translateY(40px)';
+      entry.target.style.transitionTimingFunction = 'ease-out';
+
+      // Trigger fade in animation with delay
+      setTimeout(() => {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        entry.target.style.transition = 'opacity 1s, transform 1s';
+      }, 100 + delay);
+
+      // Unobserve after animation
+      observer.unobserve(entry.target);
+    }
+  });
+}, {
+  threshold: 0.1
+});
+
+contentElements.forEach(element => {
+  element.style.opacity = '0';
+  observer.observe(element);
+});
+
+
+
+function random(min,max) {
+	return Math.floor(Math.random() * (max + 1 - min) + min);
+}
+
+
+</script>
+
+
+</body>
+</html>

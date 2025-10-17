@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="100" fill="#6B2940"/>
+  <g transform="translate(100, 100)">
+    <!-- CHESS text (top arc) -->
+    <text x="0" y="-55" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#D4C5A9" text-anchor="middle" letter-spacing="4">CHESS</text>
+
+    <!-- King piece -->
+    <g transform="translate(0, -15)">
+      <!-- Crown -->
+      <circle cx="-8" cy="-20" r="2" fill="#D4C5A9"/>
+      <circle cx="8" cy="-20" r="2" fill="#D4C5A9"/>
+      <circle cx="0" cy="-23" r="2.5" fill="#D4C5A9"/>
+      <rect x="-10" y="-18" width="20" height="3" fill="#D4C5A9"/>
+
+      <!-- Head -->
+      <rect x="-8" y="-15" width="16" height="8" rx="2" fill="#D4C5A9"/>
+
+      <!-- Neck -->
+      <rect x="-6" y="-7" width="12" height="4" fill="#D4C5A9"/>
+
+      <!-- Body -->
+      <path d="M -12,-3 L -8,-3 L -10,10 L -14,12 L 14,12 L 10,10 L 8,-3 L 12,-3 L 12,0 L -12,0 Z" fill="#D4C5A9"/>
+
+      <!-- Base lines -->
+      <rect x="-14" y="12" width="28" height="2" fill="#D4C5A9"/>
+      <rect x="-16" y="14" width="32" height="2" fill="#D4C5A9"/>
+    </g>
+
+    <!-- Dots -->
+    <circle cx="-35" cy="0" r="3" fill="#D4C5A9"/>
+    <circle cx="35" cy="0" r="3" fill="#D4C5A9"/>
+
+    <!-- EMPIRE text (bottom arc) -->
+    <text x="0" y="58" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#D4C5A9" text-anchor="middle" letter-spacing="4">EMPIRE</text>
+  </g>
+</svg>

@@ -11,60 +11,75 @@
    - Environments: .env.local
 
  ✓ Starting...
- ✓ Ready in 1919ms
+ ✓ Ready in 1900ms
  ○ Compiling / ...
- ✓ Compiled / in 1973ms (779 modules)
+ ✓ Compiled / in 1635ms (765 modules)
 ⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
- GET / 200 in 2811ms
- ✓ Compiled /favicon.ico in 401ms (485 modules)
- GET /favicon.ico 200 in 530ms
+ GET / 200 in 2233ms
+
+[2m[83.71ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.07ms][22m  [2m ↳ [22mQuick bail check
+[2m[25.28ms][22m  [2m ↳ [22mSetup compiler
+[2m[ 0.76ms][22m    [2m ↳ [22mPostCSS AST -> Tailwind CSS AST
+[2m[24.50ms][22m    [2m ↳ [22mCreate compiler
+[2m[ 0.11ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 0.90ms][22m  [2m ↳ [22mSetup scanner
+[2m[ 5.20ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 5.30ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[33.61ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 7.35ms][22m  [2m ↳ [22mTransform Tailwind CSS AST into PostCSS AST
+[2m[ 5.45ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1053ms (784 modules)
+ GET / 200 in 174ms
+ GET /landin 404 in 1269ms
+ GET /landing 404 in 35ms
+ GET /landing 404 in 64ms
+ GET / 200 in 26ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 736ms (777 modules)
+ GET /admin 200 in 850ms
+ GET /admin 200 in 19ms
+
+[2m[17.50ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.07ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.09ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 4.52ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 3.34ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 0.58ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 8.66ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 349ms (313 modules)
+ GET /admin 200 in 46ms
+
+[2m[47.16ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.01ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.08ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 5.12ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 3.92ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[18.58ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 8.69ms][22m  [2m ↳ [22mTransform Tailwind CSS AST into PostCSS AST
+[2m[10.55ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 186ms (313 modules)
+
+[2m[9.74ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[0.03ms][22m  [2m ↳ [22mQuick bail check
+[2m[0.03ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[2.47ms][22m  [2m ↳ [22mScan for candidates
+[2m[1.93ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[0.25ms][22m  [2m ↳ [22mBuild utilities
+[2m[4.97ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ GET /admin 200 in 130ms
+ ✓ Compiled in 521ms (772 modules)
+ GET /admin 200 in 454ms
+ GET /admin 200 in 20ms
+ ✓ Compiled /landing in 261ms (779 modules)
+ HEAD /landing 200 in 424ms
 ⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
- GET / 200 in 220ms
- GET /favicon.ico 200 in 19ms
- ○ Compiling /login ...
- ✓ Compiled /login in 536ms (805 modules)
- GET /login 200 in 682ms
- GET /login 200 in 30ms
- ○ Compiling /dashboard ...
- ✓ Compiled /dashboard in 511ms (804 modules)
- GET /dashboard 200 in 608ms
- ✓ Compiled /admin in 354ms (811 modules)
- GET /admin 200 in 417ms
- ✓ Compiled /admin/access in 340ms (818 modules)
- GET /admin/access 200 in 398ms
-⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
- GET /dashboard 200 in 186ms
- GET /admin/access 200 in 81ms
- GET /favicon.ico 200 in 30ms
- ✓ Compiled in 849ms (815 modules)
- GET /dashboard 200 in 201ms
- GET /admin/access 200 in 201ms
- ✓ Compiled in 373ms (815 modules)
- GET /dashboard 200 in 144ms
- GET /admin/access 200 in 145ms
-⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
- GET /admin/access 200 in 126ms
- ✓ Compiled /favicon.ico in 213ms (509 modules)
- GET /favicon.ico 200 in 302ms
-⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
- GET /dashboard 200 in 226ms
- GET /favicon.ico 200 in 21ms
- ○ Compiling /levels/[levelId] ...
- ✓ Compiled /levels/[levelId] in 758ms (825 modules)
- GET /levels/37 200 in 1306ms
-⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
- GET /dashboard 200 in 184ms
- GET /favicon.ico 200 in 27ms
- ✓ Compiled in 628ms (817 modules)
- GET /dashboard 200 in 175ms
- GET /admin/access 200 in 175ms
-⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
- GET /admin/access 200 in 132ms
- ✓ Compiled /favicon.ico in 158ms (509 modules)
- GET /favicon.ico 200 in 260ms
- ✓ Compiled in 355ms (834 modules)
- GET /dashboard 200 in 162ms
- GET /admin/access 200 in 163ms
- ✓ Compiled in 696ms (817 modules)
- ✓ Compiled in 380ms (817 modules)
- ✓ Compiled in 426ms (817 modules)
+ GET /admin 200 in 142ms
+ ✓ Compiled /favicon.ico in 367ms (495 modules)
+ GET /favicon.ico 200 in 483ms
+ GET /landing 200 in 140ms

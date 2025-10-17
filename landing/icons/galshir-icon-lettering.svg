@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>galshir-icon-lettering</title>
+    <g id="galshir-icon-lettering" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <path d="M70.4,42 L90,90 L75.2,90 L70,79 L58,79 L52.8,90 L38,90 L57.6,42 L70.4,42 Z M63.6488766,60.9116721 C63.3784532,61.0130808 63.1650796,61.2264545 63.0636708,61.4968778 L61.5066713,65.6488766 C61.3127512,66.1659969 61.5747567,66.7424091 62.091877,66.9363292 C62.2041541,66.9784331 62.3230885,67 62.4430005,67 L65.5569995,67 C66.1092843,67 66.5569995,66.5522847 66.5569995,66 C66.5569995,65.880088 66.5354326,65.7611536 66.4933287,65.6488766 L64.9363292,61.4968778 C64.7424091,60.9797575 64.1659969,60.7177519 63.6488766,60.9116721 Z" id="Combined-Shape" stroke="#000000" fill="#000000"></path>
+        <circle id="Oval-2" stroke="#000000" fill="#FFFFFF" transform="translate(71.0294, 42.6569) rotate(-45) translate(-71.0294, -42.6569)" cx="71.0294373" cy="42.6568542" r="2"></circle>
+        <circle id="Oval-2" stroke="#000000" fill="#FFFFFF" transform="translate(57.0294, 42.6569) rotate(-45) translate(-57.0294, -42.6569)" cx="57.0294373" cy="42.6568542" r="2"></circle>
+        <circle id="Oval-2" stroke="#000000" fill="#FFFFFF" transform="translate(39.0294, 89.6569) rotate(-45) translate(-39.0294, -89.6569)" cx="39.0294373" cy="89.6568542" r="2"></circle>
+        <circle id="Oval-2" stroke="#000000" fill="#FFFFFF" transform="translate(53.0294, 89.6569) rotate(-45) translate(-53.0294, -89.6569)" cx="53.0294373" cy="89.6568542" r="2"></circle>
+        <circle id="Oval-2" stroke="#000000" fill="#FFFFFF" transform="translate(76.0294, 89.6569) rotate(-45) translate(-76.0294, -89.6569)" cx="76.0294373" cy="89.6568542" r="2"></circle>
+        <circle id="Oval-2" stroke="#000000" fill="#FFFFFF" transform="translate(90.0294, 89.6569) rotate(-45) translate(-90.0294, -89.6569)" cx="90.0294373" cy="89.6568542" r="2"></circle>
+        <circle id="Oval-2" stroke="#000000" fill="#FFFFFF" transform="translate(58.0294, 78.6569) rotate(-45) translate(-58.0294, -78.6569)" cx="58.0294373" cy="78.6568542" r="2"></circle>
+        <circle id="Oval-2" stroke="#000000" fill="#FFFFFF" transform="translate(70.0294, 78.6569) rotate(-45) translate(-70.0294, -78.6569)" cx="70.0294373" cy="78.6568542" r="2"></circle>
+    </g>
+</svg>

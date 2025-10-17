@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>galshir-icon-polishing</title>
+    <g id="galshir-icon-polishing" stroke="none" fill="none" stroke-width="1">
+        <circle id="Oval-2" stroke="#000000" fill="#FFFFFF" fill-rule="evenodd" transform="translate(45.0294, 84.6569) rotate(-45) translate(-45.0294, -84.6569)" cx="45.0294373" cy="84.6568542" r="4"></circle>
+        <rect id="Rectangle-2" stroke="#000000" fill="#FFFFFF" fill-rule="evenodd" x="26" y="83" width="4" height="4" rx="1"></rect>
+        <rect id="Rectangle-2" stroke="#000000" fill="#FFFFFF" fill-rule="evenodd" x="84" y="83" width="4" height="4" rx="1"></rect>
+        <g id="Group" fill-rule="evenodd" transform="translate(63, 66) rotate(-135) translate(-63, -66)translate(48, 37)" stroke="#000000">
+            <path d="M6,50 L0.286309944,34.7634932 C0.102770731,34.2740553 0.118141924,33.7322116 0.329132696,33.2539659 L13.1701644,4.14762737 C13.6160131,3.13703707 14.7966901,2.67922352 15.8072804,3.12507218 C16.263742,3.32645229 16.6284555,3.69116578 16.8298356,4.14762737 L29.6708673,33.2539659 C29.8818581,33.7322116 29.8972293,34.2740553 29.7136901,34.7634932 L24,50 L24,50" id="Path" fill="#FFFFFF"></path>
+            <rect id="Rectangle" fill="#000000" x="2" y="50" width="26" height="8" rx="4"></rect>
+            <rect id="Rectangle" fill="#000000" x="11" y="29" width="8" height="8" rx="4"></rect>
+            <line x1="15" y1="3" x2="15" y2="29" id="Path"></line>
+        </g>
+        <line x1="49.0237763" y1="85" x2="84" y2="85" id="Path" stroke="#000000"></line>
+        <line x1="30.0237763" y1="85" x2="41" y2="85" id="Path" stroke="#000000"></line>
+    </g>
+</svg>

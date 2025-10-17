@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>galshir-icon-preparing</title>
+    <g id="galshir-icon-preparing" stroke="none" fill="none">
+        <path d="M60,57 L53,57 C48.581722,57 45,60.581722 45,65 L45,72 L45,72 L39,80 L34.2690748,78.4230249 C32.5697084,77.8565695 30.7328969,78.7749753 30.1664414,80.4743416 C30.0562015,80.8050614 30,81.1513908 30,81.5 L30,82.5 C30,84.4329966 31.5670034,86 33.5,86 L35.1114562,86 C36.3534169,86 37.5783215,85.7108393 38.6891649,85.1554175 L48.5777088,80.2111456 C51.287981,78.8560095 53,76.0859046 53,73.0557281 L53,67 L53,67 L53,84" id="Path" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" stroke-linejoin="round"></path>
+        <rect id="Rectangle-2" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" stroke-linejoin="round" x="39" y="84" width="50" height="8" rx="4"></rect>
+        <path d="M57,84 L85,84 C87.209139,84 89,85.790861 89,88 C89,90.209139 87.209139,92 85,92 L57,92 L57,92 L57,84 Z" id="Rectangle-2" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" stroke-linejoin="round"></path>
+        <path d="M98,57 L91,57 C86.581722,57 83,60.581722 83,65 L83,72 L83,72 L77,80 L72.2690748,78.4230249 C70.5697084,77.8565695 68.7328969,78.7749753 68.1664414,80.4743416 C68.0562015,80.8050614 68,81.1513908 68,81.5 L68,82.5 C68,84.4329966 69.5670034,86 71.5,86 L72.9043913,86 C74.2782862,86 75.6290281,85.6461717 76.8264812,84.9726043 L86.9220899,79.2938244 C89.4411058,77.876878 91,75.2114066 91,72.3212201 L91,67 L91,67 L91,84" id="Path" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" stroke-linejoin="round" transform="translate(83, 71.5) scale(-1, 1) translate(-83, -71.5)"></path>
+        <line x1="53" y1="72" x2="45" y2="72" id="Path" stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></line>
+        <line x1="75" y1="72" x2="83" y2="72" id="Path" stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></line>
+        <path d="M51,84 L57,84 L57,84 L57,88 L51,88 C49.8954305,88 49,87.1045695 49,86 C49,84.8954305 49.8954305,84 51,84 Z" id="Rectangle-3" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd"></path>
+        <path d="M60,57 L52.5,57 C48.3578644,57 45,60.3578644 45,64.5 L45,72 L45,72 L53,72 L53,84 L75,84 L75,72 L83,72 L83,65 C83,60.581722 79.418278,57 75,57 L60,57 Z" id="Path" fill="#000000" fill-rule="evenodd"></path>
+        <path d="M60,53 L60,59 C60,61.209139 61.790861,63 64,63 C66.209139,63 68,61.209139 68,59 L68,53 L68,53" id="Path" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" stroke-linejoin="round"></path>
+        <rect id="Rectangle" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" stroke-linejoin="round" x="56" y="31" width="16" height="23" rx="8"></rect>
+        <line x1="58" y1="44" x2="61" y2="44" id="Path" stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></line>
+        <line x1="67" y1="44" x2="70" y2="44" id="Path" stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></line>
+        <line x1="62" y1="49" x2="66" y2="49" id="Path" stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></line>
+        <path d="M64,31 C68.418278,31 72,34.581722 72,39 L72,41.7878758 L72,41.7878758 L67,36 L66.4,36.8 C64.8891649,38.8144467 62.5180584,40 60,40 L56,40 L56,40 L56,39 C56,34.581722 59.581722,31 64,31 Z" id="Path" fill="#000000" fill-rule="evenodd"></path>
+    </g>
+</svg>
