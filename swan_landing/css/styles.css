@@ -107,6 +107,15 @@ a {
     line-height: 1.6;
 }
 
+/* White Panel Container */
+.white-panel {
+    background-color: #fff;
+    border-radius: 32px;
+    padding: 96px 48px;
+    box-shadow: rgba(9, 13, 3, 0.05) 0px 1px 2px 0px;
+    animation: fadeInUp 0.8s ease-out;
+}
+
 /* ============================================
    BUTTONS
    ============================================ */
@@ -219,9 +228,13 @@ button {
    ============================================ */
 
 .hero {
-    padding: 120px 0;
+    padding: 40px 0 120px;
     text-align: center;
     animation: fadeIn 1s ease-out;
+}
+
+.hero .white-panel {
+    text-align: center;
 }
 
 .hero-badge {
@@ -305,7 +318,11 @@ button {
    ============================================ */
 
 .video-section {
-    padding: 80px 0;
+    padding: 0 0 80px;
+}
+
+.video-section .white-panel {
+    padding: 96px 24px;
 }
 
 .video-placeholder {
@@ -936,6 +953,11 @@ button {
     .footer-left {
         align-items: center;
     }
+
+    .white-panel {
+        padding: 48px 24px;
+        border-radius: 24px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -959,6 +981,11 @@ button {
 
     .pricing-card {
         padding: 32px 24px;
+    }
+
+    .white-panel {
+        padding: 32px 16px;
+        border-radius: 20px;
     }
 }
 
