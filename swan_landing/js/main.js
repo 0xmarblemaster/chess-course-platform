@@ -302,58 +302,10 @@ pulseStyle.textContent = `
 document.head.appendChild(pulseStyle);
 
 // ============================================
-// MOUSE TRAIL EFFECT (SUBTLE)
+// CUSTOM CURSOR REMOVED
 // ============================================
-
-let mouseX = 0;
-let mouseY = 0;
-let cursorDot = null;
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Create cursor dot
-    cursorDot = document.createElement('div');
-    cursorDot.style.cssText = `
-        position: fixed;
-        width: 8px;
-        height: 8px;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        transition: transform 0.2s ease;
-        display: none;
-    `;
-    document.body.appendChild(cursorDot);
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-
-        if (cursorDot) {
-            cursorDot.style.left = mouseX - 4 + 'px';
-            cursorDot.style.top = mouseY - 4 + 'px';
-        }
-    });
-
-    // Show cursor dot on hover over interactive elements
-    const interactiveElements = document.querySelectorAll('button, a, .feature-card, .testimonial-card');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            if (cursorDot) {
-                cursorDot.style.display = 'block';
-                cursorDot.style.transform = 'scale(2)';
-            }
-        });
-        el.addEventListener('mouseleave', () => {
-            if (cursorDot) {
-                cursorDot.style.transform = 'scale(1)';
-                setTimeout(() => {
-                    if (cursorDot) cursorDot.style.display = 'none';
-                }, 200);
-            }
-        });
-    });
-});
+// The original Swan site does not use a custom cursor effect.
+// Standard browser cursor behavior is maintained for better UX.
 
 // ============================================
 // PERFORMANCE OPTIMIZATION

@@ -204,10 +204,13 @@ button {
     font-size: 15px;
     font-weight: 500;
     color: #444;
-    transition: color 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-link:hover {
+    background-color: #f1f1f4;
     color: #000;
 }
 
@@ -780,13 +783,14 @@ button {
 }
 
 .footer-links a {
-    color: #999;
+    color: #c9c9d2;
     font-size: 14px;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
 }
 
 .footer-links a:hover {
     color: #fff;
+    text-decoration: underline;
 }
 
 .footer-right {
@@ -795,13 +799,14 @@ button {
 }
 
 .footer-social, .footer-email {
-    color: #999;
+    color: #c9c9d2;
     font-size: 14px;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
 }
 
 .footer-social:hover, .footer-email:hover {
     color: #fff;
+    text-decoration: underline;
 }
 
 /* ============================================
