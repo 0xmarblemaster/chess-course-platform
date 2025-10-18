@@ -68,3 +68,15 @@ export interface Badge {
   badge_url: string
   earned_at: string
 }
+
+// Per-user access overrides for early unlocks
+export interface AccessOverride {
+  id: number
+  user_id: string
+  level_group_id?: number | null
+  level_id?: number | null
+  lesson_id?: number | null
+  note?: string | null
+  created_by?: string | null
+  created_at: string
+}
