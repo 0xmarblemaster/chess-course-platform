@@ -986,3 +986,13 @@
 [2m[ 5.78ms][22m  [2m ↳ [22mUpdate PostCSS AST
 
  ✓ Compiled in 214ms (311 modules)
+
+[2m[14.98ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.01ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.04ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 3.96ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 3.94ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 0.24ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 6.69ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 227ms (311 modules)
