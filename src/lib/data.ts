@@ -1,4 +1,4 @@
-import { supabase, type Level, type Lesson, type Progress, type Badge, type LevelGroup } from './supabaseClient'
+import { supabase, type Level, type Lesson, type Progress, type Badge, type LevelGroup, type AccessOverride } from './supabaseClient'
 
 // Re-export types for convenience
 export type { Level, Lesson, Progress, Badge, LevelGroup }
@@ -237,7 +237,7 @@ export async function getDashboardData(userId: string, groupId?: number): Promis
     
     // Make all API calls in parallel
     // Load all levels; we'll filter by group locally to avoid extra network churn
-    const [levels, badges, userProgress, lessonsData] = await Promise.all([
+    const [levels, badges, userProgress, lessonsData, overrides] = await Promise.all([
       getLevels(),
       getUserBadges(userId),
       getUserProgress(userId),
@@ -249,6 +249,14 @@ export async function getDashboardData(userId: string, groupId?: number): Promis
         .then(({ data, error }) => {
           if (error) throw error
           return data || []
+        }),
+      supabase
+        .from('access_overrides')
+        .select('*')
+        .eq('user_id', userId)
+        .then(({ data, error }) => {
+          if (error) return [] as AccessOverride[]
+          return (data as AccessOverride[]) || []
         })
     ])
 
@@ -270,7 +278,7 @@ export async function getDashboardData(userId: string, groupId?: number): Promis
         progressPercentage: levelLessons.length > 0 ? (levelCompletedLessons / levelLessons.length) * 100 : 0
       }
 
-      // Check if previous level is completed (for unlocking logic)
+      // Check if previous level is completed (for unlocking logic) or admin override
       let isUnlocked = true
       if (index === 0) {
         isUnlocked = true
@@ -282,6 +290,10 @@ export async function getDashboardData(userId: string, groupId?: number): Promis
         ).length
         isUnlocked = prevLevelLessons.length === 0 || prevCompleted === prevLevelLessons.length
       }
+
+      // Override-based unlocks
+      const levelOverride = overrides.find((o: AccessOverride) => o.level_id === level.id || o.level_group_id === level.level_group_id)
+      if (levelOverride) isUnlocked = true
 
       return {
         ...level,
