@@ -487,3 +487,29 @@
 [2m[ 3.16ms][22m  [2m ↳ [22mUpdate PostCSS AST
 
  ✓ Compiled in 479ms (772 modules)
+ ⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+   ▲ Next.js 15.5.4
+   - Local:        http://localhost:3010
+   - Network:      http://192.168.0.13:3010
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1895ms
+ ○ Compiling /_not-found ...
+
+[2m[88.64ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.07ms][22m  [2m ↳ [22mQuick bail check
+[2m[29.33ms][22m  [2m ↳ [22mSetup compiler
+[2m[ 0.55ms][22m    [2m ↳ [22mPostCSS AST -> Tailwind CSS AST
+[2m[28.76ms][22m    [2m ↳ [22mCreate compiler
+[2m[ 0.13ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 3.53ms][22m  [2m ↳ [22mSetup scanner
+[2m[ 6.62ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 5.46ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[30.21ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 7.17ms][22m  [2m ↳ [22mTransform Tailwind CSS AST into PostCSS AST
+[2m[ 5.50ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled /_not-found in 1920ms (777 modules)
+ GET /landing/galshir-logos-train.webp 404 in 2261ms
+ GET /landing/whatsapp-official.svg 404 in 2433ms
