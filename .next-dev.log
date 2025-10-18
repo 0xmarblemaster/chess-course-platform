@@ -513,3 +513,115 @@
  ✓ Compiled /_not-found in 1920ms (777 modules)
  GET /landing/galshir-logos-train.webp 404 in 2261ms
  GET /landing/whatsapp-official.svg 404 in 2433ms
+ GET /landing/whatsapp-official.svg 404 in 71ms
+ GET /landing/galshir-logos-train.webp 404 in 45ms
+ GET /landing/whatsapp-official.svg 404 in 41ms
+ GET /landing/galshir-logos-train.webp 404 in 50ms
+
+[2m[16.75ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.07ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.11ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 3.62ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 2.52ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 4.68ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 5.54ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 352ms (313 modules)
+
+[2m[35.26ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.07ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.09ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 3.19ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 2.11ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[14.58ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 8.49ms][22m  [2m ↳ [22mTransform Tailwind CSS AST into PostCSS AST
+[2m[ 6.50ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 296ms (313 modules)
+
+[2m[10.25ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.00ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.04ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 2.67ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 2.09ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 0.32ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 5.07ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 128ms (313 modules)
+ ⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+   ▲ Next.js 15.5.4
+   - Local:        http://localhost:3010
+   - Network:      http://192.168.0.13:3010
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1787ms
+ ○ Compiling /_not-found ...
+
+[2m[110.51ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[  0.06ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 29.32ms][22m  [2m ↳ [22mSetup compiler
+[2m[  0.55ms][22m    [2m ↳ [22mPostCSS AST -> Tailwind CSS AST
+[2m[ 28.72ms][22m    [2m ↳ [22mCreate compiler
+[2m[  0.14ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[  1.59ms][22m  [2m ↳ [22mSetup scanner
+[2m[  6.63ms][22m  [2m ↳ [22mScan for candidates
+[2m[  6.09ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 48.28ms][22m  [2m ↳ [22mBuild utilities
+[2m[  8.25ms][22m  [2m ↳ [22mTransform Tailwind CSS AST into PostCSS AST
+[2m[  9.64ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled /_not-found in 1922ms (777 modules)
+ GET /landing/galshir-logos-train.webp 404 in 1931ms
+ GET /landing/whatsapp-official.svg 404 in 2322ms
+
+[2m[38.32ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.01ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.06ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 3.77ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 2.72ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[10.54ms][22m  [2m ↳ [22mBuild utilities
+[2m[10.72ms][22m  [2m ↳ [22mTransform Tailwind CSS AST into PostCSS AST
+[2m[10.27ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 203ms (313 modules)
+
+[2m[12.00ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.01ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.05ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 2.91ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 2.45ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 0.31ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 6.19ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 141ms (313 modules)
+
+[2m[17.82ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.04ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.08ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 3.75ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 3.61ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 3.61ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 6.51ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 315ms (309 modules)
+
+[2m[17.49ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.07ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.08ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 3.51ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 2.01ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 3.82ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 7.82ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 307ms (309 modules)
+
+[2m[17.60ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.01ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.06ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 5.48ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 3.39ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 0.35ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 8.17ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 231ms (309 modules)
