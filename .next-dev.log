@@ -862,3 +862,56 @@
 [2m[ 6.62ms][22m  [2m ↳ [22mUpdate PostCSS AST
 
  ✓ Compiled in 312ms (309 modules)
+
+[2m[22.82ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.01ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.05ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 4.73ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 2.44ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 2.78ms][22m  [2m ↳ [22mBuild utilities
+[2m[12.68ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 310ms (309 modules)
+ ✓ Compiled / in 482ms (765 modules)
+⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
+ GET / 200 in 735ms
+
+[2m[18.20ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.03ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.06ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 4.00ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 2.50ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 3.10ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 8.29ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 290ms (311 modules)
+
+[2m[9.87ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[0.01ms][22m  [2m ↳ [22mQuick bail check
+[2m[0.04ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[3.05ms][22m  [2m ↳ [22mScan for candidates
+[2m[2.16ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[0.21ms][22m  [2m ↳ [22mBuild utilities
+[2m[4.32ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 122ms (311 modules)
+
+[2m[16.09ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.00ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.03ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 4.16ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 3.19ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 2.21ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 6.37ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 280ms (311 modules)
+
+[2m[14.50ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[ 0.01ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 0.07ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 5.01ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 2.96ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 0.23ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 6.11ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+ ✓ Compiled in 236ms (311 modules)
