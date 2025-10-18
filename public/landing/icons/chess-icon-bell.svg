@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>chess-icon-bell</title>
+    <g stroke="none" fill="none">
+        <!-- Bell top knob -->
+        <rect x="62" y="32" width="4" height="4" stroke="#000000" stroke-width="1" fill="#FFFFFF"/>
+        <!-- Bell body -->
+        <path d="M64,36 C54,36 46,44 46,54 L46,68 L42,76 L86,76 L82,68 L82,54 C82,44 74,36 64,36 Z" stroke="#000000" stroke-width="1" fill="#FFFFFF"/>
+        <!-- Bell bottom rim -->
+        <ellipse cx="64" cy="76" rx="22" ry="4" stroke="#000000" stroke-width="1" fill="#000000"/>
+        <!-- Bell clapper -->
+        <circle cx="64" cy="80" r="4" stroke="#000000" stroke-width="1" fill="#000000"/>
+    </g>
+</svg>

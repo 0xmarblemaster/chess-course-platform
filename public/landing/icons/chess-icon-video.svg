@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>chess-icon-video</title>
+    <g stroke="none" fill="none">
+        <!-- Laptop screen -->
+        <rect x="28" y="36" width="72" height="48" rx="4" stroke="#000000" stroke-width="2" fill="#FFFFFF"/>
+
+        <!-- Play button (triangle) -->
+        <path d="M 56,52 L 56,68 L 72,60 Z" fill="#000000"/>
+
+        <!-- Laptop base -->
+        <path d="M 20,84 L 24,84 L 28,88 L 100,88 L 104,84 L 108,84 C 108,84 112,84 112,88 C 112,92 108,92 108,92 L 20,92 C 20,92 16,92 16,88 C 16,84 20,84 20,84 Z"
+              stroke="#000000" stroke-width="2" fill="#FFFFFF" stroke-linejoin="round"/>
+
+        <!-- Laptop keyboard indicator line -->
+        <line x1="28" y1="84" x2="100" y2="84" stroke="#000000" stroke-width="2"/>
+
+        <!-- Graduation cap on top of laptop -->
+        <!-- Flat mortarboard (square top tilted) -->
+        <path d="M 60,24 L 88,18 L 100,28 L 96,32 L 68,38 L 56,34 Z"
+              stroke="#000000" stroke-width="1.5" fill="#000000" stroke-linejoin="miter"/>
+
+        <!-- Cap base (rounded dome) -->
+        <path d="M 68,30 C 68,30 62,32 62,36 C 62,38 66,40 72,40 C 78,40 82,38 82,36 C 82,32 76,30 76,30"
+              stroke="#000000" stroke-width="1.5" fill="#FFFFFF" stroke-linejoin="round"/>
+
+        <!-- Tassel string -->
+        <line x1="78" y1="24" x2="78" y2="32" stroke="#000000" stroke-width="1.5"/>
+
+        <!-- Tassel threads -->
+        <line x1="76" y1="32" x2="76" y2="36" stroke="#000000" stroke-width="1"/>
+        <line x1="78" y1="32" x2="78" y2="36" stroke="#000000" stroke-width="1"/>
+        <line x1="80" y1="32" x2="80" y2="36" stroke="#000000" stroke-width="1"/>
+    </g>
+</svg>

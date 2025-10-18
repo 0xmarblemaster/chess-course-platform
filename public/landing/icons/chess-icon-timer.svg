@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>chess-icon-timer</title>
+    <g stroke="none" fill="none">
+        <!-- Stopwatch body -->
+        <circle cx="64" cy="68" r="32" stroke="#000000" stroke-width="1" fill="#FFFFFF"/>
+        <!-- Inner circle -->
+        <circle cx="64" cy="68" r="28" fill="#000000"/>
+        <!-- Clock face -->
+        <circle cx="64" cy="68" r="24" fill="#FFFFFF"/>
+        <!-- Hour hand -->
+        <line x1="64" y1="68" x2="64" y2="52" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+        <!-- Minute hand -->
+        <line x1="64" y1="68" x2="76" y2="68" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+        <!-- Center dot -->
+        <circle cx="64" cy="68" r="2" fill="#000000"/>
+        <!-- Top button -->
+        <rect x="60" y="28" width="8" height="6" rx="1" stroke="#000000" stroke-width="1" fill="#FFFFFF"/>
+        <!-- Top knob -->
+        <rect x="62" y="24" width="4" height="4" stroke="#000000" stroke-width="1" fill="#FFFFFF"/>
+    </g>
+</svg>

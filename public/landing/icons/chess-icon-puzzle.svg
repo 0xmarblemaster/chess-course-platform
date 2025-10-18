@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>chess-icon-puzzle</title>
+    <g stroke="none" fill="none">
+        <!-- Single puzzle piece with tabs and slots -->
+        <path d="M 40,64
+                 L 40,48
+                 C 40,48 40,42 46,42
+                 C 52,42 52,48 52,48
+                 L 52,40
+                 L 64,40
+                 L 64,48
+                 C 64,48 64,42 70,42
+                 C 76,42 76,48 76,48
+                 L 76,64
+                 L 84,64
+                 C 84,64 90,64 90,70
+                 C 90,76 84,76 84,76
+                 L 76,76
+                 L 76,88
+                 L 52,88
+                 L 52,76
+                 L 44,76
+                 C 44,76 38,76 38,70
+                 C 38,64 44,64 44,64
+                 Z"
+              stroke="#000000" stroke-width="1.5" fill="#FFFFFF" stroke-linejoin="round" stroke-linecap="round"/>
+
+        <!-- Inner detail to add depth -->
+        <path d="M 48,64 L 48,50 C 48,48 48,46 48,46"
+              stroke="#000000" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <path d="M 68,64 L 68,50 C 68,48 68,46 68,46"
+              stroke="#000000" stroke-width="1" fill="none" stroke-linecap="round"/>
+    </g>
+</svg>
