@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>chess-icon-teacher</title>
+    <g stroke="none" fill="none">
+        <!-- Person head -->
+        <circle cx="64" cy="44" r="16" stroke="#000000" stroke-width="2" fill="#FFFFFF"/>
+
+        <!-- Person body -->
+        <path d="M 44,60 L 44,88 L 54,88 L 54,72 L 74,72 L 74,88 L 84,88 L 84,60 C 84,60 74,56 64,56 C 54,56 44,60 44,60 Z"
+              stroke="#000000" stroke-width="2" fill="#000000"/>
+
+        <!-- Chalkboard/presentation board -->
+        <rect x="20" y="24" width="32" height="24" rx="2" stroke="#000000" stroke-width="2" fill="#FFFFFF"/>
+
+        <!-- Chess pieces on board (simple shapes) -->
+        <circle cx="28" cy="32" r="3" fill="#000000"/>
+        <circle cx="36" cy="32" r="3" fill="#000000"/>
+        <circle cx="44" cy="32" r="3" fill="#000000"/>
+
+        <!-- Pointer/stick -->
+        <line x1="52" y1="48" x2="38" y2="36" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- Star (FIDE Master symbol) -->
+        <path d="M 92,28 L 94,34 L 100,34 L 95,38 L 97,44 L 92,40 L 87,44 L 89,38 L 84,34 L 90,34 Z"
+              fill="#000000" stroke="#000000" stroke-width="1"/>
+    </g>
+</svg>

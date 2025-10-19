@@ -532,6 +532,8 @@ p.subtitle {
   position: relative;
   top: -1.5px;
   letter-spacing: 1px;
+  display: inline-block;
+  white-space: nowrap;
 }
 .timer {
   color:rgba(0,0,0,0.5);
@@ -583,7 +585,7 @@ p.subtitle {
   </a>
   <div class="socials">
     <a href="https://www.instagram.com/chessempire.kz/" target="_blank"><img src="https://galshir.com/studio-img/i-instagram.png" style="margin-right:2px">5.6k</a>
-    <a href="https://api.whatsapp.com/send/?phone=77077872210&text=%D0%27%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%0A%0A%D0%9F%D0%B8%D1%88%D1%83+%D0%B8%D0%B7+%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F+2%D0%93%D0%98%D0%A1.%0A%0A&type=phone_number&app_absent=0" target="_blank" style="padding:0 20px 0 8px"><img class="whatsapp" src="https://cdn.simpleicons.org/whatsapp/4B5563" alt="WhatsApp" style="margin-right:2px; width:20px; height:20px"></a>
+    <a href="https://api.whatsapp.com/send/?phone=77077872210&text=%D0%27%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%0A%0A%D0%9F%D0%B8%D1%88%D1%83+%D0%B8%D0%B7+%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F+2%D0%93%D0%98%D0%A1.%0A%0A&type=phone_number&app_absent=0" target="_blank" style="padding:0 20px 0 8px"><img class="whatsapp" src="https://cdn.simpleicons.org/whatsapp/4B5563" alt="WhatsApp" style="margin-right:2px; width:26px; height:26px"></a>
   </div>
 </div>
 
@@ -618,7 +620,7 @@ p.subtitle {
 
 <div class="content">
   <h2>Присоединяйся к Шахматной Империи</h2>
-  <p class="subtitle"><b>60 Шагов до 4 разряда</b> это интерактивный онлайн курс, где вы шаг за шагом пройдете путь от базовых правил, до продвинутых тактический приемов.</p>
+  <p class="subtitle"><b>60 Шагов до 4 разряда</b> — это интерактивный онлайн курс, где вы шаг за шагом пройдете путь от базовых правил, до продвинутых тактический приемов.</p>
   <div class="chapters">
     <div class="chapter">
       <img src="icons/chess-icon-phone.svg" />
@@ -650,6 +652,16 @@ p.subtitle {
       <div class="chapter-title">УМНЫЕ НАПОМИНАНИЯ</div>
       <p class="chapter-content">Получайте уведомления, когда пришло время для ежедневной практики шахмат</p>
     </div>
+    <div class="chapter">
+      <img src="icons/chess-icon-content.svg" />
+      <div class="chapter-title">БОГАТЫЙ КОНТЕНТ</div>
+      <p class="chapter-content">Более 100 видео уроков и 500 интерактивных задач на пути мастерства</p>
+    </div>
+    <div class="chapter">
+      <img src="icons/chess-icon-teacher.svg" />
+      <div class="chapter-title">МАСТЕР ФИДЕ</div>
+      <p class="chapter-content">Уроки от Мастера Фиде обучившего более 500 студентов</p>
+    </div>
   </div>
 </div>
 
@@ -657,7 +669,7 @@ p.subtitle {
 
 
 <div class="content">
-  <h2>Make an impact</h2>
+  <h2>Наши Отзывы</h2>
   <p class="subtitle">Design logos that not only look great, but also hold real value for the companies behind them.</p>
 </div>
 
@@ -678,12 +690,11 @@ p.subtitle {
 <div class="footer flex">
   <div class="info">
     <div class="price">
-      <span class="strike-through">$60</span>
-      <span class="price">$29</span>
-      <span class="discount">50% LAUNCH DISCOUNT</span>
+      <span class="price">₸19.900</span>
+      <span class="discount">+4 урока с тренером в подарок</span>
     </div>
     <div class="timer">
-      8 days and 12 hours left
+      осталось 19 часов 28 минут
     </div>
   </div>
   <a class="button tracked-button" href="https://galshir.gumroad.com/l/60?wanted=true">НАЧАТЬ</a>
@@ -832,17 +843,10 @@ setInterval(() => {
 
 
 
-// Countdown timer to September 1st
+// Countdown timer
 function updateTimer() {
-  const targetDate = new Date('2025-10-30T00:00:00');
-  const now = new Date();
-  const diff = targetDate - now;
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-
   const timerElements = document.querySelectorAll('.timer');
-  const timerText = days + " days and " + hours + " hours left";
+  const timerText = "осталось 19 часов 28 минут";
 
   timerElements.forEach(timer => {
     timer.textContent = timerText;
