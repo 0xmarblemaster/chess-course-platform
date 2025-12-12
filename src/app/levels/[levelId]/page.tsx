@@ -30,9 +30,11 @@ export default function LevelPage() {
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [trialActive, setTrialActive] = useState(false)
+  const [trialTargets, setTrialTargets] = useState<Array<{ level_group_id: number | null; level_id: number | null; lesson_id: number | null; max_courses_per_level: number | null; max_lessons_per_course: number | null }>>([])
 
   const loadLevelData = useCallback(async () => {
-    if (!user || !levelId) return
+    if (!levelId) return
 
     try {
       setLoading(true)
@@ -47,12 +49,45 @@ export default function LevelPage() {
         return
       }
       
+      // Trial gating: if unauthenticated, ensure this level is allowed by entitlements
+      if (!user) {
+        try {
+          const res = await fetch('/api/trial/entitlements', { cache: 'no-store' })
+          const data = await res.json()
+          if (data?.active) {
+            setTrialActive(true)
+            const targets = (data.targets || []) as Array<{ level_group_id: number | null; max_courses_per_level: number | null }>
+            const allowedGroupIds = targets.map((t) => t.level_group_id).filter((v): v is number => typeof v === 'number')
+            const capPerLevel = targets.find((t) => t.level_group_id)?.max_courses_per_level || 3
+            const sameGroupLevels = levels.filter(l => allowedGroupIds.includes(l.level_group_id as number))
+            const sorted = sameGroupLevels.slice().sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+            const allowedLevelIds = sorted.slice(0, Math.max(1, capPerLevel)).map(l => l.id)
+            if (!allowedLevelIds.includes(levelId)) {
+              setError('upgrade')
+              setLevel(null)
+              setLessons([])
+              setLevelProgress({ totalLessons: 0, completedLessons: 0, progressPercentage: 0 })
+              return
+            }
+          } else {
+            setTrialActive(false)
+            setError('')
+          }
+        } catch {
+          // ignore
+        }
+      }
+
       setLevel(currentLevel)
       
       // Load lessons and progress
       const lessonsData = await getLessonsForLevel(levelId)
-      const userProgress = await getUserProgress(user.id)
-      const progress = await getLevelProgress(user.id, levelId)
+      const userProgress = user ? await getUserProgress(user.id) : []
+      const progress = user ? await getLevelProgress(user.id, levelId) : {
+        totalLessons: lessonsData.length,
+        completedLessons: 0,
+        progressPercentage: 0
+      }
       
       const lessonsWithProgress: LessonWithProgress[] = lessonsData.map(lesson => {
         const lessonProgress = userProgress.find(p => p.lesson_id === lesson.id)
@@ -74,7 +109,7 @@ export default function LevelPage() {
   }, [user, levelId])
 
   useEffect(() => {
-    if (user && levelId) {
+    if (levelId) {
       loadLevelData()
     }
   }, [user, levelId, loadLevelData])
@@ -87,7 +122,7 @@ export default function LevelPage() {
     )
   }
 
-  if (error || !level) {
+  if ((error && error !== 'upgrade') || (!level && error !== 'upgrade')) {
     return (
       <ProtectedRoute>
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -106,6 +141,20 @@ export default function LevelPage() {
     )
   }
 
+  if (error === 'upgrade') {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="text-center max-w-md mx-auto p-6 bg-white rounded-lg shadow">
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">{t('dashboard.upgradeToContinue', 'Upgrade to continue')}</h1>
+            <p className="text-gray-600 mb-6">{t('level.upgradeMessage', 'This course is not included in your trial access.')}</p>
+            <Link href="/signup" className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">{t('common.upgrade', 'Upgrade')}</Link>
+          </div>
+        </div>
+      </ProtectedRoute>
+    )
+  }
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
@@ -115,9 +164,9 @@ export default function LevelPage() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="flex-1">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                  {level.title}
+                  {level?.title ?? ''}
                 </h1>
-                <p className="text-gray-600 mb-6">{level.description}</p>
+                <p className="text-gray-600 mb-6">{level?.description ?? ''}</p>
                 
                 {/* Progress Bar */}
                 <div className="mb-4">
@@ -138,9 +187,9 @@ export default function LevelPage() {
               </div>
               
               <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                {level.pdf_url && (
+                {level?.pdf_url && (
                   <a
-                    href={level.pdf_url}
+                    href={level?.pdf_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="border border-indigo-600 text-indigo-600 px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-50 transition-colors text-center"

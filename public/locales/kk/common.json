@@ -69,7 +69,9 @@
     "level": "Деңгей",
     "lesson": "Сабақ",
     "lessonsCount": "сабақ",
-    "percentComplete": "аяқталды"
+    "percentComplete": "аяқталды",
+    "upgradeToContinue": "Жалғастыру үшін жаңартыңыз",
+    "trialEndsIn": "Сынақ қолжетімді. Қол жеткізу аяқталады"
   },
   "auth": {
     "signIn": "Тіркелгіге кіру",
@@ -147,7 +149,8 @@
     "notPassed": "Өтпеді",
     "reviewLesson": "Сабақты қайталау",
     "courseTitle": "Chess Empire",
-    "courseDescription": "Шахматты негіздерден жоғары деңгейге дейін үйреніңіз"
+    "courseDescription": "Шахматты негіздерден жоғары деңгейге дейін үйреніңіз",
+    "upgradeMessage": "Бұл курс сынақ қолжетімділігіңізге кірмейді."
   },
   "lesson": {
     "loading": "Сабақ жүктелуде...",
@@ -245,7 +248,9 @@
     "totalLessons": "Барлық сабақтар",
     "totalProgress": "Барлық прогресс",
     "totalBadges": "Барлық белгілер",
-    "quickActions": "Жылдам әрекеттер"
+    "quickActions": "Жылдам әрекеттер",
+    "manageLevelGroups": "Сатыларды басқару",
+    "manageAccess": "Қол жеткізуді басқару"
   },
   "login": {
     "title": "Аккаунтыңызға кіру",
@@ -270,6 +275,7 @@
     "confirm": "Растау",
     "back": "Артқа",
     "next": "Келесі",
-    "previous": "Алдыңғы"
+    "previous": "Алдыңғы",
+    "upgrade": "Жаңарту"
   }
 }

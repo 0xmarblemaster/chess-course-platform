@@ -12,6 +12,11 @@ const config: Config = {
         progress: "#32CD32",
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        'chess-gold': '#C2A580',
+        'chess-maroon': '#5F192B',
+      },
+      fontFamily: {
+        unbounded: ['var(--font-unbounded)'],
       },
     },
   },

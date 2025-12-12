@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import LoadingScreen from "@/components/LoadingScreen"
-import { getDashboardData, getLevelGroups } from "@/lib/data"
+import { getDashboardData, getLevelGroups, getLevelsByGroup, getLevels } from "@/lib/data"
 import { type Level, type Badge, type LevelGroup } from '@/lib/data'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
@@ -112,28 +112,115 @@ export default function DashboardPage() {
     progressPercentage: 0
   })
   const [dashboardLoading, setDashboardLoading] = useState(true)
+  const [trialActive, setTrialActive] = useState(false)
+  const [trialTargets, setTrialTargets] = useState<Array<{ level_group_id: number | null; level_id: number | null; lesson_id: number | null; max_courses_per_level: number | null; max_lessons_per_course: number | null }>>([])
+  const [trialExpiresAt, setTrialExpiresAt] = useState<string | null>(null)
+  const [trialExpiresLabel, setTrialExpiresLabel] = useState<string>('')
+  const [allowedGroupIds, setAllowedGroupIds] = useState<number[]>([])
+
+  // Detect trial session
+  useEffect(() => {
+    const checkTrial = async () => {
+      try {
+        const res = await fetch('/api/trial/entitlements', { cache: 'no-store' })
+        const data = await res.json()
+        if (data?.active) {
+          setTrialActive(true)
+          setTrialTargets(data.targets || [])
+          setTrialExpiresAt(data.expiresAt || null)
+        } else {
+          setTrialActive(false)
+          setTrialTargets([])
+          setTrialExpiresAt(null)
+        }
+      } catch {
+        setTrialActive(false)
+      }
+    }
+    checkTrial()
+  }, [])
+
+  // Compute a stable, client-only label for expiry to avoid SSR/client timezone mismatch
+  useEffect(() => {
+    if (!trialExpiresAt) { setTrialExpiresLabel(''); return }
+    try {
+      const d = new Date(trialExpiresAt)
+      // Force UTC for consistency; render a concise ISO without seconds
+      const iso = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes())).toISOString().replace(':00.000Z', 'Z')
+      setTrialExpiresLabel(iso)
+    } catch {
+      setTrialExpiresLabel('')
+    }
+  }, [trialExpiresAt])
   const loadDashboardData = useCallback(async () => {
-    if (!user) return
+    if (!user && !trialActive) return
 
     try {
       setDashboardLoading(true)
-      
-      // Use optimized parallel data loading
-      const { badges: badgesData, overallProgress: overallProgressData, levelsWithProgress } = await getDashboardData(user.id, selectedGroupId ?? undefined)
-      
-      setLevels(levelsWithProgress)
-      setBadges(badgesData)
-      setOverallProgress(overallProgressData)
+      if (user) {
+        // Authenticated path
+        const { badges: badgesData, overallProgress: overallProgressData, levelsWithProgress } = await getDashboardData(user.id, selectedGroupId ?? undefined)
+        setLevels(levelsWithProgress)
+        setBadges(badgesData)
+        setOverallProgress(overallProgressData)
+        setAllowedGroupIds([])
+      } else if (trialActive) {
+        // Trial path: show ALL courses but only trial-allowed ones are unlocked
+        const [levelsForView, lessonsData] = await Promise.all([
+          selectedGroupId ? Promise.resolve(await getLevelsByGroup(selectedGroupId)) : Promise.resolve(await getLevels()),
+          supabase
+            .from('lessons')
+            .select('*')
+            .order('level_id, order_index')
+            .then(({ data }) => data || [])
+        ])
+
+        // Determine allowed level IDs based on targets and caps
+        const allowedGroupIdsLocal = trialTargets
+          .map(t => t.level_group_id)
+          .filter((v): v is number => typeof v === 'number')
+        const capPerLevel = trialTargets.find(t => t.level_group_id)?.max_courses_per_level || 3
+
+        const grouped = new Map<number, Level[]>()
+        for (const lvl of levelsForView) {
+          const gid = (lvl.level_group_id as number)
+          const arr = grouped.get(gid) || []
+          arr.push(lvl)
+          grouped.set(gid, arr)
+        }
+        const allowedLevelIds = new Set<number>()
+        for (const [gid, arr] of grouped) {
+          if (!allowedGroupIdsLocal.includes(gid)) continue
+          const sorted = arr.slice().sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+          const slice = sorted.slice(0, Math.max(1, capPerLevel || 3))
+          slice.forEach(l => allowedLevelIds.add(l.id))
+        }
+
+        const levelsWithProgress: LevelWithProgress[] = levelsForView.map((level) => {
+          const levelLessons = (lessonsData as Array<{ level_id: number }>).filter(l => l.level_id === level.id)
+          const progress = {
+            totalLessons: levelLessons.length,
+            completedLessons: 0,
+            progressPercentage: 0
+          }
+          return { ...level, progress, isUnlocked: allowedLevelIds.has(level.id) }
+        })
+
+        setLevels(levelsWithProgress)
+        setBadges([])
+        setOverallProgress({ totalLessons: levelsWithProgress.length, completedLessons: 0, progressPercentage: 0 })
+        setAllowedGroupIds(allowedGroupIdsLocal)
+      }
     } finally {
       setDashboardLoading(false)
     }
-  }, [user, selectedGroupId])
+  }, [user, trialActive, trialTargets, selectedGroupId])
 
   useEffect(() => {
-    if (user) {
+    if (user || trialActive) {
       loadDashboardData()
     }
-  }, [user, loadDashboardData])
+  }, [user, trialActive, loadDashboardData])
 
   // Load level groups once and default to first if none selected
   useEffect(() => {
@@ -157,13 +244,23 @@ export default function DashboardPage() {
           return
         }
       }
+      if (!user && trialActive) {
+        // Default to first allowed group in trial
+        const allowedGroupIds = trialTargets
+          .map(t => t.level_group_id)
+          .filter((v): v is number => typeof v === 'number')
+        if (allowedGroupIds.length > 0) {
+          setSelectedGroupId(allowedGroupIds[0])
+          return
+        }
+      }
 
       if (!selectedGroupId && groups.length > 0) {
         setSelectedGroupId(groups[0].id)
       }
     }
     loadGroupsAndDefault()
-  }, [user])
+  }, [user, trialActive, trialTargets])
 
   // Persist selection
   useEffect(() => {
@@ -181,9 +278,10 @@ export default function DashboardPage() {
     )
   }
 
+  const isTrialView = !user && trialActive
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50" suppressHydrationWarning>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
           {/* Welcome Section */}
           <div className="mb-8">
@@ -193,6 +291,9 @@ export default function DashboardPage() {
             <p className="text-gray-600">
               {t('dashboard.trackProgress', 'Track your progress and continue learning')}
             </p>
+            {isTrialView && trialExpiresLabel && (
+              <p className="mt-2 text-sm text-gray-700">{t('dashboard.trialEndsIn', 'Trial active. Access ends at')}: {trialExpiresLabel}</p>
+            )}
           </div>
 
           {/* Overall Progress */}
@@ -223,7 +324,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Badges Section */}
-          {badges.length > 0 && (
+          {!isTrialView && badges.length > 0 && (
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 Earned Badges
@@ -266,7 +367,7 @@ export default function DashboardPage() {
             {!showFavorites && levelGroups.length > 0 && (
               <div className="mb-6">
                 <div className="flex items-center gap-2 overflow-x-auto py-1">
-                  {levelGroups.map(g => {
+                  {(isTrialView ? levelGroups : levelGroups).map(g => {
                     const match = /^Level\s*(\d+)$/i.exec(g.title?.trim?.() || '')
                     const displayTitle = match ? `${t('dashboard.levelWord', 'Level')} ${match[1]}` : g.title
                     return (
@@ -296,6 +397,7 @@ export default function DashboardPage() {
                   : (level.progress.completedLessons === 0
                       ? t('dashboard.startLevel', 'Start Level')
                       : t('dashboard.continueLevel', 'Continue Level'))
+                const isTrialLocked = isTrialView && !level.isUnlocked
                 return (
                   <div
                     key={level.id}
@@ -328,7 +430,7 @@ export default function DashboardPage() {
 
                       <div className="mt-auto">
                         {isLocked ? (
-                          <button disabled className="w-full bg-gray-300 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium cursor-not-allowed">{t('dashboard.completePrevious', 'Complete Previous Level')}</button>
+                          <button disabled className="w-full bg-gray-300 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium cursor-not-allowed">{isTrialView ? t('dashboard.upgradeToContinue', 'Upgrade to continue') : t('dashboard.completePrevious', 'Complete Previous Level')}</button>
                         ) : (
                           <Link href={`/levels/${level.id}`} className="block w-full text-center bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm hover:shadow-md">{ctaLabel}</Link>
                         )}

@@ -22,7 +22,7 @@ export default function Home() {
           {!user && (
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link
-                href="/signup"
+                href="/checkout"
                 className="bg-indigo-600 text-white px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg font-medium hover:bg-indigo-700 transition-colors text-center"
               >
                 {t('home.startLearning', 'Start Learning Free')}
@@ -170,7 +170,7 @@ export default function Home() {
               {t('home.joinThousands', 'Join thousands of students learning chess with our structured approach')}
             </p>
             <Link
-              href="/signup"
+              href="/checkout"
               className="bg-white text-indigo-600 px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg font-medium hover:bg-gray-100 transition-colors"
             >
               {t('home.getStartedFree', 'Get Started Free')}

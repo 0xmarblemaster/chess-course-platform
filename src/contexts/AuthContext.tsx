@@ -42,13 +42,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     })
+
+    // Log detailed error information for debugging
+    if (error) {
+      console.error('Supabase signup error:', {
+        message: error.message,
+        status: error.status,
+        name: error.name,
+        details: error
+      })
+    } else {
+      console.log('Signup successful:', data)
+    }
+
     return { error }
   }
 

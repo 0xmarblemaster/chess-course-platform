@@ -1,18 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 const languages = [
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'kk', name: 'Қазақша', flag: '🇰🇿' },
+  { code: 'ru', name: 'Русский', nativeName: 'Русский' },
+  { code: 'kk', name: 'Kazakh', nativeName: 'Қазақша' },
+  { code: 'en', name: 'English', nativeName: 'English' },
 ]
 
 export default function LanguageSwitcher() {
   const { locale, setLocale } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
-  
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0]
 
   const handleLanguageChange = (newLocale: string) => {
@@ -20,38 +21,71 @@ export default function LanguageSwitcher() {
     setIsOpen(false)
   }
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
+
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
+      {/* Circular Planet Icon Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 transition-colors"
+        className="language-globe-button"
+        aria-label="Change language"
+        title={`Current language: ${currentLanguage.name}`}
       >
-        <span className="text-lg">{currentLanguage.flag}</span>
-        <span className="hidden sm:inline">{currentLanguage.name}</span>
         <svg
-          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          width="36"
+          height="36"
+          viewBox="0 0 36 36"
           fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          className="language-globe-icon"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          {/* Outer circle */}
+          <circle cx="18" cy="18" r="16" stroke="currentColor" strokeWidth="2" fill="none"/>
+
+          {/* Horizontal lines (latitude) */}
+          <ellipse cx="18" cy="18" rx="16" ry="5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+          <line x1="2" y1="18" x2="34" y2="18" stroke="currentColor" strokeWidth="1.5"/>
+          <ellipse cx="18" cy="18" rx="16" ry="11" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.5"/>
+
+          {/* Vertical line (longitude) */}
+          <ellipse cx="18" cy="18" rx="6" ry="16" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+          <ellipse cx="18" cy="18" rx="11" ry="16" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.5"/>
         </svg>
       </button>
 
+      {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
+        <div className="language-dropdown">
+          <div className="language-dropdown-header">
+            Select Language
+          </div>
           {languages.map((language) => (
             <button
               key={language.code}
               onClick={() => handleLanguageChange(language.code)}
-              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center space-x-3 ${
-                locale === language.code ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'
+              className={`language-option ${
+                locale === language.code ? 'language-option-active' : ''
               }`}
             >
-              <span className="text-lg">{language.flag}</span>
-              <span>{language.name}</span>
+              <span className="language-option-text">{language.nativeName}</span>
               {locale === language.code && (
-                <svg className="w-4 h-4 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="language-check-icon" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               )}

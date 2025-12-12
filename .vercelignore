@@ -1,0 +1,14 @@
+# Exclude large non-essential assets from deployment
+.next/
+node_modules/
+*.log
+swan_landing/
+landing/testimonials/originals/
+public/landing/testimonials/originals/
+public/landing/testimonials/*.mp4
+public/landing/testimonials/*-thumb.jpg
+# Keep background/landing assets so animations work in production
+# public/landing/logo-sketches/   <-- ALLOW
+# public/landing/noise.png        <-- ALLOW
+# public/landing/chess-logo.jpg   <-- ALLOW
+public/landing/testimonials/image*.jpg

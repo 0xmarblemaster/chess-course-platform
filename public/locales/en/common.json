@@ -77,7 +77,9 @@
     "level": "Level",
     "lesson": "Lesson",
     "lessonsCount": "lessons",
-    "percentComplete": "complete"
+    "percentComplete": "complete",
+    "upgradeToContinue": "Upgrade to continue",
+    "trialEndsIn": "Trial active. Access ends at"
   },
   "auth": {
     "signIn": "Sign in to your account",
@@ -156,7 +158,9 @@
     "totalLessons": "Total Lessons",
     "totalProgress": "Total Progress",
     "totalBadges": "Total Badges",
-    "quickActions": "Quick Actions"
+    "quickActions": "Quick Actions",
+    "manageLevelGroups": "Manage Level Groups",
+    "manageAccess": "Manage Access"
   },
   "breadcrumb": {
     "level": "Level"
@@ -181,7 +185,8 @@
     "notPassed": "Not Passed",
     "reviewLesson": "Review Lesson",
     "courseTitle": "Chess Empire",
-    "courseDescription": "Learn chess from basics to advanced"
+    "courseDescription": "Learn chess from basics to advanced",
+    "upgradeMessage": "This course is not included in your trial access."
   },
   "lesson": {
     "loading": "Loading lesson...",
@@ -254,6 +259,7 @@
     "confirm": "Confirm",
     "back": "Back",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "upgrade": "Upgrade"
   }
 }

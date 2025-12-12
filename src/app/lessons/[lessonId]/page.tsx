@@ -34,6 +34,8 @@ export default function LessonPage() {
   const [isBookmarked, setIsBookmarked] = useState(false)
   const [notesOpen, setNotesOpen] = useState(false)
   const [difficultyRating, setDifficultyRating] = useState<'easy' | 'medium' | 'hard' | null>(null)
+  const [trialActive, setTrialActive] = useState(false)
+  const [trialTargets, setTrialTargets] = useState<Array<{ level_group_id: number | null; level_id: number | null; lesson_id: number | null; max_courses_per_level: number | null; max_lessons_per_course: number | null }>>([])
 
   const lessonId = parseInt(params.lessonId as string)
 
@@ -52,6 +54,35 @@ export default function LessonPage() {
 
       if (error) throw error
       setLesson(data)
+
+      // Trial gating (unauthenticated): ensure this lesson's course is allowed
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user && data?.level_id) {
+        try {
+          const res = await fetch('/api/trial/entitlements', { cache: 'no-store' })
+          const ent = await res.json()
+          if (ent?.active) {
+            setTrialActive(true)
+            const targets = (ent.targets || []) as Array<{ level_group_id: number | null; level_id?: number | null; lesson_id?: number | null; max_courses_per_level: number | null; max_lessons_per_course?: number | null }>
+            const allowedGroupIds = targets.map((t) => t.level_group_id).filter((v): v is number => typeof v === 'number')
+            const capPerLevel = targets.find((t) => t.level_group_id)?.max_courses_per_level || 3
+            // Load levels to compute first N courses within allowed groups
+            const { data: levels } = await supabase
+              .from('levels')
+              .select('id, level_group_id, order_index')
+            const sameGroupLevels = ((levels as Array<{ id: number; level_group_id: number; order_index: number }> ) || []).filter(l => allowedGroupIds.includes(l.level_group_id))
+            const sorted = sameGroupLevels.slice().sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+            const allowedLevelIds = sorted.slice(0, Math.max(1, capPerLevel)).map(l => l.id)
+            if (!allowedLevelIds.includes(data.level_id)) {
+              setError('upgrade')
+            }
+          } else {
+            setTrialActive(false)
+          }
+        } catch {
+          setTrialActive(false)
+        }
+      }
     } catch (err) {
       console.error('Error fetching lesson:', err)
       setError('Failed to load lesson')
@@ -236,7 +267,7 @@ export default function LessonPage() {
     )
   }
 
-  if (error || !lesson) {
+  if ((error && error !== 'upgrade') || (!lesson && error !== 'upgrade')) {
     return (
       <ProtectedRoute>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -259,6 +290,20 @@ export default function LessonPage() {
     )
   }
 
+  if (error === 'upgrade') {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center max-w-md mx-auto p-6 bg-white rounded-lg shadow">
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">{t('dashboard.upgradeToContinue', 'Upgrade to continue')}</h1>
+            <p className="text-gray-600 mb-6">{t('level.upgradeMessage', 'This course is not included in your trial access.')}</p>
+            <button onClick={() => router.push('/signup')} className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">{t('common.upgrade', 'Upgrade')}</button>
+          </div>
+        </div>
+      </ProtectedRoute>
+    )
+  }
+
   const videoWatched = progress?.video_watched || false
   const testPassed = progress?.test_passed || false
   const isCompleted = progress?.completed_at !== null
@@ -271,7 +316,7 @@ export default function LessonPage() {
     return a.id - b.id
   })
   
-  const currentIndex = sortedLessons.findIndex(l => l.id === lesson.id)
+  const currentIndex = sortedLessons.findIndex(l => l.id === (lesson!.id))
   const previousLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null
   const nextLesson = currentIndex < sortedLessons.length - 1 ? sortedLessons[currentIndex + 1] : null
 
@@ -300,20 +345,20 @@ export default function LessonPage() {
               </Link>
               <ChevronRightIcon className="w-4 h-4 text-gray-400" />
               <Link
-                href={`/levels/${lesson.level_id}`}
+                href={lesson ? `/levels/${lesson.level_id}` : '/courses'}
                 className="hover:text-indigo-600 transition-colors"
               >
                 {t('breadcrumb.level', 'Level')}
               </Link>
               <ChevronRightIcon className="w-4 h-4 text-gray-400" />
-              <span className="text-gray-900 font-medium">{lesson.title}</span>
+              <span className="text-gray-900 font-medium">{lesson?.title ?? ''}</span>
             </nav>
 
             {/* Title and actions */}
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                  {lesson.title}
+                  {lesson?.title ?? ''}
                 </h1>
               </div>
               <div className="flex items-center gap-2 ml-4">
@@ -360,18 +405,18 @@ export default function LessonPage() {
             </div>
 
             {/* Description */}
-            {lesson.description && (
+            {lesson?.description && (
               <div className="bg-gray-50 rounded-lg p-4 mt-4">
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">
                   {t('lesson.descriptionTitle', 'Lesson Description')}
                 </h2>
-                <p className="text-gray-700 whitespace-pre-wrap">{lesson.description}</p>
+                <p className="text-gray-700 whitespace-pre-wrap">{lesson?.description ?? ''}</p>
               </div>
             )}
           </motion.div>
 
           {/* Video Section */}
-          {lesson.video_url && (
+          {lesson?.video_url && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -385,8 +430,8 @@ export default function LessonPage() {
               
               <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden mb-4">
                 <iframe
-                  src={lesson.video_url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
-                  title={`Video Lesson - ${lesson.title}`}
+                  src={(lesson?.video_url || '').replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                  title={`Video Lesson - ${lesson?.title ?? ''}`}
                   className="w-full h-full"
                   allowFullScreen
                 />
@@ -423,14 +468,14 @@ export default function LessonPage() {
               {t('lesson.lichessChallenge', 'Lichess Challenge')}
             </h2>
             
-            {lesson.lichess_embed_url ? (
+            {lesson?.lichess_embed_url ? (
               <div>
                 {/* Thumbnail with custom image or default */}
                 <div 
                   className="w-64 h-40 bg-gray-100 rounded-lg overflow-hidden mb-4 relative cursor-pointer mx-auto"
-                  onClick={() => window.open(lesson.lichess_embed_url, '_blank')}
+                  onClick={() => lesson?.lichess_embed_url && window.open(lesson.lichess_embed_url, '_blank')}
                   style={{
-                    backgroundImage: `url(${lesson.lichess_image_url || defaultThumbnail})`,
+                    backgroundImage: `url(${lesson?.lichess_image_url || defaultThumbnail})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat'
@@ -452,10 +497,10 @@ export default function LessonPage() {
                 </div>
                 
                 {/* Challenge Description */}
-                {lesson.lichess_description && (
+                {lesson?.lichess_description && (
                   <div className="mb-4 p-3 bg-gray-50 rounded-lg">
                     <p className="text-sm text-gray-700">
-                      {lesson.lichess_description}
+                      {lesson?.lichess_description}
                     </p>
                   </div>
                 )}
@@ -466,12 +511,12 @@ export default function LessonPage() {
                     {t('lesson.lichessDirectLink', 'Direct link to challenge:')}
                   </p>
                   <a
-                    href={lesson.lichess_embed_url}
+                    href={lesson?.lichess_embed_url || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-indigo-600 hover:text-indigo-800 underline text-sm break-all"
                   >
-                    {lesson.lichess_embed_url}
+                    {lesson?.lichess_embed_url}
                   </a>
                 </div>
               </div>
@@ -498,7 +543,7 @@ export default function LessonPage() {
           </motion.div>
 
           {/* Second Lichess Challenge Section */}
-          {lesson.lichess_embed_url_2 && (
+          {lesson?.lichess_embed_url_2 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -514,9 +559,9 @@ export default function LessonPage() {
                 {/* Thumbnail with custom image or default */}
                 <div 
                   className="w-64 h-40 bg-gray-100 rounded-lg overflow-hidden mb-4 relative cursor-pointer mx-auto"
-                  onClick={() => window.open(lesson.lichess_embed_url_2, '_blank')}
+                  onClick={() => lesson?.lichess_embed_url_2 && window.open(lesson.lichess_embed_url_2, '_blank')}
                   style={{
-                    backgroundImage: `url(${lesson.lichess_image_url_2 || defaultThumbnail})`,
+                    backgroundImage: `url(${lesson?.lichess_image_url_2 || defaultThumbnail})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat'
@@ -538,10 +583,10 @@ export default function LessonPage() {
                 </div>
                 
                 {/* Challenge Description */}
-                {lesson.lichess_description_2 && (
+                {lesson?.lichess_description_2 && (
                   <div className="mb-4 p-3 bg-gray-50 rounded-lg">
                     <p className="text-sm text-gray-700">
-                      {lesson.lichess_description_2}
+                      {lesson?.lichess_description_2}
                     </p>
                   </div>
                 )}
@@ -552,12 +597,12 @@ export default function LessonPage() {
                     {t('lesson.lichessDirectLink', 'Direct link to challenge:')}
                   </p>
                   <a
-                    href={lesson.lichess_embed_url_2}
+                    href={lesson?.lichess_embed_url_2 || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-indigo-600 hover:text-indigo-800 underline text-sm break-all"
                   >
-                    {lesson.lichess_embed_url_2}
+                    {lesson?.lichess_embed_url_2}
                   </a>
                 </div>
               </div>

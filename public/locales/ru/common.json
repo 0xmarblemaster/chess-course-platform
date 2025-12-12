@@ -70,7 +70,9 @@
     "level": "Уровень",
     "lesson": "Урок",
     "lessonsCount": "уроков",
-    "percentComplete": "завершено"
+    "percentComplete": "завершено",
+    "upgradeToContinue": "Обновите тариф, чтобы продолжить",
+    "trialEndsIn": "Пробный доступ активен. Доступ закончится"
   },
   "auth": {
     "signIn": "Войти в аккаунт",
@@ -121,7 +123,9 @@
     "totalLessons": "Всего уроков",
     "totalProgress": "Общий прогресс",
     "totalBadges": "Всего значков",
-    "quickActions": "Быстрые действия"
+    "quickActions": "Быстрые действия",
+    "manageLevelGroups": "Управление ступенями",
+    "manageAccess": "Управление доступом"
   },
   "breadcrumb": {
     "level": "Уровень"
@@ -146,7 +150,8 @@
     "notPassed": "Не пройден",
     "reviewLesson": "Повторить урок",
     "courseTitle": "Chess Empire",
-    "courseDescription": "Изучайте шахматы от основ до продвинутого уровня"
+    "courseDescription": "Изучайте шахматы от основ до продвинутого уровня",
+    "upgradeMessage": "Этот курс не входит в ваш пробный доступ."
   },
   "lesson": {
     "loading": "Загрузка урока...",
@@ -232,6 +237,7 @@
     "confirm": "Подтвердить",
     "back": "Назад",
     "next": "Далее",
-    "previous": "Предыдущий"
+    "previous": "Предыдущий",
+    "upgrade": "Обновить"
   }
 }

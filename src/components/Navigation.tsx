@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabaseClient'
 
@@ -13,6 +14,7 @@ const Navigation = () => {
   const [userRole, setUserRole] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const logoSrc = '/brand/chess-empire-logo.png'
 
   useEffect(() => {
     const checkUserRole = async () => {
@@ -87,7 +89,12 @@ const Navigation = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center min-h-16 py-2">
             <div className="flex items-center">
-              <Link href="/" className="text-indigo-600 hover:text-indigo-700 font-bold text-xl">♔ Chess Empire</Link>
+              <Link href="/" className="flex items-end space-x-3 hover:opacity-90 transition-opacity">
+                <Image src={logoSrc} alt="Chess Empire logo" width={22} height={36} priority className="object-contain logo-gradient" />
+                <span className="text-xl tracking-wide logo-text-gradient" style={{ fontFamily: 'Clear Sans, sans-serif' }}>
+                  Chess Empire
+                </span>
+              </Link>
             </div>
             <div className="flex items-center">
               <div className="animate-pulse bg-gray-200 h-6 w-16 sm:h-8 sm:w-20 rounded"></div>
@@ -109,7 +116,12 @@ const Navigation = () => {
         <div className="flex justify-between items-center min-h-16 py-2">
           {/* Logo */}
           <div className="flex items-center">
-              <Link href="/" className="text-indigo-600 hover:text-indigo-700 font-bold text-xl">♔ Chess Empire</Link>
+              <Link href="/" className="flex items-end space-x-3 hover:opacity-90 transition-opacity">
+                <Image src={logoSrc} alt="Chess Empire logo" width={22} height={36} priority className="object-contain logo-gradient" />
+                <span className="text-xl tracking-wide logo-text-gradient" style={{ fontFamily: 'Clear Sans, sans-serif' }}>
+                  Chess Empire
+                </span>
+              </Link>
           </div>
 
           {/* Desktop Navigation - Hidden on mobile */}
@@ -157,17 +169,12 @@ const Navigation = () => {
               </>
             ) : (
               <>
+                {/* Test users: show Dashboard button instead of Login/Register */}
                 <Link
-                  href="/login"
-                  className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  {t('navigation.login', 'Login')}
-                </Link>
-                <Link
-                  href="/signup"
+                  href="/dashboard"
                   className="bg-indigo-600 text-white hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium"
                 >
-                  {t('navigation.signup', 'Sign Up')}
+                  {t('navigation.dashboard', 'Dashboard')}
                 </Link>
                 <LanguageSwitcher />
               </>

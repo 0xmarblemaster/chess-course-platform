@@ -244,13 +244,19 @@ const AdminDashboard = () => {
                   href="/admin/levels"
                   className="bg-indigo-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-indigo-700 transition-colors"
                 >
-                  Manage Level Groups
+                  {t('admin.manageLevelGroups', 'Manage Level Groups')}
                 </Link>
                 <Link
                   href="/admin/access"
                   className="bg-indigo-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-indigo-700 transition-colors"
                 >
-                  Manage Access
+                  {t('admin.manageAccess', 'Manage Access')}
+                </Link>
+                <Link
+                  href="/admin/payments"
+                  className="bg-green-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-green-700 transition-colors"
+                >
+                  {t('admin.managePayments', 'Manage Payments')}
                 </Link>
                 <Link
                   href="/dashboard"
