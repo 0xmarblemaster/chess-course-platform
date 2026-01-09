@@ -9,6 +9,8 @@ interface LessonDataUpdate {
   level_id: number
   order_index: number
   video_url: string | null
+  video_url_kk?: string | null
+  video_url_en?: string | null
   lichess_embed_url: string | null
   lichess_embed_url_2?: string | null
   lichess_image_url?: string | null
@@ -32,6 +34,8 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
     level_id: lesson?.level_id || (levels.length > 0 ? levels[0].id : 1),
     order_index: (lesson?.order_index ?? 1) as number | null,
     video_url: lesson?.video_url || '',
+    video_url_kk: lesson?.video_url_kk || '',
+    video_url_en: lesson?.video_url_en || '',
     lichess_embed_url: lesson?.lichess_embed_url || '',
     lichess_embed_url_2: lesson?.lichess_embed_url_2 || '',
     lichess_image_url: lesson?.lichess_image_url || '',
@@ -106,6 +110,8 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
         level_id: formData.level_id,
         order_index: safeOrderIndex,
         video_url: formData.video_url?.trim() ? formData.video_url : null,
+        video_url_kk: formData.video_url_kk?.trim() ? formData.video_url_kk : null,
+        video_url_en: formData.video_url_en?.trim() ? formData.video_url_en : null,
         lichess_embed_url: formData.lichess_embed_url?.trim() ? formData.lichess_embed_url : null,
         description: formData.description?.trim() ? formData.description : null,
         lichess_description: formData.lichess_description?.trim() ? formData.lichess_description : null,
@@ -247,18 +253,50 @@ export default function LessonForm({ lesson, levels, onSuccess, onCancel }: Less
               </p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                YouTube Video URL
-              </label>
-              <input
-                type="url"
-                value={formData.video_url}
-                onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="https://www.youtube.com/watch?v=VIDEO_ID or https://youtu.be/VIDEO_ID"
-              />
-              <p className="text-xs text-gray-500 mt-1">
+            {/* Video URLs Section - Multi-language support */}
+            <div className="border border-gray-200 rounded-lg p-4 space-y-4 bg-gray-50">
+              <h3 className="text-sm font-semibold text-gray-800 mb-2">YouTube Video URLs</h3>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  YouTube Video URL (Russian / Русский)
+                </label>
+                <input
+                  type="url"
+                  value={formData.video_url}
+                  onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                  placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  YouTube Video URL (Kazakh / Қазақша)
+                </label>
+                <input
+                  type="url"
+                  value={formData.video_url_kk}
+                  onChange={(e) => setFormData({ ...formData, video_url_kk: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                  placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  YouTube Video URL (English)
+                </label>
+                <input
+                  type="url"
+                  value={formData.video_url_en}
+                  onChange={(e) => setFormData({ ...formData, video_url_en: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                  placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                />
+              </div>
+
+              <p className="text-xs text-gray-500">
                 Supports YouTube watch URLs (youtube.com/watch?v=) or short URLs (youtu.be/)
               </p>
             </div>

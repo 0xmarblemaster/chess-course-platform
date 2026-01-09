@@ -234,7 +234,8 @@
     "saveNotes": "Save Notes",
     "previousNotes": "Previous Notes",
     "noNotes": "No notes yet for this lesson",
-    "writeNotes": "Write your notes here..."
+    "writeNotes": "Write your notes here...",
+    "videoFallbackNotice": "Video shown in Russian"
   },
   "login": {
     "title": "Sign in to your account",

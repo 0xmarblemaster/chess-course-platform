@@ -1,7 +1,7 @@
 'use client'
 import LoadingScreen from "@/components/LoadingScreen"
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -23,7 +23,7 @@ import type { Lesson, Progress } from '@/lib/supabaseClient'
 export default function LessonPage() {
   const params = useParams()
   const router = useRouter()
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
   const [lesson, setLesson] = useState<Lesson | null>(null)
   const [progress, setProgress] = useState<Progress | null>(null)
   const [allLessons, setAllLessons] = useState<Lesson[]>([])
@@ -38,6 +38,24 @@ export default function LessonPage() {
   const [trialTargets, setTrialTargets] = useState<Array<{ level_group_id: number | null; level_id: number | null; lesson_id: number | null; max_courses_per_level: number | null; max_lessons_per_course: number | null }>>([])
 
   const lessonId = parseInt(params.lessonId as string)
+
+  // Get the video URL based on user's selected language, with fallback to Russian
+  // IMPORTANT: This useMemo must be called before any early returns to follow Rules of Hooks
+  const { localizedVideoUrl, isVideoFallback } = useMemo(() => {
+    if (!lesson) return { localizedVideoUrl: null, isVideoFallback: false }
+
+    if (locale === 'kk' && lesson.video_url_kk) {
+      return { localizedVideoUrl: lesson.video_url_kk, isVideoFallback: false }
+    }
+    if (locale === 'en' && lesson.video_url_en) {
+      return { localizedVideoUrl: lesson.video_url_en, isVideoFallback: false }
+    }
+    // Default to Russian or show fallback notice if not Russian locale
+    return {
+      localizedVideoUrl: lesson.video_url || null,
+      isVideoFallback: locale !== 'ru' && !!lesson.video_url
+    }
+  }, [lesson, locale])
 
   useEffect(() => {
     fetchLesson()
@@ -416,7 +434,7 @@ export default function LessonPage() {
           </motion.div>
 
           {/* Video Section */}
-          {lesson?.video_url && (
+          {localizedVideoUrl && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -427,16 +445,25 @@ export default function LessonPage() {
                 <VideoCameraIcon className="w-6 h-6 text-indigo-600" />
                 {t('lesson.video', 'Video')}
               </h2>
-              
+
+              {/* Fallback notice when video is shown in Russian */}
+              {isVideoFallback && (
+                <div className="mb-4 px-3 py-2 bg-amber-50 border border-amber-200 rounded-md">
+                  <p className="text-sm text-amber-700">
+                    {t('lesson.videoFallbackNotice', 'Video shown in Russian')}
+                  </p>
+                </div>
+              )}
+
               <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden mb-4">
                 <iframe
-                  src={(lesson?.video_url || '').replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                  src={(localizedVideoUrl || '').replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
                   title={`Video Lesson - ${lesson?.title ?? ''}`}
                   className="w-full h-full"
                   allowFullScreen
                 />
               </div>
-              
+
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
                 <p className="text-sm text-gray-600">
                   {t('lesson.watchVideoDescription', 'Watch the video to learn the concepts')}

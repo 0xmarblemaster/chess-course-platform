@@ -43,6 +43,8 @@ export interface Lesson {
   title: string
   description?: string
   video_url: string
+  video_url_kk?: string
+  video_url_en?: string
   lichess_embed_url: string
   lichess_image_url?: string
   lichess_image_url_2?: string
