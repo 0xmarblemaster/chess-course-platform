@@ -3,18 +3,41 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabaseClient'
 
 import { useLanguage } from '@/contexts/LanguageContext'
 import LanguageSwitcher from './LanguageSwitcher'
+import { WHATSAPP_LEAD_URL } from '@/lib/whatsapp'
+
+// Anchor links for the Classic homepage header (scroll to sections in page.tsx).
+const HOME_NAV_LINKS = [
+  { href: '#about', key: 'landing.nav_about' },
+  { href: '#trainers', key: 'landing.nav_trainers' },
+  { href: '#programs', key: 'landing.nav_programs' },
+  { href: '#branches', key: 'landing.nav_branches' },
+  { href: '#prices', key: 'landing.nav_prices' },
+  { href: '#faq', key: 'landing.nav_faq' },
+  { href: '#contacts', key: 'landing.nav_contacts' },
+]
+
 const Navigation = () => {
   const { user, signOut } = useAuth()
   const { t } = useLanguage()
+  const pathname = usePathname()
+  const isHome = pathname === '/'
   const [userRole, setUserRole] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const logoSrc = '/brand/chess-empire-logo.png'
+
+  // Lock body scroll while the Classic mobile menu is open.
+  useEffect(() => {
+    if (!isHome) return
+    document.body.classList.toggle('nav-open', mobileMenuOpen)
+    return () => document.body.classList.remove('nav-open')
+  }, [isHome, mobileMenuOpen])
 
   useEffect(() => {
     const checkUserRole = async () => {
@@ -76,6 +99,53 @@ const Navigation = () => {
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen)
+  }
+
+  // Classic homepage header: reuses the shared Navigation (auth + LanguageSwitcher)
+  // but restyles it to the Chess (Classic) palette instead of adding a second header.
+  if (isHome) {
+    const closeMenu = () => setMobileMenuOpen(false)
+    return (
+      <div className="chess-classic">
+        <a className="skip-link" href="#main">{t('landing.skip', 'Перейти к содержанию')}</a>
+        <header className="site-header">
+          <div className="wrap header-inner">
+            <Link className="logo" href="/" onClick={closeMenu}>
+              <Image src={logoSrc} alt="Chess Empire logo" width={22} height={36} priority className="object-contain logo-gradient logo-mark-img" />
+              Chess Empire
+            </Link>
+            <nav className={`main-nav${mobileMenuOpen ? ' is-open' : ''}`} id="main-nav" aria-label={t('landing.menu', 'Меню')}>
+              <ul>
+                {HOME_NAV_LINKS.map((l) => (
+                  <li key={l.href}><a href={l.href} onClick={closeMenu}>{t(l.key)}</a></li>
+                ))}
+              </ul>
+            </nav>
+            <div className="header-actions">
+              {user && (
+                <Link href="/dashboard" className="header-auth" onClick={closeMenu}>
+                  {t('navigation.dashboard', 'Dashboard')}
+                </Link>
+              )}
+              <LanguageSwitcher />
+              <a className="btn btn-primary header-cta" href={WHATSAPP_LEAD_URL} target="_blank" rel="noopener noreferrer">
+                {t('landing.header_cta')}
+              </a>
+              <button
+                className="burger"
+                type="button"
+                aria-expanded={mobileMenuOpen}
+                aria-controls="main-nav"
+                aria-label={t('landing.menu', 'Меню')}
+                onClick={toggleMobileMenu}
+              >
+                <span></span>
+              </button>
+            </div>
+          </div>
+        </header>
+      </div>
+    )
   }
 
   if (loading) {
