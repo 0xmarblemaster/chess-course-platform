@@ -35,8 +35,9 @@ h3{font-size:20px;font-weight:700;line-height:1.25}
 /* header */
 .site-header{padding-top:16px}
 .header-inner{padding:0 12px 0 24px;border-radius:999px;background:rgba(18,20,40,.55);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
-.logo{font-family:var(--font-display);font-weight:700;font-size:17px}
+.logo{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:17px}
 .logo-mark{font-size:22px}
+.logo-mark-img{height:24px;width:auto;display:block;filter:brightness(0) saturate(100%) invert(78%) sepia(38%) saturate(560%) hue-rotate(1deg) brightness(92%) contrast(88%)}
 .main-nav a{font-size:14px;color:rgba(255,255,255,.85)}
 .main-nav a:hover{color:#fff}
 .lang-switch{padding:3px;border-radius:999px;background:rgba(255,255,255,.06)}
