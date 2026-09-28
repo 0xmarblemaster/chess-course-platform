@@ -14,6 +14,26 @@ const nextConfig: NextConfig = {
         destination: "/landing/index.html",
         permanent: false,
       },
+      {
+        source: "/v1",
+        destination: "/v1/index.html",
+        permanent: false,
+      },
+      {
+        source: "/v1/",
+        destination: "/v1/index.html",
+        permanent: false,
+      },
+      {
+        source: "/v2",
+        destination: "/v2/index.html",
+        permanent: false,
+      },
+      {
+        source: "/v2/",
+        destination: "/v2/index.html",
+        permanent: false,
+      },
     ];
   },
 };
