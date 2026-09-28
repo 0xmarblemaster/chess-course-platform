@@ -44,9 +44,7 @@ h3{font-size:20px;font-weight:700;line-height:1.25}
 .lang-switch a{border-radius:999px;color:var(--soft);min-width:38px;min-height:36px}
 .lang-switch a[aria-current="page"]{background:rgba(255,255,255,.16);color:#fff}
 .header-cta{min-height:44px;padding:10px 20px;font-size:14px}
-@media (max-width:1120px){.main-nav{background:rgba(10,12,24,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
-/* Open mobile menu is position:fixed; a backdrop-filter ancestor becomes its containing block and collapses it. Drop the pill's blur only while open so the panel resolves against the viewport. */
-body.nav-open .header-inner{-webkit-backdrop-filter:none;backdrop-filter:none}}
+@media (max-width:1120px){.main-nav{background:rgba(10,12,24,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}}
 
 /* hero */
 .hero{padding-block:clamp(48px,6vw,80px) clamp(56px,7vw,96px)}
