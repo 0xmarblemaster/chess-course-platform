@@ -128,9 +128,6 @@ export default function Home() {
         {/* About */}
         <section className="section" id="about">
           <div className="wrap split">
-            <figure className="media-frame">
-              <img src="/landing-chess/chess-pieces.jpg" alt={t('landing.about_img_alt')} width={800} height={533} loading="lazy" />
-            </figure>
             <div className="prose">
               <p className="eyebrow"><span className="glyph" aria-hidden="true">{'♔︎'}</span> {t('landing.ch_about')}</p>
               <h2>{t('landing.about_title')}</h2>

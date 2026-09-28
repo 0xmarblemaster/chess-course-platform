@@ -134,7 +134,7 @@ body.nav-open { overflow: hidden; }
 
 /* ===== About ===== */
 .chess-classic #about { padding-top: 0; }
-.chess-classic #about .media-frame img { border: 1px solid var(--ink); padding: 12px; background: var(--paper); }
+.chess-classic #about .split { grid-template-columns: minmax(0, 1fr); max-width: 720px; }
 .chess-classic #about .prose p { font-size: 17px; line-height: 1.7; color: var(--body); }
 .chess-classic #about .prose p:first-of-type::first-letter { float: left; font-family: var(--font-display); font-size: 64px; line-height: .85; padding: 6px 10px 0 0; font-weight: 700; color: var(--ink); }
 
