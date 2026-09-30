@@ -153,8 +153,14 @@ function mountSite(canvas, hud) {
   const frame = () => { raf = requestAnimationFrame(frame); lastT = performance.now(); step(false); };
   const onScroll = () => { if (performance.now() - lastT > 100) step(true); };
   addEventListener('scroll', onScroll, { passive: true });
+  // Pause the render loop while the tab is backgrounded (saves battery/GPU on mobile)
+  const onVis = () => {
+    if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+    else if (!raf) { lastT = performance.now(); frame(); }
+  };
+  document.addEventListener('visibilitychange', onVis);
   frame();
-  return () => { cancelAnimationFrame(raf); removeEventListener('scroll', onScroll); removeEventListener('pointermove', move); removeEventListener('resize', size); r.dispose(); };
+  return () => { cancelAnimationFrame(raf); removeEventListener('scroll', onScroll); removeEventListener('pointermove', move); removeEventListener('resize', size); document.removeEventListener('visibilitychange', onVis); r.dispose(); };
 }
 
 

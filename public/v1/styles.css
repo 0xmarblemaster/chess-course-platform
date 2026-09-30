@@ -229,6 +229,9 @@ body{background:#3A0E19 radial-gradient(ellipse at 68% 55%,#7A2238 0%,#5F192B 40
 #board3d{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block}
 main,.site-footer{position:relative;z-index:1}
 .site-header{background:rgba(58,14,25,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid rgba(194,164,129,.35)}
+/* backdrop-filter makes the header a containing block for the fixed mobile nav, collapsing it to 0 height.
+   Drop it while the nav is open so the drawer fills the viewport. */
+body.nav-open .site-header{-webkit-backdrop-filter:none;backdrop-filter:none}
 main>section:not(.hero){background:var(--panel)}
 #features,.section-tournaments,.cta-band,.site-footer{background:linear-gradient(var(--band),var(--band)),var(--panel)}
 .eyebrow{font-weight:600;color:var(--gold)}
@@ -280,4 +283,37 @@ h1 span{color:var(--gold)}
 .move-hud{position:fixed;right:20px;bottom:18px;z-index:40;display:none;align-items:center;gap:10px;padding:10px 14px;background:rgba(58,14,25,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(194,164,129,.4);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--body);pointer-events:none}
 .move-hud b{font-family:var(--font-display);font-size:18px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--gold);min-width:74px}
 .has-3d .move-hud{display:flex}
-@media (max-width:560px){.move-hud{right:12px;bottom:12px;padding:8px 10px}}
+@media (max-width:560px){.move-hud{right:12px;bottom:12px;padding:8px 10px}.move-hud b{font-size:16px;min-width:62px}}
+
+/* ---------- mobile responsive (v1) ---------- */
+/* Header must fit so the burger stays on-screen and the page doesn't scroll sideways */
+@media (max-width:560px){
+  .site-header .wrap{width:100%;padding-inline:12px}
+  .header-inner{gap:10px}
+  .logo{font-size:20px}
+  .logo-img{width:32px;height:32px}
+  .header-actions{gap:6px}
+  .lang-switch a{min-width:36px;min-height:44px;font-size:11px;padding:0 4px}
+  .btn-ghost{min-height:44px}
+}
+@media (max-width:380px){
+  .logo{font-size:16px;gap:6px}
+  .logo-img{width:26px;height:26px}
+  .lang-switch a{min-width:30px;padding:0 3px}
+}
+/* Contacts must stack on mobile (the desktop 2-col grid cramps the map/contact list) */
+@media (max-width:820px){
+  #contacts .contacts-grid{grid-template-columns:minmax(0,1fr)}
+}
+/* Smaller display type on phones (also lets long Kazakh words wrap without overflow) */
+@media (max-width:480px){
+  h1{font-size:clamp(30px,8.5vw,42px)}
+  h2{font-size:clamp(25px,6.8vw,36px)}
+  .section-tournaments h2,.adults-info h2,.cta-band h2{font-size:clamp(28px,7.5vw,42px)}
+  .hero-stats strong{font-size:34px}
+}
+/* Contacts map placeholder: keep its label inside the viewport at 320px */
+@media (max-width:560px){
+  .map-placeholder{min-height:220px;padding:20px}
+  .map-placeholder p{font-size:18px;padding:16px 18px;line-height:1.35}
+}
