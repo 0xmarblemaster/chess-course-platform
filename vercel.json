@@ -4,5 +4,8 @@
   "installCommand": null,
   "outputDirectory": "landing-live",
   "cleanUrls": false,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/v2", "destination": "/index.html" }
+  ]
 }
