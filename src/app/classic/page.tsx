@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { WHATSAPP_LEAD_URL, openWhatsAppLead } from '@/lib/whatsapp'
-import './landing-chess.css'
+import '../landing-chess.css'
 
 // New-tab attributes shared by every WhatsApp CTA.
 const WA_LINK = { href: WHATSAPP_LEAD_URL, target: '_blank', rel: 'noopener noreferrer' } as const
