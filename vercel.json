@@ -1,15 +1,8 @@
 {
-  "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "outputDirectory": ".next",
-  "headers": [
-    {
-      "source": "/landing/index.html",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0" }
-      ]
-    }
-  ]
+  "framework": null,
+  "buildCommand": null,
+  "installCommand": null,
+  "outputDirectory": "landing-live",
+  "cleanUrls": false,
+  "trailingSlash": false
 }
