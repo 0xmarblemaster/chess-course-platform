@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
       // the Next.js app alive. The classic cream landing now lives at /classic.
       {
         source: "/",
-        destination: "/v1/index.html",
+        destination: "/home/index.html",
       },
     ];
   },
