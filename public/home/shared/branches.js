@@ -35,6 +35,19 @@
 
   var WEEKDAYS = "09:00-18:00";
   var BRANCHES = [
+    { id: "debut", gisId: "70000001104248570", lat: 43.250483, lon: 76.952242, rating: 5.0, ratings: 163, phone: "+77077872210",
+      hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Sat: "09:00-14:00", Sun: "09:00-14:00" },
+      name: { ru: "Дебют", en: "Debut", kk: "Дебют" },
+      address: { ru: "ул. Кабанбай батыра, 71", en: "71 Kabanbay Batyr St", kk: "Қабанбай батыр к-сі, 71" },
+      district: { ru: "Медеуский р‑н", en: "Medeu district", kk: "Медеу ауданы" },
+      note: { ru: "Здесь же — вечерние занятия для взрослых", en: "Evening classes for adults are held here too", kk: "Мұнда ересектерге арналған кешкі сабақтар да өтеді" } },
+    { id: "gagarin", gisId: "70000001112466521", lat: 43.204118, lon: 76.897401, rating: 4.9, ratings: 153, phone: "+77077872210",
+      hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Sat: "09:00-14:00", Sun: "09:00-14:00" },
+      name: { ru: "ЖК Gagarin Park", en: "Gagarin Park", kk: "Gagarin Park ТК" },
+      address: { ru: "пр. Гагарина, 287/2", en: "287/2 Gagarin Ave", kk: "Гагарин даңғ., 287/2" },
+      building: { ru: "ЖК Gagarin Park", en: "Gagarin Park residential complex", kk: "Gagarin Park ТК" },
+      entrance: { ru: "1 этаж", en: "1st floor", kk: "1-қабат" },
+      district: { ru: "Бостандыкский р‑н", en: "Bostandyk district", kk: "Бостандық ауданы" } },
     { id: "arena", gisId: "70000001030399258", lat: 43.262664, lon: 76.818421, rating: 4.9, ratings: 202, phone: "+77077872210",
       hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Sat: "09:00-13:00", Sun: "09:00-13:00" },
       name: { ru: "Алматы Арена", en: "Almaty Arena", kk: "Алматы Арена" },
@@ -42,12 +55,6 @@
       building: { ru: "Almaty Arena", en: "Almaty Arena", kk: "Almaty Arena" },
       entrance: { ru: "2 этаж, блок D, каб. 5 и 6", en: "2nd floor, block D, rooms 5 & 6", kk: "2-қабат, D блогы, 5 және 6-кабинеттер" },
       district: { ru: "Алатауский р‑н", en: "Alatau district", kk: "Алатау ауданы" } },
-    { id: "debut", gisId: "70000001104248570", lat: 43.250483, lon: 76.952242, rating: 5.0, ratings: 163, phone: "+77077872210",
-      hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Sat: "09:00-14:00", Sun: "09:00-14:00" },
-      name: { ru: "Дебют", en: "Debut", kk: "Дебют" },
-      address: { ru: "ул. Кабанбай батыра, 71", en: "71 Kabanbay Batyr St", kk: "Қабанбай батыр к-сі, 71" },
-      district: { ru: "Медеуский р‑н", en: "Medeu district", kk: "Медеу ауданы" },
-      note: { ru: "Здесь же — вечерние занятия для взрослых", en: "Evening classes for adults are held here too", kk: "Мұнда ересектерге арналған кешкі сабақтар да өтеді" } },
     { id: "halyk", gisId: "70000001061297172", lat: 43.288076, lon: 76.990837, rating: 4.9, ratings: 82, phone: "+77077872210",
       hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Fri: "09:00-13:00", Sat: WEEKDAYS, Sun: WEEKDAYS },
       name: { ru: "Халык Арена", en: "Halyk Arena", kk: "Халық Арена" },
@@ -67,14 +74,7 @@
       name: { ru: "Жандосова 305", en: "Zhandosov 305", kk: "Жандосов 305" },
       address: { ru: "ул. Жандосова, 305", en: "305 Zhandosov St", kk: "Жандосов к-сі, 305" },
       entrance: { ru: "кабинет 7", en: "room 7", kk: "7-кабинет" },
-      district: { ru: "Ауэзовский р‑н", en: "Auezov district", kk: "Әуезов ауданы" } },
-    { id: "gagarin", gisId: "70000001112466521", lat: 43.204118, lon: 76.897401, rating: 4.9, ratings: 153, phone: "+77077872210",
-      hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Sat: "09:00-14:00", Sun: "09:00-14:00" },
-      name: { ru: "ЖК Gagarin Park", en: "Gagarin Park", kk: "Gagarin Park ТК" },
-      address: { ru: "пр. Гагарина, 287/2", en: "287/2 Gagarin Ave", kk: "Гагарин даңғ., 287/2" },
-      building: { ru: "ЖК Gagarin Park", en: "Gagarin Park residential complex", kk: "Gagarin Park ТК" },
-      entrance: { ru: "1 этаж", en: "1st floor", kk: "1-қабат" },
-      district: { ru: "Бостандыкский р‑н", en: "Bostandyk district", kk: "Бостандық ауданы" } }
+      district: { ru: "Ауэзовский р‑н", en: "Auezov district", kk: "Әуезов ауданы" } }
   ];
 
   var DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
