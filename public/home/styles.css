@@ -4,7 +4,7 @@
   --walnut:#5F192B;--brass:#C2A580;--focus:#5F192B;
   --gold:#C2A580;--burgundy:#5F192B;--deep:#42111D;--grey:#EBEBEB;--black:#101211;--tint:#EDE3D3;
   --font-body:'Clear Sans','Noto Sans',system-ui,sans-serif;--font-display:'Unbounded','Montserrat',system-ui,sans-serif;--font-mono:'Clear Sans','Noto Sans',system-ui,sans-serif;
-  --header-h:80px;--grid-gap:20px
+  --header-h:81px;--grid-gap:20px
 }
 :lang(kk){--font-display:'Montserrat',system-ui,sans-serif;--font-body:'Noto Sans',system-ui,sans-serif;--font-mono:'Noto Sans',system-ui,sans-serif}
 h1,h2,h3,.sub-title{font-family:var(--font-display);font-weight:600}
@@ -262,7 +262,9 @@ h2{font-size:clamp(28px,3.6vw,44px);line-height:1.12;text-wrap:balance}
 .tag,.rating,.step-rating,.read-more,.form-status,.pct{color:var(--ink)}
 .badge{color:var(--gold)}
 .post-no,.branch-idx,.faq-item summary::before,.contact-list dt,.level-badge small,.discount-grid small,.price span,.review small{color:var(--soft)}
-.site-header{background:rgba(244,238,230,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+/* blur sits on a pseudo-layer: backdrop-filter on the header itself makes it the containing block for the fixed mobile .main-nav (collapsing it to ~1px) */
+.site-header{background:transparent;border-bottom:1px solid var(--line)}
+.site-header::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(244,238,230,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);pointer-events:none}
 .main-nav a{color:var(--body)}
 .main-nav a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
 .lang-switch{border-color:var(--line)}

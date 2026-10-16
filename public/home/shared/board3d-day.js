@@ -124,7 +124,7 @@ function mountSite(canvas, hud, theme) {
   ];
   const tracks = []; const occ = { ...at };
   const p0 = .1, p1 = .9, w = (p1 - p0) / game.length;
-  game.forEach(([label, mv], i) => mv.forEach(([f, t]) => { const obj = occ[f]; delete occ[f]; occ[t] = obj; tracks.push({ obj, a: sq2xz(f), b: sq2xz(t), s: p0 + i * w, e: p0 + i * w + w * .7 }); }));
+  game.forEach(([label, mv], i) => mv.forEach(([f, t]) => { const obj = occ[f]; delete occ[f]; occ[t] = obj; tracks.push({ obj, a: sq2xz(f), b: sq2xz(t), s: p0 + i * w, e: p0 + i * w + w * .7, first: !tracks.some(k => k.obj === obj) }); }));
   const keys = [
     [0, .55, 11, 4.6, 1], [.14, 1.25, 8.2, 2.4, 0], [.4, 2.3, 9, 3.6, 0], [.7, 3.5, 9.5, 5.2, 0], [1, 4.6, 7, 12, 0],
   ];
@@ -152,7 +152,8 @@ function mountSite(canvas, hud, theme) {
     const off = oa + (ob - oa) * u;
     if (W > 760 && off > .001) cam.setViewOffset(W, H, -W * .34 * off, H * .03 * off, W, H); else cam.clearViewOffset();
     let label = '3. Bc4';
-    tracks.forEach(({ obj, a, b, s, e }) => { const q = sstep(s, e, prog); obj.position.set(a[0] + (b[0] - a[0]) * q, Math.sin(Math.PI * q) * .55, a[1] + (b[1] - a[1]) * q); });
+    // a piece's later moves (h1 rook: O-O then Re1) only take over once their window starts
+    tracks.forEach(({ obj, a, b, s, e, first }) => { if (!first && prog < s) return; const q = sstep(s, e, prog); obj.position.set(a[0] + (b[0] - a[0]) * q, Math.sin(Math.PI * q) * .55, a[1] + (b[1] - a[1]) * q); });
     game.forEach(([l], i) => { if (prog >= p0 + i * w + w * .5) label = l; });
     if (hud && label !== lastLabel) { hud.textContent = label; lastLabel = label; }
     r.render(scene, cam);
