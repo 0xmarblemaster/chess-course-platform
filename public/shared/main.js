@@ -1,6 +1,6 @@
 /* Chess Empire — shared behaviour (no dependencies). */
 window.CHESS_EMPIRE_CONFIG = window.CHESS_EMPIRE_CONFIG || {
-  whatsapp: '77771234567' // TODO: real WhatsApp number, digits only
+  whatsapp: '77077872210'
 };
 
 /**
