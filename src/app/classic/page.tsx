@@ -461,7 +461,7 @@ export default function Home() {
                 <dl className="contact-list">
                   <div><dt>{t('landing.c_phone')}</dt><dd><a href="tel:+77077872210">+7 (707) 787-22-10</a></dd></div>
                   <div><dt>WhatsApp</dt><dd><a {...WA_LINK}>+7 (707) 787-22-10</a></dd></div>
-                  <div><dt>Instagram</dt><dd><a href="https://instagram.com/chessempire_almaty" target="_blank" rel="noopener noreferrer">@chessempire_almaty</a></dd></div>
+                  <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/chessempire.kz" target="_blank" rel="noopener noreferrer">@chessempire.kz</a></dd></div>
                   <div><dt>{t('landing.c_email')}</dt><dd><a href="mailto:info@chessempire.kz">info@chessempire.kz</a></dd></div>
                   <div><dt>{t('landing.c_hours')}</dt><dd dangerouslySetInnerHTML={html('hours')} /></div>
                 </dl>
@@ -494,10 +494,7 @@ export default function Home() {
                 <h3><span className="glyph" aria-hidden="true">{'♔︎'}</span> Chess Empire</h3>
                 <p>{t('landing.footer_desc')}</p>
                 <ul className="socials">
-                  <li><a href="https://instagram.com/chessempire_almaty" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-                  <li><a href="#">Facebook</a></li>
-                  <li><a href="#">Telegram</a></li>
-                  <li><a href="#">YouTube</a></li>
+                  <li><a href="https://www.instagram.com/chessempire.kz" target="_blank" rel="noopener noreferrer">Instagram</a></li>
                 </ul>
               </div>
               <div>
