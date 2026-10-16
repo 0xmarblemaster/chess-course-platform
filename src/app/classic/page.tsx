@@ -8,7 +8,7 @@ import '../landing-chess.css'
 // New-tab attributes shared by every WhatsApp CTA.
 const WA_LINK = { href: WHATSAPP_LEAD_URL, target: '_blank', rel: 'noopener noreferrer' } as const
 
-// KZ phone mask: +7 (777) 123-45-67
+// KZ phone mask: +7 (707) 787-22-10
 function formatPhone(v: string): string {
   let x = v.replace(/\D/g, '')
   if (!x) return ''
@@ -459,7 +459,7 @@ export default function Home() {
               <div className="contact-card">
                 <h3>{t('landing.contact_us')}</h3>
                 <dl className="contact-list">
-                  <div><dt>{t('landing.c_phone')}</dt><dd><a href="tel:+77771234567">+7 (777) 123-45-67</a></dd></div>
+                  <div><dt>{t('landing.c_phone')}</dt><dd><a href="tel:+77077872210">+7 (707) 787-22-10</a></dd></div>
                   <div><dt>WhatsApp</dt><dd><a {...WA_LINK}>+7 (707) 787-22-10</a></dd></div>
                   <div><dt>Instagram</dt><dd><a href="https://instagram.com/chessempire_almaty" target="_blank" rel="noopener noreferrer">@chessempire_almaty</a></dd></div>
                   <div><dt>{t('landing.c_email')}</dt><dd><a href="mailto:info@chessempire.kz">info@chessempire.kz</a></dd></div>
@@ -523,7 +523,7 @@ export default function Home() {
               </div>
               <div>
                 <h3>{t('landing.footer_contacts')}</h3>
-                <p><a href="tel:+77771234567">+7 (777) 123-45-67</a></p>
+                <p><a href="tel:+77077872210">+7 (707) 787-22-10</a></p>
                 <p><a href="mailto:info@chessempire.kz">info@chessempire.kz</a></p>
                 <p>{t('landing.footer_6')}</p>
               </div>
