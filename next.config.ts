@@ -4,16 +4,23 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   async rewrites() {
     return [
-      // Serve build A (burgundy 3D landing) at the site root while keeping
-      // the Next.js app alive. The classic cream landing now lives at /classic.
-      {
-        source: "/",
-        destination: "/home/index.html",
-      },
+      // Landing in 3 languages at short URLs; Russian is the default
+      // (the root redirects to /ru). The classic cream landing lives at /classic.
+      { source: "/ru", destination: "/home/index.html" },
+      { source: "/en", destination: "/home/en/index.html" },
+      { source: "/kz", destination: "/home/kk/index.html" },
     ];
   },
   async redirects() {
     return [
+      // Russian is the default language.
+      { source: "/", destination: "/ru", permanent: false },
+      // Old landing addresses (switcher links before the move, and the
+      // /kk URL that the hreflang tags used to advertise).
+      { source: "/home", destination: "/ru", permanent: true },
+      { source: "/home/en", destination: "/en", permanent: true },
+      { source: "/home/kk", destination: "/kz", permanent: true },
+      { source: "/kk", destination: "/kz", permanent: true },
       {
         source: "/landing",
         destination: "/landing/index.html",
