@@ -40,8 +40,9 @@ for (const [file, L] of Object.entries(PAGES)) {
     assert.equal(cards[1].match(/<p>(.*?)<\/p>/)[1], sign)
   })
 
-  test(`${file}: first 3 cards are click-to-play videos`, () => {
-    for (const [i, c] of cards.slice(0, 3).entries()) {
+  test(`${file}: cards 1–3 and 5 are click-to-play videos`, () => {
+    for (const i of [0, 1, 2, 4]) {
+      const c = cards[i]
       const video = c.match(/<video\b[^>]*>/)?.[0]
       assert.ok(video, `card ${i + 1} has a video`)
       assert.match(video, /class="avatar trainer-video"/)
@@ -57,8 +58,8 @@ for (const [file, L] of Object.entries(PAGES)) {
     }
   })
 
-  test(`${file}: cards 4–5 are lazy photo cards`, () => {
-    for (const c of cards.slice(3)) {
+  test(`${file}: card 4 is a lazy photo card`, () => {
+    for (const c of [cards[3]]) {
       assert.doesNotMatch(c, /<video/)
       const img = c.match(/<img class="avatar" src="([^"]+)"[^>]*>/)
       assert.ok(img && asset(img[1]), 'photo exists')
