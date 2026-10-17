@@ -141,3 +141,10 @@
 /* language switch + burger fit a 390px header (the switch was pushing the burger 10px off-screen) */
 @media (max-width:420px){.lang-switch a{min-width:32px;padding:0 4px}}
 @media (max-width:374px){.logo{font-size:15px;gap:8px}.logo-img{width:32px;height:32px}}
+
+/* Hero 2GIS rating stat (links to the Дебют 2GIS reviews page) */
+.hero-stats:has(.hero-stat-2gis){column-gap:clamp(24px,2.6vw,32px)}
+@media (min-width:600px){.hero-stats:has(.hero-stat-2gis){flex-wrap:nowrap}.hero-stats:has(.hero-stat-2gis) li{flex:0 1 auto;min-width:0}}
+.hero-stat-2gis a{display:flex;flex-direction:column;color:inherit;text-decoration:none}
+.hero-stat-2gis a span{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.hero-stat-2gis a:hover strong,.hero-stat-2gis a:focus-visible strong{opacity:.8}

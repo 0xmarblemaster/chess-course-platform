@@ -238,3 +238,19 @@ test('reviews: screenshot strip loops seamlessly in every language', () => {
   assert.ok(css.includes("@media (prefers-reduced-motion:reduce){.v2-shots-track{animation-duration:120s!important;animation-iteration-count:infinite!important}}"), "reduced motion slows the strip instead of stopping it")
   assert.ok(!/prefers-reduced-motion[^@]*animation:none/.test(css), "strip never stops for reduced motion")
 })
+
+test('hero stats end with the 2GIS rating linking to the Дебют reviews page', () => {
+  for (const path of ['public/main/index.html', 'public/main/en/index.html', 'public/main/kk/index.html']) {
+    const page = readFileSync(path, 'utf8')
+    const stats = page.match(/<ul class="hero-stats">(.*?)<\/ul>/)
+    assert.ok(stats, `${path}: hero stats present`)
+    const items = [...stats[1].matchAll(/<li[^>]*>.*?<\/li>/g)].map((m) => m[0])
+    assert.equal(items.length, 4, `${path}: four hero stats`)
+    assert.ok(items[2].includes('<strong>6</strong>'), `${path}: branches stat is third`)
+    assert.ok(items[3].includes('href="https://2gis.kz/almaty/firm/70000001104248570/tab/reviews"'), `${path}: rating links to Дебют on 2GIS`)
+    assert.ok(items[3].includes('target="_blank" rel="noopener"'), `${path}: opens in a new tab safely`)
+    assert.ok(items[3].includes('<strong>★ 5,0</strong>'), `${path}: matches Дебют rating in the reviews block`)
+  }
+  assert.ok(html.includes('Дебют <b>★ 5,0</b>'), 'reviews block still lists Дебют at 5,0')
+  assert.ok(css.includes('.hero-stat-2gis a{'), 'rating link is styled')
+})
