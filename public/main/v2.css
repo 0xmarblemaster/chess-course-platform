@@ -182,3 +182,8 @@
 .wa-fab.is-compact:hover .wa-fab-label,.wa-fab.is-compact:focus-visible .wa-fab-label{max-width:220px;opacity:1;margin-left:10px}
 .wa-fab.is-hidden{opacity:0;transform:translateY(8px);pointer-events:none;visibility:hidden}
 @media (prefers-reduced-motion:reduce){.wa-fab,.wa-fab-label{transition:none}}
+
+/* section order (2026-10-17): Reviews → Trainers → Branches → Club → Skills → Approach → Path → Fide.
+   Alternate white bands so neighbours don't merge — also where the 3D gaps are closed (no WebGL). */
+#trainers{border-top:1px solid var(--ink)}
+#approach,#fide{background-color:var(--sand);border-top:1px solid var(--ink)}
