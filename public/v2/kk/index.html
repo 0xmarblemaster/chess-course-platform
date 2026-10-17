@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chess Empire — Алматыдағы балаларға арналған шахмат мектебі</title>
+<meta name="description" content="Шахматтағы алғашқы қадамдар — біздің мамандығымыз. Балаларды нөлден оқытамыз, топтарда 10 оқушыға дейін, Алматыда 6 филиал, тегін сынақ сабақ.">
+<meta name="theme-color" content="#F4EEE6">
+<link rel="canonical" href="https://www.chessempire.kz/kz">
+<link rel="alternate" hreflang="ru" href="https://www.chessempire.kz/ru">
+<link rel="alternate" hreflang="en" href="https://www.chessempire.kz/en">
+<link rel="alternate" hreflang="kk" href="https://www.chessempire.kz/kz">
+<link rel="alternate" hreflang="x-default" href="https://www.chessempire.kz/ru">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chess Empire">
+<meta property="og:title" content="Chess Empire — Алматыдағы балаларға арналған шахмат мектебі">
+<meta property="og:description" content="Шахматтағы алғашқы қадамдар — біздің мамандығымыз. Балаларды нөлден оқытамыз, топтарда 10 оқушыға дейін, Алматыда 6 филиал, тегін сынақ сабақ.">
+<meta property="og:image" content="https://www.chessempire.kz/home/assets/chess-pieces.jpg">
+<meta property="og:locale" content="kk_KZ">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/home/assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/home/shared/fonts/montserrat-cyrillic-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/home/shared/fonts.css">
+<link rel="stylesheet" href="/home/shared/base.css">
+<link rel="stylesheet" href="/home/styles.css">
+<link rel="stylesheet" href="/v2/v2.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Оқу қанша тұрады?","acceptedAnswer":{"@type":"Answer","text":"Құны филиалға және таңдалған тарифке байланысты. Негізгі тарифтер аптасына 2 рет 60 минуттық сабақ үшін айына 29 500 ₸-ден басталады. Gagarin Park және Дебют филиалдарында — айына 35 900 ₸-ден. Барлық тарифтер мен жеңілдіктер — «Филиалдар мен бағалар» бөлімінде."}},
+{"@type":"Question","name":"Қай филиалдарда қазақ тілінде сөйлейтін жаттықтырушылар бар?","acceptedAnswer":{"@type":"Answer","text":"Қазақ тілінде сөйлейтін жаттықтырушылар Дебют, Жандосов, Алматы Арена филиалдарында жұмыс істейді."}},
+{"@type":"Question","name":"Жеке сабақтар бар ма?","acceptedAnswer":{"@type":"Answer","text":"Жеке сабақтар тек сынақ сабақта немесе ірі жарыстарға дайындық кезінде өткізіледі (құны сағатына 10 000 ₸). Бастаушылар мен жалғастырушыларға топтық форматты ұсынамыз — ол даму үшін тиімдірек."}},
+{"@type":"Question","name":"Аптасына бір рет қатысуға бола ма?","acceptedAnswer":{"@type":"Answer","text":"Жоқ, мұндай формат қарастырылмаған. Аптасына бір реттік сабақтар қажетті нәтиже мен тәжірибе бермейді. Прогресс үшін аптасына кемінде 2 сабақ қажет."}},
+{"@type":"Question","name":"Турнирлер қалай өтеді және бала қашан қатыса алады?","acceptedAnswer":{"@type":"Answer","text":"Турнирлер әр демалыс сайын 5 филиалда өтеді. Бала оқудың бірінші кезеңін аяқтап, жаттықтырушыға емтихан тапсырғаннан кейін қатыса алады. Абонементке айына 4 тегін турнирге дейін кіреді."}},
+{"@type":"Question","name":"Ересектерге арналған оқу бар ма?","acceptedAnswer":{"@type":"Answer","text":"Иә, ересектерге арналған сабақтар «Дебют» филиалында (Қабанбай батыр, 71) 19:00-ден 21:00-ге дейін өтеді. Бір сабақтың құны — 5 000 ₸. Сынақ сабақ тегін."}},
+{"@type":"Question","name":"Жеке кабинет қалай жұмыс істейді?","acceptedAnswer":{"@type":"Answer","text":"Жеке кабинет бірінші сабақтан кейін жаттықтырушымен бірге ашылады. Тіркелуге көмектесіп, оны қалай пайдалану керектігін түсіндіреміз."}}
+]}</script>
+</head>
+<body class="theme-chess">
+<canvas id="board3d" aria-hidden="true"></canvas>
+<a class="skip-link" href="#main">Мазмұнға өту</a>
+<header class="site-header"><div class="wrap header-inner">
+<a class="logo" href="#top"><img class="logo-img" src="/home/assets/logo.png" alt="" width="40" height="40">Chess Empire</a>
+<nav class="main-nav" id="main-nav" aria-label="Мәзір"><ul><li><a href="#about">Мектеп туралы</a></li><li><a href="#skills">Оқыту</a></li><li><a href="#trainers">Жаттықтырушылар</a></li><li><a href="#path">Оқушы жолы</a></li><li><a href="#branches">Филиалдар мен бағалар</a></li><li><a href="#faq">FAQ</a></li></ul></nav>
+<div class="header-actions"><nav class="lang-switch" aria-label="Тіл"><a href="/ru" hreflang="ru" lang="ru">RU</a><a href="/en" hreflang="en" lang="en">EN</a><a href="/kz" hreflang="kk" lang="kk" aria-current="page">KZ</a></nav><a class="btn btn-primary header-cta" href="#signup">Сынақ сабақ</a><button class="burger" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Мәзір"><span></span></button></div>
+</div></header>
+<main id="main">
+
+<section class="hero" id="top"><div class="wrap hero-grid"><div class="hero-text">
+<p class="eyebrow">1. e4 e5 2. Nf3 Nc6 3. Bc4 — сіздің жүрісіңіз</p>
+<p class="hero-kicker">Алматыдағы балаларға арналған шахмат мектебі</p>
+<h1>Шахматтағы алғашқы қадамдар — біздің мамандығымыз</h1>
+<p class="lead">Балаларға шахматты нөлден меңгеруге, зейінді, есте сақтауды және өз бетінше ойлауды жаттықтыруға көмектесеміз. Ойынға қызықтырамыз, ой қорытуға үйретеміз және алғашқы нәтижелерге біртіндеп жеткіземіз.</p>
+<a class="btn btn-primary btn-lg" href="#signup">Тегін сынақ сабаққа жазылу</a>
+<ul class="hero-stats"><li><strong>нөлден</strong><span>балаларды оқытамыз</span></li><li><strong>10-ға дейін</strong><span>оқушы бір топта</span></li><li><strong>6</strong><span>Алматыдағы филиал</span></li></ul>
+</div><div class="hero-media"><img src="/home/assets/chess-pieces.jpg" alt="Тақтадағы шахмат фигуралары" width="800" height="533" fetchpriority="high"></div></div></section>
+
+<section class="section" id="about"><div class="wrap v2-letter">
+<header class="section-head"><p class="eyebrow">Дебют · I</p><h2>Мен өзім де әкемін. Сіз бізге ең қымбатыңызды — балаңызды сеніп тапсыратыныңызды түсінемін</h2></header>
+<div class="prose">
+<p>Сабақ таңдағанда сіз үшін баланың қызығуы, оған көңіл бөлінуі және оның шынымен бір нәрсе үйренуі маңызды.</p>
+<p>Сіз жолға уақыт жұмсайсыз, отбасы кестесін бейімдейсіз және оқуға төлейсіз. Мен бұл күш-жігердің құнын түсінемін.</p>
+<p>Сондықтан Chess Empire-де біз баланы жай ғана ойнатып қоймаймыз. Біз оқытамыз: түсіндіреміз, түсінуге көмектесеміз, дағдыларды бекітеміз және ілгерілеуін қадағалаймыз.</p>
+<p>Шахматтың пайдасы бала бойында өмір бойы қалады деп сенемін. Әрекет етпес бұрын ойлану, салдарын бағалау, өз бетінше шешім қабылдау және қателіктен сабақ алу әдеті шахмат тақтасынан әлдеқайда тыс жерде де керек болады.</p>
+<p>Біз балаларды осы үшін оқытамыз.</p>
+<p>Мен бұл мектепті негіздедім және бастаушыларға өзім сабақ беремін.</p>
+<p class="v2-pledge">Оқу бағдарламасы, жаттықтырушыларды даярлау және сабақ сапасы үшін мен жеке өзім жауап беремін.</p>
+<figure class="v2-sign"><span class="v2-monogram" aria-hidden="true">ЧН</span><figcaption><b>Чингис Нургалимов</b><span>Chess Empire негізін қалаушы, әдістеме авторы және жаттықтырушы. Ең жоғары FIDE рейтингі — 2121.</span></figcaption></figure>
+</div>
+</div></section>
+
+<section class="section" id="skills"><div class="wrap">
+<header class="section-head"><h2>Бала шахмат тақтасында жаттықтыратын дағдылар</h2></header>
+<ul class="features-grid">
+<li class="feature"><span class="feature-mark" aria-hidden="true">♙︎</span><h3>Зейін</h3></li>
+<li class="feature"><span class="feature-mark" aria-hidden="true">♘︎</span><h3>Логикалық ойлау</h3></li>
+<li class="feature"><span class="feature-mark" aria-hidden="true">♗︎</span><h3>Есте сақтау</h3></li>
+<li class="feature"><span class="feature-mark" aria-hidden="true">♖︎</span><h3>Жоспарлау</h3></li>
+<li class="feature"><span class="feature-mark" aria-hidden="true">♕︎</span><h3>Дербестік</h3></li>
+<li class="feature"><span class="feature-mark" aria-hidden="true">♔︎</span><h3>Қателіктермен жұмыс істеу</h3></li>
+</ul>
+</div></section>
+
+<section class="section" id="approach"><div class="wrap">
+<header class="section-head"><h2>Балаға оқуға және алға жылжуға қалай көмектесеміз</h2></header>
+<div class="v2-worries">
+<details class="feature v2-worry" open><summary><h3>Балаға қызық бола ма?</h3></summary><p>Бағдарламамызға сабаққа деген қызығушылықты және әрі қарай жылжуға деген ынтаны сақтауға көмектесетін мотивация жүйесі енгізілген. Бала үшін сабақтың әрі пайдалы, әрі қызықты болғаны біз үшін маңызды.</p><p class="v2-perk">Әр жаңа оқушыға — біздің әдістеме бойынша кітап сыйлыққа.</p></details>
+<details class="feature v2-worry" open><summary><h3>Оқу тиімді бола ма?</h3></summary><p>Бағдарлама балаға өз қарқынымен жылжуға мүмкіндік береді. Материалды тезірек меңгеретіндерді ұстап қалмаймыз. Көбірек уақыт керек балаларға түсінуге және негіздерді бекітуге көмектесеміз. Оқыту әдістемесі топ ішіндегі осы айырмашылықтарды ескеруге мүмкіндік береді.</p></details>
+<details class="feature v2-worry" open><summary><h3>Балама көңіл бөле ме?</h3></summary><p>Біздің топтарда 10 оқушыдан аспайды. Жаттықтырушы әрқайсысына көңіл бөледі: тапсырмаларға көмектеседі, сұрақтарға жауап береді және түсінгенін тексереді.</p></details>
+<details class="feature v2-worry" open><summary><h3>Баланы кім оқытады?</h3></summary><p>Chess Empire-дің жаттықтырушылардың өз академиясы бар. Даярлауда біз педагогикаға басты назар аударамыз: түсіндіре білу, қызықтыра білу және балалармен жұмыс істей білу. Жаттықтырушының өз білімін балаға жеткізе алуы біз үшін маңызды.</p></details>
+</div>
+</div></section>
+
+<section class="section" id="trainers"><div class="wrap">
+<header class="section-head"><p class="eyebrow">Миттельшпиль · II</p><h2>Балаңызды кім оқытады</h2><p>Chess Empire-дің жаттықтырушылардың өз академиясы бар. Даярлаудағы басты нәрсе — педагогика: түсіндіре білу, қызықтыра білу және балалармен жұмыс істей білу.</p></header>
+<ul class="trainers">
+<li class="trainer"><img class="avatar" src="/home/assets/trainer-assylkhan.png" alt="Асылхан Агбаевич" width="240" height="240" loading="lazy"><h3>Асылхан Агбаевич</h3><span class="tag">Дебют</span><p>ФИДЕ шебері, Алматы қаласының аға жаттықтырушысы, ҚР еңбек сіңірген жаттықтырушысы, «Дебют» клубының жетекшісі.</p></li>
+<li class="trainer"><img class="avatar" src="/home/assets/trainer-vasily.png" alt="Василий Михайлович" width="240" height="240" loading="lazy"><h3>Василий Михайлович</h3><span class="tag">Gagarin Park</span><p>ФИДЕ шебері, ең жоғары FIDE рейтингі — 2381, 7+ жыл оқыту тәжірибесі.</p></li>
+<li class="trainer"><img class="avatar" src="/home/assets/trainer-aleksandr.png" alt="Александр Олегович" width="240" height="240" loading="lazy"><h3>Александр Олегович</h3><span class="tag">Халық Арена</span><p>ФИДЕ шебері, 700-ден астам оқушы тәрбиелеген.</p></li>
+</ul>
+</div></section>
+
+<section class="section section-tournaments" id="club"><div class="wrap">
+<div class="prose">
+<h2>Балаңыздың өсуіне арналған тұтас шахмат жүйесі</h2>
+<p>Chess Empire-де оқу сабақтан тыс та жалғасады. Бізде мектепішілік, қалалық, республикалық және халықаралық турнирлер өтетін «Дебют» атты өз шахмат клубымыз бар.</p>
+<p>Бала бастаушыларға арналған жарыстардан бастап, дайындығы артқан сайын күрделірек турнирлерге өте алады. Үйренгенін қолданады, тәжірибе жинайды және әрі қарай қайда жылжу керектігін көреді.</p>
+<ul class="stats"><li><span class="stat-num">4-ке дейін</span><span class="stat-label">айына тегін турнир</span></li><li><span class="stat-num">5</span><span class="stat-label">турнир өтетін филиал</span></li><li><span class="stat-num">әр</span><span class="stat-label">демалыс сайын</span></li></ul>
+</div>
+<ol class="v2-rail">
+<li class="v2-stage"><img src="/home/assets/kids-playing-chess.jpg" alt="Сабақта шахмат ойнап жатқан балалар" width="1200" height="800" loading="lazy"><h3>Оқыту</h3><p>Сабақта жаңа нәрсені меңгереміз.</p></li>
+<li class="v2-stage"><img src="/home/assets/chess-pieces.jpg" alt="Тақтадағы шахмат фигуралары" width="800" height="533" loading="lazy"><h3>Тәжірибе</h3><p>Дағдыларды ойында және мектепішілік турнирлерде қолданамыз.</p></li>
+<li class="v2-stage"><span class="v2-stage-icon" aria-hidden="true">♔︎</span><h3>Өсу</h3><p>Келесі деңгейдегі жарыстарға дайындаламыз.</p></li>
+</ol>
+</div></section>
+
+<section class="section" id="path"><div class="wrap">
+<header class="section-head is-center"><h2>Түсінікті жол және айқын нәтижелер</h2></header>
+<ol class="path">
+<li class="step"><span class="step-piece" aria-hidden="true">♙︎</span><span class="step-key">1</span><h3>Нөлден бастау</h3></li>
+<li class="step"><span class="step-piece" aria-hidden="true">♘︎</span><span class="step-key">2</span><h3>Өз бетінше ойнау</h3></li>
+<li class="step"><span class="step-piece" aria-hidden="true">♗︎</span><span class="step-key">3</span><h3>Алғашқы турнир</h3></li>
+<li class="step"><span class="step-piece" aria-hidden="true">♖︎</span><span class="step-key">4</span><h3>4-разряд</h3></li>
+<li class="step"><span class="step-piece" aria-hidden="true">♕︎</span><span class="step-key">5</span><h3>3-разряд</h3></li>
+<li class="step"><span class="step-piece" aria-hidden="true">♔︎</span><span class="step-key">6</span><h3>Халықаралық ФИДЕ рейтингі</h3></li>
+</ol>
+<p class="path-note">Әр баланың өз қарқыны бар. Ілгерілеу мерзімі сабаққа тұрақты қатысуға, тәжірибеге және бағдарламаны меңгеруге байланысты.</p>
+<div class="center"><a class="btn btn-primary" href="#signup">Алғашқы қадам жасау</a></div>
+</div></section>
+
+<section class="section" id="fide"><div class="wrap split">
+<div class="prose">
+<h2>Шахматты меңгеру. Ал содан кейін — өз жолыңды таңдау</h2>
+<p class="lead">Біздің мақсатымыз — әр оқушыға ойынды халықаралық ФИДЕ рейтингі деңгейіне дейін меңгеруге көмектесу.</p>
+<p>Бұл жолда бала зейінді, есте сақтауды, жоспарлауды және өз бетінше шешім қабылдауды жаттықтырады, оларды тақта басында қолдануды үйренеді. Рейтингтің өзі жарыс нәтижелері арқылы оның шахмат деңгейін растайды.</p>
+<p>Бұл — жеке жетістік: Халықаралық шахмат федерациясының сайтындағы рейтингі бар профильге сілтемені портфолиоға немесе түйіндемеге қосуға болады.</p>
+</div>
+<div class="v2-ways">
+<article class="feature"><span class="feature-mark" aria-hidden="true">♘︎</span><h3>Шахмат — қызығушылық ретінде</h3><p>Көңіл үшін ойнау, турнирлерге қатысу және өз қарқыныңмен шыңдала беру.</p></article>
+<article class="feature"><span class="feature-mark" aria-hidden="true">♕︎</span><h3>Шахмат — спорт ретінде</h3><p>Егер бала кәсіби ойыншы болғысы келсе, келесі кезең — шахмат академиясында дайындалу.</p></article>
+</div>
+</div></section>
+
+<section class="section" id="reviews"><div class="wrap">
+<header class="section-head is-center"><h2>Ата-аналар біз туралы 2ГИС-те не жазады</h2></header>
+<div class="v2-rating">
+<p class="v2-rating-total"><span class="stat-num">4,9–5,0</span><span>6 филиалда 745 баға</span></p>
+<ul class="v2-chips">
+<li><a href="https://2gis.kz/almaty/firm/70000001104248570/tab/reviews" target="_blank" rel="noopener">Дебют <b>★ 5,0</b> <small>163</small></a></li>
+<li><a href="https://2gis.kz/almaty/firm/70000001112466521/tab/reviews" target="_blank" rel="noopener">Gagarin Park <b>★ 4,9</b> <small>153</small></a></li>
+<li><a href="https://2gis.kz/almaty/firm/70000001030399258/tab/reviews" target="_blank" rel="noopener">Алматы Арена <b>★ 4,9</b> <small>202</small></a></li>
+<li><a href="https://2gis.kz/almaty/firm/70000001061297172/tab/reviews" target="_blank" rel="noopener">Халық Арена <b>★ 4,9</b> <small>82</small></a></li>
+<li><a href="https://2gis.kz/almaty/firm/70000001055873518/tab/reviews" target="_blank" rel="noopener">Алматы 1 <b>★ 5,0</b> <small>120</small></a></li>
+<li><a href="https://2gis.kz/almaty/firm/70000001089892904/tab/reviews" target="_blank" rel="noopener">Жандосов 305 <b>★ 5,0</b> <small>25</small></a></li>
+</ul>
+<a class="btn btn-primary" href="https://2gis.kz/almaty/firm/70000001104248570/tab/reviews" target="_blank" rel="noopener">2ГИС-те пікірлерді оқу</a>
+</div>
+</div></section>
+
+<section class="section" id="branches"><div class="wrap">
+<header class="section-head"><p class="eyebrow">Эндшпиль · III</p><h2>Ыңғайлы филиалды таңдаңыз</h2><p>Құны филиалға байланысты. Мекенжайды таңдаңыз — жұмыс уақытын, бағытты және бағаларды көрсетеміз.</p></header>
+<div class="br-picker" data-branch-picker data-show-price hidden><div class="br-tabs" role="tablist" aria-label="Филиалдар"></div><div class="br-split"><div class="bmap"></div><div class="bd" role="tabpanel" id="br-panel" aria-live="polite"></div></div><p class="src-note">Мекенжайлар, телефондар, жұмыс уақыты мен рейтингтер — дереккөз: <a href="https://2gis.kz/almaty/branches/70000001030399023" target="_blank" rel="noopener">2ГИС</a>.</p></div>
+<noscript><ul class="branches">
+<li class="branch"><span class="branch-idx">01</span><div class="branch-body"><h3>Дебют</h3><p>Қабанбай батыр к-сі, 71 · айына 35 900 ₸-ден</p></div><a class="btn btn-ghost" href="#signup">Жазылу</a></li>
+<li class="branch"><span class="branch-idx">02</span><div class="branch-body"><h3>Gagarin Park ТК</h3><p>Гагарин даңғ., 287/2 · айына 35 900 ₸-ден</p></div><a class="btn btn-ghost" href="#signup">Жазылу</a></li>
+<li class="branch"><span class="branch-idx">03</span><div class="branch-body"><h3>Алматы Арена</h3><p>Нұркент ш/а, 7 · айына 29 500 ₸-ден</p></div><a class="btn btn-ghost" href="#signup">Жазылу</a></li>
+<li class="branch"><span class="branch-idx">04</span><div class="branch-body"><h3>Халық Арена</h3><p>Құлжа тас жолы, 2 · айына 29 500 ₸-ден</p></div><a class="btn btn-ghost" href="#signup">Жазылу</a></li>
+<li class="branch"><span class="branch-idx">05</span><div class="branch-body"><h3>Алматы 1</h3><p>Сауранбаев к-сі, 7/1 · айына 29 500 ₸-ден</p></div><a class="btn btn-ghost" href="#signup">Жазылу</a></li>
+<li class="branch"><span class="branch-idx">06</span><div class="branch-body"><h3>Жандосов 305</h3><p>Жандосов к-сі, 305 · айына 29 500 ₸-ден</p></div><a class="btn btn-ghost" href="#signup">Жазылу</a></li>
+</ul></noscript>
+
+<h3 class="sub-title v2-sub">Абонементтер</h3>
+<div class="v2-table"><table class="v2-prices">
+<caption class="visually-hidden">Абонементтің айлық құны, ₸</caption>
+<thead><tr><th scope="col">Формат</th><th scope="col">Филиалдардың көбі</th><th scope="col">Gagarin Park және Дебют</th></tr></thead>
+<tbody>
+<tr><th scope="row">2 × 60 мин<small>айына 8 сабақ</small></th><td>29 500 ₸</td><td>35 900 ₸</td></tr>
+<tr class="is-featured"><th scope="row">2 × 90 мин <span class="badge">Танымал</span><small>айына 8 сабақ</small></th><td>37 500 ₸</td><td>43 900 ₸</td></tr>
+<tr><th scope="row">2 × 120 мин<small>айына 8 сабақ</small></th><td>45 500 ₸</td><td>51 900 ₸</td></tr>
+<tr><th scope="row">4 × 60 мин<small>айына 16 сабақ</small></th><td>44 250 ₸</td><td>53 850 ₸</td></tr>
+</tbody>
+</table></div>
+<p class="v2-note">Абонементке айына 4 тегін турнирге дейін және сыйлыққа кітап кіреді. Топтар 10 адамға дейін.</p>
+
+<div class="discounts">
+<h3 class="sub-title v2-sub">Жеңілдіктер</h3>
+<p class="v2-note">Шахматқа бүкіл отбасы әуес болса — бұл тамаша! Бізде екі немесе үш баласы оқитын отбасыларға жеңілдіктер қарастырылған.</p>
+<ul class="discount-grid"><li><span class="pct">10%</span><p>2 бала</p></li><li><span class="pct">20%</span><p>3 бала</p></li><li><span class="pct">25%</span><p>Көпбалалы отбасыларға<br><small>(анықтама бойынша)</small></p></li><li><span class="pct">50%</span><p>Мүгедектігі бар адамдарға<br><small>(шарттары нақтыланады)</small></p></li></ul>
+</div>
+
+<p class="v2-adults"><b>Ересектерге арналған шахмат</b> — «Дебют», Қабанбай батыр, 71, 19:00–21:00, бір сабақ 5 000 ₸. Сынақ сабақ тегін.</p>
+</div></section>
+
+<section class="section" id="faq"><div class="wrap"><header class="section-head"><h2>Жиі қойылатын сұрақтар</h2></header><div class="faq">
+<details class="faq-item" open><summary><span>Оқу қанша тұрады?</span></summary><div class="faq-a"><p>Құны филиалға және таңдалған тарифке байланысты. Негізгі тарифтер аптасына 2 рет 60 минуттық сабақ үшін айына 29 500 ₸-ден басталады. Gagarin Park және Дебют филиалдарында — айына 35 900 ₸-ден. Барлық тарифтер мен жеңілдіктер — «Филиалдар мен бағалар» бөлімінде.</p></div></details>
+<details class="faq-item"><summary><span>Қай филиалдарда қазақ тілінде сөйлейтін жаттықтырушылар бар?</span></summary><div class="faq-a"><p>Қазақ тілінде сөйлейтін жаттықтырушылар Дебют, Жандосов, Алматы Арена филиалдарында жұмыс істейді.</p></div></details>
+<details class="faq-item"><summary><span>Жеке сабақтар бар ма?</span></summary><div class="faq-a"><p>Жеке сабақтар тек сынақ сабақта немесе ірі жарыстарға дайындық кезінде өткізіледі (құны сағатына 10 000 ₸). Бастаушылар мен жалғастырушыларға топтық форматты ұсынамыз — ол даму үшін тиімдірек.</p></div></details>
+<details class="faq-item"><summary><span>Аптасына бір рет қатысуға бола ма?</span></summary><div class="faq-a"><p>Жоқ, мұндай формат қарастырылмаған. Аптасына бір реттік сабақтар қажетті нәтиже мен тәжірибе бермейді. Прогресс үшін аптасына кемінде 2 сабақ қажет.</p></div></details>
+<details class="faq-item"><summary><span>Турнирлер қалай өтеді және бала қашан қатыса алады?</span></summary><div class="faq-a"><p>Турнирлер әр демалыс сайын 5 филиалда өтеді. Бала оқудың бірінші кезеңін аяқтап, жаттықтырушыға емтихан тапсырғаннан кейін қатыса алады. Абонементке айына 4 тегін турнирге дейін кіреді.</p></div></details>
+<details class="faq-item"><summary><span>Ересектерге арналған оқу бар ма?</span></summary><div class="faq-a"><p>Иә, ересектерге арналған сабақтар «Дебют» филиалында (Қабанбай батыр, 71) 19:00-ден 21:00-ге дейін өтеді. Бір сабақтың құны — 5 000 ₸. Сынақ сабақ тегін.</p></div></details>
+<details class="faq-item"><summary><span>Жеке кабинет қалай жұмыс істейді?</span></summary><div class="faq-a"><p>Жеке кабинет бірінші сабақтан кейін жаттықтырушымен бірге ашылады. Тіркелуге көмектесіп, оны қалай пайдалану керектігін түсіндіреміз.</p></div></details>
+</div></div></section>
+
+<section class="section section-trial" id="signup"><div class="wrap split v2-signup">
+<div class="prose">
+<h2>Танысудан бастайық</h2>
+<p class="lead">Сынақ сабақта жаттықтырушы баламен танысып, оның деңгейін анықтайды және алғашқы тапсырмаларды ұсынады. Сабақтан кейін лайықты топты ұсынып, сұрақтарыңызға жауап береміз.</p>
+<ul class="hero-stats"><li><strong>~30 минут</strong><span>сынақ сабақтың ұзақтығы</span></li><li><strong>тегін</strong><span>сынақ сабақтың құны</span></li></ul>
+</div>
+<div class="v2-form-card">
+<form class="v2-form" id="v2-form" novalidate>
+<div class="field" id="f-name"><label for="name">Сіздің атыңыз</label><input type="text" id="name" name="name" autocomplete="given-name" placeholder="Мысалы, Әйгерім" maxlength="40" aria-describedby="name-err"><span class="v2-err" id="name-err" hidden>Сізге қалай жүгінуге болатынын жазыңыз</span></div>
+<div class="field" id="f-age"><label for="age">Баланың жасы</label><select id="age" name="age" aria-describedby="age-err"><option value="">Жасын таңдаңыз</option><option>4–5 жас</option><option>6–7 жас</option><option>8–9 жас</option><option>10–12 жас</option><option>13+ жас</option><option value="adult">ересек</option></select><span class="v2-err" id="age-err" hidden>Жасын таңдаңыз</span></div>
+<div class="field" id="f-branch"><label for="branch">Филиал</label><select id="branch" name="branch" aria-describedby="branch-err"><option value="">Филиалды таңдаңыз</option><option>Дебют (Қабанбай батыр к-сі, 71)</option><option>Gagarin Park ТК (Гагарин даңғ., 287/2)</option><option>Алматы Арена (Нұркент ш/а, 7)</option><option>Халық Арена (Құлжа тас жолы, 2)</option><option>Алматы 1 (Сауранбаев к-сі, 7/1)</option><option>Жандосов 305 (Жандосов к-сі, 305)</option><option value="help">Таңдауға көмектесіңіз</option></select><span class="v2-err" id="branch-err" hidden>Филиалды немесе «Таңдауға көмектесіңіз» тармағын таңдаңыз</span></div>
+<button class="btn btn-primary btn-block" type="submit">Сынақ сабаққа жазылу</button>
+<p class="v2-hint">WhatsApp дайын хабарламамен ашылады — тек «Жіберу» түймесін басу қалады.</p>
+</form>
+<div class="v2-done" id="v2-done" hidden tabindex="-1" aria-live="polite">
+<h3>Хабарлама дайын</h3>
+<p>Біз WhatsApp-ты өтінішіңізбен аштық. Чатта «Жіберу» түймесін басыңыз — әкімші сынақ сабақтың уақытын таңдайды.</p>
+<p class="v2-hint">WhatsApp ашылмады ма? Оны қайта ашыңыз немесе хабарламаны көшіріп, +7 707 787-22-10 нөміріне жіберіңіз.</p>
+<pre class="v2-msg" id="v2-msg"></pre>
+<div class="v2-row"><a class="btn btn-primary" id="v2-wa-again" href="https://wa.me/77077872210" target="_blank" rel="noopener">WhatsApp-ты қайта ашу</a><button class="btn btn-ghost" type="button" id="v2-copy">Хабарламаны көшіру</button></div>
+<button class="v2-link" type="button" id="v2-edit">Деректерді өзгерту</button>
+</div>
+<a class="v2-wa-link" href="https://wa.me/77077872210?text=%D0%A1%D3%99%D0%BB%D0%B5%D0%BC%D0%B5%D1%82%D1%81%D1%96%D0%B7%20%D0%B1%D0%B5!%20%D0%91%D0%B0%D0%BB%D0%B0%D0%BC%D0%B4%D1%8B%20%D1%82%D0%B5%D0%B3%D1%96%D0%BD%20%D1%81%D1%8B%D0%BD%D0%B0%D2%9B%20%D1%81%D0%B0%D0%B1%D0%B0%D2%9B%D2%9B%D0%B0%20%D0%B6%D0%B0%D0%B7%D2%93%D1%8B%D0%BC%20%D0%BA%D0%B5%D0%BB%D0%B5%D0%B4%D1%96." target="_blank" rel="noopener">Формасыз WhatsApp-қа жазу</a>
+<p class="v2-privacy">Сайт деректеріңізді сақтамайды және жібермейді: аты, жасы және филиал тек өзіңіз жіберетін WhatsApp хабарламасына ғана түседі.</p>
+</div>
+</div></section>
+
+<section class="cta-band"><div class="wrap cta-inner"><div><p class="eyebrow">Шах және мат</p><h2>Алғашқы жүріс — тегін</h2></div><a class="btn btn-light btn-lg" href="#signup">Тегін сынақ сабаққа жазылу</a></div></section>
+</main>
+<footer class="site-footer"><div class="wrap"><div class="footer-panel"><div class="footer-grid">
+<div class="footer-brand"><h3><span class="glyph" aria-hidden="true">♔︎</span> Chess Empire</h3><p>Алматыдағы балаларға арналған шахмат мектебі. Нөлден оқытамыз, қала бойынша 6 филиал, тегін сынақ сабақ.</p><ul class="socials"><li><a href="https://www.instagram.com/chessempire.kz" target="_blank" rel="noopener">Instagram</a></li></ul></div>
+<div><h3>Бөлімдер</h3><ul><li><a href="#about">Мектеп туралы</a></li><li><a href="#trainers">Жаттықтырушылар</a></li><li><a href="#path">Оқушы жолы</a></li><li><a href="#branches">Филиалдар мен бағалар</a></li><li><a href="#faq">FAQ</a></li><li><a href="#signup">Жазылу</a></li></ul></div>
+<div><h3>Филиалдар</h3><ul><li><a href="#branches">Дебют</a></li><li><a href="#branches">Gagarin Park</a></li><li><a href="#branches">Алматы Арена</a></li><li><a href="#branches">Халық Арена</a></li><li><a href="#branches">Алматы 1</a></li><li><a href="#branches">Жандосов 305</a></li></ul></div>
+<div><h3>Байланыс</h3><p><a href="tel:+77077872210">+7 (707) 787-22-10</a></p><p><a href="https://wa.me/77077872210" target="_blank" rel="noopener">WhatsApp</a></p><p><a href="https://www.instagram.com/chessempire.kz" target="_blank" rel="noopener">@chessempire.kz</a></p><p><a href="mailto:info@chessempire.kz">info@chessempire.kz</a></p></div>
+</div><div class="footer-bottom"><p>© 2026 Chess Empire</p></div></div></div></footer>
+<div class="v2-sticky" id="v2-sticky" aria-hidden="true"><a class="btn btn-primary btn-block" href="#signup" tabindex="-1">Жазылу</a></div>
+<div class="move-hud" aria-hidden="true"><span>Партия</span><b id="move-hud">3. Bc4</b></div>
+<script src="/home/shared/main.js" defer></script><script src="/home/shared/branches.js" defer></script><script src="/v2/v2.js" defer></script>
+<script type="module" src="/home/shared/board3d-day.js"></script>
+</body>
+</html>

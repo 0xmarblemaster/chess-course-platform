@@ -3,6 +3,16 @@
   var d = document;
   var WHATSAPP = "77077872210";
   function waUrl(text) { return "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(text); }
+  // Language follows <html lang>: ru | en | kk.
+  var L = {
+    ru: { hiChild: "Здравствуйте! Хочу записать ребёнка на бесплатный пробный урок.", hiAdult: "Здравствуйте! Хочу записаться на бесплатный пробный урок.",
+      name: "Имя: ", age: "Возраст ребёнка: ", adult: "Возраст: взрослый", branch: "Филиал: ", help: "помогите выбрать", copied: "Скопировано", selected: "Выделено — скопируйте" },
+    en: { hiChild: "Hello! I'd like to sign my child up for a free trial lesson.", hiAdult: "Hello! I'd like to sign up for a free trial lesson.",
+      name: "Name: ", age: "Child's age: ", adult: "Age: adult", branch: "Branch: ", help: "please help me choose", copied: "Copied", selected: "Selected — copy it" },
+    kk: { hiChild: "Сәлеметсіз бе! Баламды тегін сынақ сабаққа жазғым келеді.", hiAdult: "Сәлеметсіз бе! Тегін сынақ сабаққа жазылғым келеді.",
+      name: "Аты: ", age: "Баланың жасы: ", adult: "Жасы: ересек", branch: "Филиал: ", help: "таңдауға көмектесіңіз", copied: "Көшірілді", selected: "Белгіленді — көшіріп алыңыз" }
+  };
+  var T = L[d.documentElement.lang] || L.ru;
 
   /* --- signup form → WhatsApp --- */
   var form = d.getElementById("v2-form"), done = d.getElementById("v2-done");
@@ -19,10 +29,10 @@
   function compose() {
     var adult = age.value === "adult";
     return [
-      adult ? "Здравствуйте! Хочу записаться на бесплатный пробный урок." : "Здравствуйте! Хочу записать ребёнка на бесплатный пробный урок.",
-      "Имя: " + nameEl.value.trim(),
-      adult ? "Возраст: взрослый" : "Возраст ребёнка: " + age.value,
-      "Филиал: " + (branch.value === "help" ? "помогите выбрать" : branch.value)
+      adult ? T.hiAdult : T.hiChild,
+      T.name + nameEl.value.trim(),
+      adult ? T.adult : T.age + age.value,
+      T.branch + (branch.value === "help" ? T.help : branch.value)
     ].join("\n");
   }
   form.addEventListener("submit", function (e) {
@@ -42,8 +52,8 @@
   });
   var copyBtn = d.getElementById("v2-copy");
   copyBtn.addEventListener("click", function () {
-    function selectIt() { var r = d.createRange(); r.selectNodeContents(d.getElementById("v2-msg")); var s = getSelection(); s.removeAllRanges(); s.addRange(r); copyBtn.textContent = "Выделено — скопируйте"; }
-    try { navigator.clipboard.writeText(lastMsg).then(function () { copyBtn.textContent = "Скопировано"; }, selectIt); } catch { selectIt(); }
+    function selectIt() { var r = d.createRange(); r.selectNodeContents(d.getElementById("v2-msg")); var s = getSelection(); s.removeAllRanges(); s.addRange(r); copyBtn.textContent = T.selected; }
+    try { navigator.clipboard.writeText(lastMsg).then(function () { copyBtn.textContent = T.copied; }, selectIt); } catch { selectIt(); }
   });
   d.getElementById("v2-edit").addEventListener("click", function () { done.hidden = true; form.hidden = false; nameEl.focus(); });
 

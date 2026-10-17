@@ -127,3 +127,6 @@
   .v2-sticky.is-shown{transform:none}
   .has-3d .move-hud{bottom:84px}
 }
+/* language switch + burger fit a 390px header (the switch was pushing the burger 10px off-screen) */
+@media (max-width:420px){.lang-switch a{min-width:32px;padding:0 4px}}
+@media (max-width:374px){.logo{font-size:15px;gap:8px}.logo-img{width:32px;height:32px}}

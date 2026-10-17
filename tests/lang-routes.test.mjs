@@ -1,4 +1,5 @@
-// Language routing for the landing: /ru (default), /en, /kz.
+// Language routing for the landing: /ru (default), /en, /kz serve the v2 design;
+// the previous landing lives at /v2, /v2/en, /v2/kz with noindex.
 // Run: node tests/lang-routes.test.mjs
 import { readFileSync } from 'fs'
 
@@ -7,10 +8,11 @@ const ok = (cond, msg) => { if (cond) { console.log(`  ✓ ${msg}`) } else { fai
 
 const B = 'https://www.chessempire.kz'
 const pages = [
-  { lang: 'ru', file: 'public/home/index.html', path: '/ru' },
-  { lang: 'en', file: 'public/home/en/index.html', path: '/en' },
-  { lang: 'kk', file: 'public/home/kk/index.html', path: '/kz' },
+  { lang: 'ru', file: 'public/v2/index.html', path: '/ru' },
+  { lang: 'en', file: 'public/v2/en/index.html', path: '/en' },
+  { lang: 'kk', file: 'public/v2/kk/index.html', path: '/kz' },
 ]
+const old = ['public/home/index.html', 'public/home/en/index.html', 'public/home/kk/index.html']
 
 for (const p of pages) {
   console.log(p.file)
@@ -24,14 +26,21 @@ for (const p of pages) {
   ok(links.map((m) => m[1]).join(',') === '/ru,/en,/kz', 'switcher links are /ru, /en, /kz')
   ok(links.filter((m) => m[3]).map((m) => m[2]).join() === p.lang, `only ${p.lang} is marked current`)
   ok(!s.includes('https://chessempire.kz'), 'no bare-domain URLs left')
+  ok(!s.includes('noindex'), 'indexable')
+}
+
+for (const f of old) {
+  console.log(f)
+  ok(readFileSync(f, 'utf8').includes('<meta name="robots" content="noindex">'), 'old landing is noindex')
 }
 
 console.log('next.config.ts')
 const cfg = readFileSync('next.config.ts', 'utf8')
 ok(/source: "\/", destination: "\/ru", permanent: false/.test(cfg), '/ redirects to /ru')
-ok(cfg.includes('{ source: "/ru", destination: "/home/index.html" }'), '/ru serves RU page')
-ok(cfg.includes('{ source: "/en", destination: "/home/en/index.html" }'), '/en serves EN page')
-ok(cfg.includes('{ source: "/kz", destination: "/home/kk/index.html" }'), '/kz serves KK page')
+for (const [from, to] of [['/ru', '/v2/index.html'], ['/en', '/v2/en/index.html'], ['/kz', '/v2/kk/index.html'],
+  ['/v2', '/home/index.html'], ['/v2/en', '/home/en/index.html'], ['/v2/kz', '/home/kk/index.html']])
+  ok(cfg.includes(`{ source: "${from}", destination: "${to}" }`), `${from} serves ${to}`)
+ok(!cfg.includes('destination: "/v2/index.html",'), 'no /v2 → /v2/index.html redirect left')
 for (const [from, to] of [['/home', '/ru'], ['/home/en', '/en'], ['/home/kk', '/kz'], ['/kk', '/kz']])
   ok(cfg.includes(`{ source: "${from}", destination: "${to}", permanent: true }`), `${from} → ${to} (permanent)`)
 

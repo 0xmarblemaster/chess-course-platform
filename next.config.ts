@@ -5,10 +5,14 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       // Landing in 3 languages at short URLs; Russian is the default
-      // (the root redirects to /ru). The classic cream landing lives at /classic.
-      { source: "/ru", destination: "/home/index.html" },
-      { source: "/en", destination: "/home/en/index.html" },
-      { source: "/kz", destination: "/home/kk/index.html" },
+      // (the root redirects to /ru). Since 2026-10-17 the main landing is the
+      // v2 "Fusion" design; the previous landing moved to /v2 (noindex).
+      { source: "/ru", destination: "/v2/index.html" },
+      { source: "/en", destination: "/v2/en/index.html" },
+      { source: "/kz", destination: "/v2/kk/index.html" },
+      { source: "/v2", destination: "/home/index.html" },
+      { source: "/v2/en", destination: "/home/en/index.html" },
+      { source: "/v2/kz", destination: "/home/kk/index.html" },
     ];
   },
   async redirects() {
@@ -39,16 +43,6 @@ const nextConfig: NextConfig = {
       {
         source: "/v1/",
         destination: "/v1/index.html",
-        permanent: false,
-      },
-      {
-        source: "/v2",
-        destination: "/v2/index.html",
-        permanent: false,
-      },
-      {
-        source: "/v2/",
-        destination: "/v2/index.html",
         permanent: false,
       },
     ];

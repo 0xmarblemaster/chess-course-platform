@@ -13,7 +13,8 @@ const js = readFileSync('public/v2/v2.js', 'utf8')
 const branchesSrc = readFileSync('public/home/shared/branches.js', 'utf8')
 const text = html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
 
-// sha256 of the /ru, /en, /kz and /v1 HTML taken before the v2 work (2026-10-17).
+// sha256 of the old /ru, /en, /kz (now /v2, /v2/en, /v2/kz) and /v1 HTML taken before the v2 work (2026-10-17).
+// The old landing only gained a noindex line when it moved to /v2.
 const BASELINE = {
   'public/home/index.html': '6243738fdfe0139abe44eb101a5086a6826857c757f2ba7dfdf5d85488aa02f0',
   'public/home/en/index.html': '41d110b6c5cb4c41999e9687afda78f306185eefa077b52fb7411862747e86f2',
@@ -101,9 +102,12 @@ function runBranches(showPrice, lang = 'ru') {
   return panel.innerHTML
 }
 
-test('7. /ru (and /en, /kz, /v1) HTML is byte-identical; branches.js shows price only with data-show-price', () => {
+const NOINDEX = '<meta name="robots" content="noindex">\n'
+test('7. old landing and /v1 HTML is unchanged apart from noindex; branches.js shows price only with data-show-price', () => {
   for (const [file, hash] of Object.entries(BASELINE)) {
-    assert.equal(createHash('sha256').update(readFileSync(file)).digest('hex'), hash, `${file} changed`)
+    const src = readFileSync(file, 'utf8')
+    if (file.startsWith('public/home/')) assert.equal(src.split(NOINDEX).length, 2, `${file} has one noindex line`)
+    assert.equal(createHash('sha256').update(src.replace(NOINDEX, '')).digest('hex'), hash, `${file} changed`)
     assert.ok(!readFileSync(file, 'utf8').includes('data-show-price'), `${file} must not opt into prices`)
   }
   for (const lang of ['ru', 'en', 'kk']) {
@@ -133,9 +137,9 @@ test('8. existing tests: lang-routes passes; landing only has its pre-existing E
   }
 })
 
-test('page setup: RU only, noindex, main design via absolute paths, no old /v2 leftovers', () => {
+test('page setup: RU at /ru, indexable, main design via absolute paths, no old /v2 leftovers', () => {
   assert.match(html, /<html lang="ru">/)
-  assert.match(html, /<meta name="robots" content="noindex">/)
+  assert.ok(!html.includes('noindex'), 'indexable')
   assert.match(html, /<link rel="canonical" href="https:\/\/www\.chessempire\.kz\/ru">/)
   for (const href of ['/home/shared/fonts.css', '/home/shared/base.css', '/home/styles.css', '/v2/v2.css']) {
     assert.ok(html.includes(`<link rel="stylesheet" href="${href}">`), href)
@@ -143,11 +147,10 @@ test('page setup: RU only, noindex, main design via absolute paths, no old /v2 l
   for (const src of ['/home/shared/main.js', '/home/shared/branches.js', '/v2/v2.js', '/home/shared/board3d-day.js']) {
     assert.ok(html.includes(`src="${src}"`), src)
   }
-  assert.ok(!/lang-switch|hreflang/.test(html), 'no language switch')
   assert.equal((html.match(/<h1[\s>]/g) || []).length, 1, 'one h1')
   assert.ok(!html.includes('class="trial-form"'), 'form must not be wired to main.js trial handler')
   assert.ok(!/data:[a-z]+\/[a-z+]+;base64/.test(html), 'no inline base64')
-  for (const p of ['public/v2/en', 'public/v2/kk', 'public/v2/styles.css', 'public/v2-modern']) assert.ok(!existsSync(p), `${p} removed`)
+  for (const p of ['public/v2/styles.css', 'public/v2-modern']) assert.ok(!existsSync(p), `${p} removed`)
   assert.ok(!readFileSync('next.config.ts', 'utf8').includes('v2-modern'))
   for (const m of html.matchAll(/src="(\/home\/assets\/[^"]+)"/g)) assert.ok(existsSync('public' + m[1]), m[1])
 })
@@ -167,4 +170,50 @@ test('content facts agree with the PRD', () => {
   const ages = [...html.matchAll(/<select id="age"[\s\S]*?<\/select>/g)][0][0]
   for (const a of ['4–5', '6–7', '8–9', '10–12', '13+', 'взрослый']) assert.ok(ages.includes(a), a)
   assert.equal((html.match(/<select id="branch"[\s\S]*?<\/select>/)[0].match(/<option/g) || []).length, 8, 'placeholder + 6 branches + help')
+})
+
+// EN and KZ versions are built from the RU page: same markup, translated text.
+const LANGS = [['en', 'public/v2/en/index.html'], ['kk', 'public/v2/kk/index.html']]
+const tags = (h) => h.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, '')
+  .replace(/>[^<]*</g, '><').replace(/\s(alt|aria-label|placeholder|content|title|lang|href|hreflang|aria-current)="[^"]*"/g, '')
+for (const [lang, file] of LANGS) {
+  const h = readFileSync(file, 'utf8')
+  const t = h.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
+  test(`${lang}: same markup as RU, translated, working form and FAQ`, () => {
+    assert.equal(tags(h), tags(html), 'tag structure matches RU')
+    assert.match(h, new RegExp(`<html lang="${lang}">`))
+    const ld = JSON.parse(h.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1])
+    const visible = [...h.matchAll(/<summary><span>([^<]+)<\/span><\/summary><div class="faq-a"><p>([^<]+)<\/p>/g)]
+    assert.equal(visible.length, 7)
+    ld.mainEntity.forEach((q, i) => { assert.equal(q.name, visible[i][1]); assert.equal(q.acceptedAnswer.text, visible[i][2]) })
+    for (const l of [...h.matchAll(/wa\.me\/([^?"'\s]*)/g)]) assert.equal(l[1], '77077872210')
+    const ids = new Set([...h.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]))
+    for (const m of h.matchAll(/href="#([^"]*)"/g)) assert.ok(ids.has(m[1]), `#${m[1]} has no target`)
+    for (const p of ['29 500', '35 900', '37 500', '43 900', '45 500', '51 900', '44 250', '53 850']) assert.ok(t.includes(p + ' ₸'), p)
+    assert.ok(t.includes('745'), 'rating count')
+    assert.ok(!/чемпион|champion|2018/i.test(t), 'no champion / founding-year claims')
+    const wa = decodeURIComponent(h.match(/wa\.me\/77077872210\?text=([^"]+)"/)[1])
+    assert.ok(!/Здравствуйте/.test(wa), 'no-form WhatsApp text is translated')
+    if (lang === 'en') {
+      const cyr = t.replace(/\bRU\b/g, '').match(/[А-Яа-яЁё]+/g)
+      assert.equal(cyr, null, `Cyrillic left in EN: ${cyr}`)
+    }
+  })
+}
+
+test('v2.js picks its WhatsApp text from <html lang>', () => {
+  for (const [lang, hi] of [['ru', 'Здравствуйте! Хочу записать ребёнка'], ['en', 'Hello! I\'d like to sign my child up'], ['kk', 'Сәлеметсіз бе! Баламды']]) {
+    const els = {}
+    const el = (id) => els[id] || (els[id] = { id, value: '', hidden: false, tagName: id === 'name' ? 'INPUT' : 'SELECT', href: '', textContent: '', tabIndex: 0,
+      classList: { toggle() {} }, setAttribute() {}, focus() {}, click() {}, addEventListener(ev, fn) { this['on' + ev] = fn },
+      querySelector() { return el(id + '-child') } })
+    const document = { documentElement: { lang }, getElementById: el, querySelectorAll: () => [] }
+    const window = { matchMedia: () => ({ matches: false, addEventListener() {} }) }
+    vm.runInNewContext(js, { document, window })
+    el('name').value = 'Aigerim'; el('age').value = '6–7'; el('branch').value = 'help'
+    el('v2-form').onsubmit({ preventDefault() {} })
+    const msg = el('v2-msg').textContent
+    assert.ok(msg.startsWith(hi), `${lang}: ${msg}`)
+    assert.ok(msg.includes('Aigerim') && msg.includes('6–7'), `${lang}: fields in message`)
+  }
 })
