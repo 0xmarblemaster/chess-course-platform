@@ -82,7 +82,7 @@
 /* review screenshots — endless strip; the second set is a copy so -50% lands on a seamless loop.
    Swap each .v2-shot's skeleton for <img src="..." alt="..."> when the real screenshots arrive. */
 .v2-shots{margin-top:clamp(40px,6vw,64px);overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-.v2-shots-track{display:flex;width:max-content;animation:v2-marquee 60s linear infinite}
+.v2-shots-track{display:flex;width:max-content;animation:v2-marquee 60s linear infinite;will-change:transform;backface-visibility:hidden}
 .v2-shots:hover .v2-shots-track{animation-play-state:paused}
 .v2-shots-set{display:flex;gap:20px;margin:0;padding:0 20px 0 0;list-style:none}
 .v2-shot{flex:none;display:flex;flex-direction:column;gap:14px;width:clamp(200px,22vw,260px);aspect-ratio:4/5;padding:20px;background:#fff;border:1px solid var(--line);overflow:hidden}
@@ -96,8 +96,8 @@
 .v2-shot-lines i:nth-child(2){width:92%}
 .v2-shot-lines i:nth-child(3){width:96%}
 .v2-shot-lines i:last-child{width:60%}
-@keyframes v2-marquee{to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){.v2-shots{overflow-x:auto}.v2-shots-track{animation:none}}
+@keyframes v2-marquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@media (prefers-reduced-motion:reduce){.v2-shots-track{animation-duration:90s!important;animation-iteration-count:infinite!important}}
 .v2-chips a:hover small{color:#EBEBEB}
 
 /* branches: price line in the card (branches.js, data-show-price) */

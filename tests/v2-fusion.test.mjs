@@ -230,6 +230,7 @@ test('reviews: screenshot strip loops seamlessly in every language', () => {
     assert.ok(!sets[0][1].includes('aria-hidden') && sets[1][1].includes('aria-hidden="true"'), `${path}: only the copy is hidden`)
     assert.ok(!/role="img"/.test(sets[1][2]), `${path}: copy cards are not announced`)
   }
-  assert.match(css, /@keyframes v2-marquee\{to\{transform:translateX\(-50%\)\}\}/)
-  assert.ok(css.includes("@media (prefers-reduced-motion:reduce){.v2-shots{overflow-x:auto}.v2-shots-track{animation:none}}"), "reduced motion stops the strip")
+  assert.ok(css.includes("@keyframes v2-marquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}"), "loop ends exactly one set left")
+  assert.ok(css.includes("@media (prefers-reduced-motion:reduce){.v2-shots-track{animation-duration:90s!important;animation-iteration-count:infinite!important}}"), "reduced motion slows the strip instead of stopping it")
+  assert.ok(!/prefers-reduced-motion[^@]*animation:none/.test(css), "strip never stops for reduced motion")
 })
