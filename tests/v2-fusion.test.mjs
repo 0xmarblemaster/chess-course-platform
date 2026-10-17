@@ -163,9 +163,8 @@ test('content facts agree with the PRD', () => {
   assert.ok(text.includes('745 оценок в 6 филиалах'))
   for (const p of ['29 500', '35 900', '37 500', '43 900', '45 500', '51 900', '44 250', '53 850']) assert.ok(text.includes(p + ' ₸'), p)
   for (const d of ['10%', '20%', '25%', '50%']) assert.ok(text.includes(d), d)
-  assert.ok(text.includes('Чингис Нургалимов') && text.includes('Высший рейтинг FIDE 2121'))
+  assert.ok(text.includes('Чингис Нургалимов') && text.includes('Президент Союза Шахматистов г. Алматы'))
   for (const t of ['Асылхан Агбаевич', 'Василий Михайлович', 'Александр Олегович']) assert.ok(text.includes(t), t)
-  assert.ok(!/президент/i.test(text), 'founder title left out')
   assert.ok(text.includes('Международный рейтинг ФИДЕ') && !/ФИДЕ \d{4}\+?|FIDE 1[47]00/.test(text), 'FIDE target has no number')
   const ages = [...html.matchAll(/<select id="age"[\s\S]*?<\/select>/g)][0][0]
   for (const a of ['4–5', '6–7', '8–9', '10–12', '13+', 'взрослый']) assert.ok(ages.includes(a), a)
