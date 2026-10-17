@@ -71,6 +71,7 @@
 .v2-rating{display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
 .v2-rating-total{display:flex;flex-direction:column;gap:6px}
 #reviews .stat-num{font-size:clamp(48px,7vw,80px);color:var(--ink)}
+#reviews .v2-rating-star{font-size:.7em;vertical-align:.08em;margin-left:.05em}
 .v2-rating-total span+span{font-size:16px;color:var(--body)}
 .v2-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
 .v2-chips a{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;background:#fff;border:1px solid var(--ink);font-size:14px;font-weight:500;text-decoration:none;color:var(--body)}
