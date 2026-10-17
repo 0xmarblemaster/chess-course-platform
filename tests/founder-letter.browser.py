@@ -34,11 +34,15 @@ def run(browser, path, label, size):
     about = page.locator("#about")
     about.scroll_into_view_if_needed()
     page.wait_for_timeout(300)
-    reel, body = page.locator("#about .v2-reel").bounding_box(), page.locator("#about .v2-letter-body").bounding_box()
+    reel = page.locator("#about .v2-reel").bounding_box()
     if label == "desktop":
+        body = page.locator("#about .v2-letter-body").bounding_box()
         check(reel["x"] + reel["width"] <= body["x"], "reel sits left of the letter")
     else:
-        check(reel["y"] + reel["height"] <= body["y"], "reel stacks above the heading")
+        text = page.locator("#about .v2-pledge").bounding_box()
+        sign = page.locator("#about .v2-sign").bounding_box()
+        check(text["y"] + text["height"] <= reel["y"], "reel sits below the letter text")
+        check(reel["y"] + reel["height"] <= sign["y"], "reel sits above the signature")
     check(abs(reel["height"] / reel["width"] - 16 / 9) < 0.02, "reel is 9:16")
     overflow = page.evaluate("[...document.querySelectorAll('#about *')].filter(e => e.getBoundingClientRect().right > innerWidth + 1).length")
     check(overflow == 0, f"no horizontal overflow in #about ({overflow})")
