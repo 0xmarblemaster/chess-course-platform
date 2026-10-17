@@ -1,31 +1,33 @@
 /* Branch picker (#branches): tabs → 2GIS map | branch card.
    Data from 2ГИС (10.10.2026). "Алматы 1" is the Сауранбаева 7/1 point (БЦ Sibel) next to the Алматы-1 station.
-   Language follows <html lang>: ru | en | kk. */
+   Language follows <html lang>: ru | en | kk.
+   Per-branch price is shown only when the root has data-show-price (/v2); main pages don't set it. */
 (function () {
   var root = document.querySelector("[data-branch-picker]");
   if (!root) return;
 
   var WHATSAPP = "77077872210";
   var MAP = { city: "almaty", overviewZoom: 11, branchZoom: 15 };
+  var SHOW_PRICE = root.hasAttribute("data-show-price");
   var LANG = { ru: "ru", en: "en", kk: "kk" }[document.documentElement.lang] || "ru";
 
   var T = {
     ru: { days: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"], closed: "выходной", gis: "Открыть в 2ГИС", route: "Маршрут",
-      schedule: "Расписание групп", scheduleVal: "Подберём удобное время при записи", hours: "Часы работы", phone: "Телефон филиала",
+      schedule: "Расписание групп", price: "Стоимость", priceVal: function (n) { return "от " + n + " ₸/мес"; }, scheduleVal: "Подберём удобное время при записи", hours: "Часы работы", phone: "Телефон филиала",
       book: "Записаться в этот филиал", pickTime: "Подобрать время", all: "Все филиалы", loading: "Загружаем карту 2ГИС…",
       mapTitle: "Карта филиалов Chess Empire в 2ГИС", decimal: ",",
       rating: function (n) { var a = n % 10, b = n % 100; return n + " " + (a === 1 && b !== 11 ? "оценка" : a >= 2 && a <= 4 && (b < 12 || b > 14) ? "оценки" : "оценок") + " в 2ГИС"; },
       waBook: function (n, a) { return "Здравствуйте! Хочу записать ребёнка на пробный урок в филиал " + n + " (" + a + ")."; },
       waTime: function (n, a) { return "Здравствуйте! Подберите, пожалуйста, удобное время в филиале " + n + " (" + a + ")."; } },
     en: { days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], closed: "closed", gis: "Open in 2GIS", route: "Directions",
-      schedule: "Group schedule", scheduleVal: "We'll find a convenient time when you sign up", hours: "Opening hours", phone: "Branch phone",
+      schedule: "Group schedule", price: "Price", priceVal: function (n) { return "from " + n + " ₸/month"; }, scheduleVal: "We'll find a convenient time when you sign up", hours: "Opening hours", phone: "Branch phone",
       book: "Sign up at this branch", pickTime: "Find a time", all: "All branches", loading: "Loading 2GIS map…",
       mapTitle: "Chess Empire branches on the 2GIS map", decimal: ".",
       rating: function (n) { return n + " rating" + (n === 1 ? "" : "s") + " on 2GIS"; },
       waBook: function (n, a) { return "Hello! I'd like to sign my child up for a trial lesson at the " + n + " branch (" + a + ")."; },
       waTime: function (n, a) { return "Hello! Could you help me find a convenient time at the " + n + " branch (" + a + ")?"; } },
     kk: { days: ["Дс", "Сс", "Ср", "Бс", "Жм", "Сб", "Жс"], closed: "демалыс", gis: "2ГИС-те ашу", route: "Бағыт",
-      schedule: "Топтар кестесі", scheduleVal: "Жазылу кезінде ыңғайлы уақытты таңдаймыз", hours: "Жұмыс уақыты", phone: "Филиал телефоны",
+      schedule: "Топтар кестесі", price: "Бағасы", priceVal: function (n) { return n + " ₸/ай бастап"; }, scheduleVal: "Жазылу кезінде ыңғайлы уақытты таңдаймыз", hours: "Жұмыс уақыты", phone: "Филиал телефоны",
       book: "Осы филиалға жазылу", pickTime: "Уақыт таңдау", all: "Барлық филиалдар", loading: "2ГИС картасы жүктелуде…",
       mapTitle: "Chess Empire филиалдары 2ГИС картасында", decimal: ",",
       rating: function (n) { return "2ГИС-те " + n + " баға"; },
@@ -34,42 +36,43 @@
   }[LANG];
 
   var WEEKDAYS = "09:00-18:00";
+  var PRICE = { base: "29\u00a0500", premium: "35\u00a0900" };
   var BRANCHES = [
-    { id: "debut", gisId: "70000001104248570", lat: 43.250483, lon: 76.952242, rating: 5.0, ratings: 163, phone: "+77077872210",
+    { id: "debut", gisId: "70000001104248570", price: PRICE.premium, lat: 43.250483, lon: 76.952242, rating: 5.0, ratings: 163, phone: "+77077872210",
       hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Sat: "09:00-14:00", Sun: "09:00-14:00" },
       name: { ru: "Дебют", en: "Debut", kk: "Дебют" },
       address: { ru: "ул. Кабанбай батыра, 71", en: "71 Kabanbay Batyr St", kk: "Қабанбай батыр к-сі, 71" },
       district: { ru: "Медеуский р‑н", en: "Medeu district", kk: "Медеу ауданы" },
       note: { ru: "Здесь же — вечерние занятия для взрослых", en: "Evening classes for adults are held here too", kk: "Мұнда ересектерге арналған кешкі сабақтар да өтеді" } },
-    { id: "gagarin", gisId: "70000001112466521", lat: 43.204118, lon: 76.897401, rating: 4.9, ratings: 153, phone: "+77077872210",
+    { id: "gagarin", gisId: "70000001112466521", price: PRICE.premium, lat: 43.204118, lon: 76.897401, rating: 4.9, ratings: 153, phone: "+77077872210",
       hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Sat: "09:00-14:00", Sun: "09:00-14:00" },
       name: { ru: "ЖК Gagarin Park", en: "Gagarin Park", kk: "Gagarin Park ТК" },
       address: { ru: "пр. Гагарина, 287/2", en: "287/2 Gagarin Ave", kk: "Гагарин даңғ., 287/2" },
       building: { ru: "ЖК Gagarin Park", en: "Gagarin Park residential complex", kk: "Gagarin Park ТК" },
       entrance: { ru: "1 этаж", en: "1st floor", kk: "1-қабат" },
       district: { ru: "Бостандыкский р‑н", en: "Bostandyk district", kk: "Бостандық ауданы" } },
-    { id: "arena", gisId: "70000001030399258", lat: 43.262664, lon: 76.818421, rating: 4.9, ratings: 202, phone: "+77077872210",
+    { id: "arena", gisId: "70000001030399258", price: PRICE.base, lat: 43.262664, lon: 76.818421, rating: 4.9, ratings: 202, phone: "+77077872210",
       hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Sat: "09:00-13:00", Sun: "09:00-13:00" },
       name: { ru: "Алматы Арена", en: "Almaty Arena", kk: "Алматы Арена" },
       address: { ru: "мкр. Нуркент, 7", en: "7 Nurkent microdistrict", kk: "Нұркент ш/а, 7" },
       building: { ru: "Almaty Arena", en: "Almaty Arena", kk: "Almaty Arena" },
       entrance: { ru: "2 этаж, блок D, каб. 5 и 6", en: "2nd floor, block D, rooms 5 & 6", kk: "2-қабат, D блогы, 5 және 6-кабинеттер" },
       district: { ru: "Алатауский р‑н", en: "Alatau district", kk: "Алатау ауданы" } },
-    { id: "halyk", gisId: "70000001061297172", lat: 43.288076, lon: 76.990837, rating: 4.9, ratings: 82, phone: "+77077872210",
+    { id: "halyk", gisId: "70000001061297172", price: PRICE.base, lat: 43.288076, lon: 76.990837, rating: 4.9, ratings: 82, phone: "+77077872210",
       hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Fri: "09:00-13:00", Sat: WEEKDAYS, Sun: WEEKDAYS },
       name: { ru: "Халык Арена", en: "Halyk Arena", kk: "Халық Арена" },
       address: { ru: "Кульджинский тракт, 2", en: "2 Kuldzha Highway", kk: "Құлжа тас жолы, 2" },
       building: { ru: "Halyk Arena", en: "Halyk Arena", kk: "Halyk Arena" },
       entrance: { ru: "2 этаж, каб. 193 и 195", en: "2nd floor, rooms 193 & 195", kk: "2-қабат, 193 және 195-кабинеттер" },
       district: { ru: "Медеуский р‑н", en: "Medeu district", kk: "Медеу ауданы" } },
-    { id: "almaty1", gisId: "70000001055873518", lat: 43.336175, lon: 76.948426, rating: 5.0, ratings: 120, phone: "+77077872210",
+    { id: "almaty1", gisId: "70000001055873518", price: PRICE.base, lat: 43.336175, lon: 76.948426, rating: 5.0, ratings: 120, phone: "+77077872210",
       hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Fri: "09:00-14:00", Sat: WEEKDAYS, Sun: WEEKDAYS },
       name: { ru: "Алматы 1", en: "Almaty 1", kk: "Алматы 1" },
       address: { ru: "ул. Сауранбаева, 7/1", en: "7/1 Sauranbayev St", kk: "Сауранбаев к-сі, 7/1" },
       building: { ru: "БЦ Sibel", en: "Sibel Business Centre", kk: "Sibel БО" },
       entrance: { ru: "3 этаж, офис 301", en: "3rd floor, office 301", kk: "3-қабат, 301-кеңсе" },
       district: { ru: "Турксибский р‑н", en: "Turksib district", kk: "Түрксіб ауданы" } },
-    { id: "zhandosov", gisId: "70000001089892904", lat: 43.201787, lon: 76.849176, rating: 5.0, ratings: 25, phone: "+77077872210",
+    { id: "zhandosov", gisId: "70000001089892904", price: PRICE.base, lat: 43.201787, lon: 76.849176, rating: 5.0, ratings: 25, phone: "+77077872210",
       hours: { Mon: WEEKDAYS, Tue: WEEKDAYS, Wed: WEEKDAYS, Thu: WEEKDAYS, Sat: "09:00-14:00", Sun: "09:00-14:00" },
       name: { ru: "Жандосова 305", en: "Zhandosov 305", kk: "Жандосов 305" },
       address: { ru: "ул. Жандосова, 305", en: "305 Zhandosov St", kk: "Жандосов к-сі, 305" },
@@ -109,6 +112,7 @@
         '<p class="bd-links"><a href="' + gisUrl(b) + '" target="_blank" rel="noopener">' + IC.pin + esc(T.gis) + "</a>" +
         '<a href="' + routeUrl(b) + '" target="_blank" rel="noopener">' + IC.route + esc(T.route) + "</a></p></div>" +
       '<dl class="bd-facts">' +
+        (SHOW_PRICE && b.price ? "<div><dt>" + esc(T.price) + '</dt><dd class="bd-price">' + esc(T.priceVal(b.price)) + "</dd></div>" : "") +
         "<div><dt>" + esc(T.schedule) + "</dt><dd>" + esc(T.scheduleVal) + "</dd></div>" +
         "<div><dt>" + esc(T.hours) + '</dt><dd><ul class="bd-hours">' + hrs + "</ul></dd></div>" +
         "<div><dt>" + esc(T.phone) + '</dt><dd><a class="bd-phone" href="tel:' + b.phone + '">' + fmtPhone(b.phone) + "</a></dd></div>" +
