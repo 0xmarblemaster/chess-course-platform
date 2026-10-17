@@ -78,6 +78,23 @@
     new IntersectionObserver(function (es) { signupIn = es[0].isIntersecting; updateSticky(); }).observe(d.getElementById("signup"));
   }
 
+  /* --- founder letter: click-to-play reel; any video starting pauses every other one on the page --- */
+  var reel = d.querySelectorAll("#about .v2-reel-video")[0];
+  if (reel) {
+    d.addEventListener("play", function (e) {
+      d.querySelectorAll("video").forEach(function (v) { if (v !== e.target && !v.paused) v.pause(); });
+    }, true);
+    var reelPlay = reel.parentNode.querySelector(".v2-reel-play");
+    reelPlay.addEventListener("click", function () {
+      reel.controls = true; reelPlay.hidden = true;
+      var p = reel.play(); if (p && p.catch) p.catch(function () {});
+    });
+    reel.addEventListener("ended", function () { reel.controls = false; reel.load(); reelPlay.hidden = false; });
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting && !reel.paused) reel.pause();
+    }, { threshold: 0.5 }).observe(reel);
+  }
+
   /* --- trainers: slider (Back/Next, counter, arrow keys) + click-to-play coach videos --- */
   var slider = d.querySelectorAll("#trainers .tr-slider")[0];
   if (slider) {
