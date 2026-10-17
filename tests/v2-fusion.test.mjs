@@ -217,3 +217,19 @@ test('v2.js picks its WhatsApp text from <html lang>', () => {
     assert.ok(msg.includes('Aigerim') && msg.includes('6–7'), `${lang}: fields in message`)
   }
 })
+
+test('reviews: screenshot strip loops seamlessly in every language', () => {
+  for (const path of ['public/main/index.html', 'public/main/en/index.html', 'public/main/kk/index.html']) {
+    const page = readFileSync(path, 'utf8')
+    const reviews = page.slice(page.indexOf('id="reviews"'), page.indexOf('id="branches"'))
+    const sets = [...reviews.matchAll(/<ul class="v2-shots-set"([^>]*)>([\s\S]*?)<\/ul>/g)]
+    assert.equal(sets.length, 2, `${path}: two sets`)
+    const ids = (s) => [...s.matchAll(/data-shot="(\d+)"/g)].map((m) => m[1])
+    assert.ok(ids(sets[0][2]).length >= 6, `${path}: enough cards`)
+    assert.deepEqual(ids(sets[1][2]), ids(sets[0][2]), `${path}: copy matches the original`)
+    assert.ok(!sets[0][1].includes('aria-hidden') && sets[1][1].includes('aria-hidden="true"'), `${path}: only the copy is hidden`)
+    assert.ok(!/role="img"/.test(sets[1][2]), `${path}: copy cards are not announced`)
+  }
+  assert.match(css, /@keyframes v2-marquee\{to\{transform:translateX\(-50%\)\}\}/)
+  assert.ok(css.includes("@media (prefers-reduced-motion:reduce){.v2-shots{overflow-x:auto}.v2-shots-track{animation:none}}"), "reduced motion stops the strip")
+})
