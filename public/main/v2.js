@@ -77,4 +77,47 @@
     new IntersectionObserver(function (es) { heroOut = !es[0].isIntersecting; updateSticky(); }).observe(d.getElementById("top"));
     new IntersectionObserver(function (es) { signupIn = es[0].isIntersecting; updateSticky(); }).observe(d.getElementById("signup"));
   }
+
+  /* --- trainers: slider (Back/Next, counter, arrow keys) + click-to-play coach videos --- */
+  var slider = d.querySelectorAll("#trainers .tr-slider")[0];
+  if (slider) {
+    var track = slider.querySelector(".trainers"), cards = track.querySelectorAll(".trainer");
+    var prev = slider.querySelector('[data-tr="prev"]'), next = slider.querySelector('[data-tr="next"]'), count = slider.querySelector(".tr-count");
+    var videos = track.querySelectorAll(".trainer-video");
+    function step() { return cards[0].offsetWidth + (parseFloat(getComputedStyle(track).columnGap) || 0); }
+    function pauseOthers(keep) { videos.forEach(function (v) { if (v !== keep && !v.paused) v.pause(); }); }
+    function updateNav() {
+      var x = track.scrollLeft, max = track.scrollWidth - track.clientWidth, s = step();
+      var visible = Math.max(1, Math.round((track.clientWidth + s - cards[0].offsetWidth) / s));
+      var atEnd = x >= max - 2, first = atEnd ? cards.length - visible : Math.round(x / s);
+      prev.disabled = x <= 2;
+      next.disabled = atEnd;
+      count.textContent = (visible > 1 ? (first + 1) + "–" + (first + visible) : first + 1) + " / " + cards.length;
+    }
+    function move(dir) { pauseOthers(null); track.scrollBy({ left: dir * step() }); }
+    prev.addEventListener("click", function () { move(-1); });
+    next.addEventListener("click", function () { move(1); });
+    slider.addEventListener("keydown", function (e) {
+      if (e.target.tagName === "VIDEO" || (e.key !== "ArrowLeft" && e.key !== "ArrowRight")) return;
+      e.preventDefault(); move(e.key === "ArrowRight" ? 1 : -1);
+    });
+    track.addEventListener("scroll", updateNav, { passive: true });
+    window.addEventListener("resize", updateNav);
+    updateNav();
+
+    var seen = "IntersectionObserver" in window && new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (!e.isIntersecting && !e.target.paused) e.target.pause(); });
+    }, { threshold: 0.5 });
+    videos.forEach(function (v) {
+      var play = v.parentNode.querySelector(".trainer-play");
+      play.addEventListener("click", function () {
+        pauseOthers(v); v.controls = true; play.hidden = true;
+        var p = v.play(); if (p && p.catch) p.catch(function () {});
+      });
+      v.addEventListener("play", function () { pauseOthers(v); });
+      // ended: back to the poster and the play overlay
+      v.addEventListener("ended", function () { v.controls = false; v.load(); play.hidden = false; });
+      if (seen) seen.observe(v);
+    });
+  }
 })();

@@ -35,10 +35,29 @@
   .v2-perk{margin-top:-4px}
 }
 
-/* trainers: 3 cards; head stacks like the other sections (main lays #trainers head out in a row) */
+/* trainers: 5-card slider (v2.js) — 3 visible on desktop, one + a peek on mobile; head stacks like the other sections */
 #trainers .section-head{flex-direction:column;align-items:flex-start;max-width:760px}
-#trainers .trainers{grid-template-columns:repeat(3,minmax(0,1fr))}
-@media (max-width:820px){#trainers .trainers{grid-template-columns:minmax(0,1fr);max-width:420px}}
+.tr-slider{display:grid;gap:20px;outline:none}
+.tr-slider:focus-visible{outline:2px solid var(--ink);outline-offset:6px}
+.tr-controls{display:flex;align-items:center;justify-content:flex-end;gap:12px}
+.tr-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;min-width:44px;padding:8px 16px;background:transparent;border:1px solid var(--ink);border-radius:0;font:500 14px var(--font-body);color:var(--ink);cursor:pointer}
+.tr-btn:hover:not(:disabled){background:var(--ink);color:#fff}
+.tr-btn:disabled{opacity:.35;cursor:default}
+.tr-count{min-width:64px;text-align:center;font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;color:var(--soft)}
+#trainers .trainers{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc((100% - 2*var(--grid-gap))/3);overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;overscroll-behavior-x:contain}
+#trainers .trainers::-webkit-scrollbar{display:none}
+#trainers .trainer{scroll-snap-align:start;min-width:0}
+#trainers .avatar{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;background:var(--deep)}
+.trainer-media{position:relative}
+.trainer-play{position:absolute;inset:0;display:grid;place-items:center;width:100%;padding:0;border:0;background:linear-gradient(180deg,transparent 55%,rgba(66,17,29,.35));cursor:pointer}
+.trainer-play svg{width:72px;height:72px;border-radius:50%;box-shadow:0 0 0 3px transparent;transition:box-shadow .2s,transform .2s}
+.trainer-play circle{fill:var(--burgundy)}
+.trainer-play path{fill:var(--bg)}
+.trainer-play:hover svg,.trainer-play:focus-visible svg{box-shadow:0 0 0 3px var(--gold);transform:scale(1.06)}
+.trainer-play:focus-visible{outline:none}
+.trainer-play[hidden]{display:none}
+@media (max-width:820px){#trainers .trainers{grid-auto-columns:85%}.tr-controls{justify-content:space-between}}
+@media (prefers-reduced-motion:reduce){#trainers .trainers{scroll-behavior:auto}.trainer-play svg{transition:none}}
 
 /* club band */
 #club>.wrap{width:min(100% - 2*var(--gutter),var(--max));padding-block:clamp(56px,8vw,104px);display:grid;gap:clamp(32px,5vw,56px)}
