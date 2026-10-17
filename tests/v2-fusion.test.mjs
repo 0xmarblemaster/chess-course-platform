@@ -228,9 +228,13 @@ test('reviews: screenshot strip loops seamlessly in every language', () => {
     assert.ok(ids(sets[0][2]).length >= 6, `${path}: enough cards`)
     assert.deepEqual(ids(sets[1][2]), ids(sets[0][2]), `${path}: copy matches the original`)
     assert.ok(!sets[0][1].includes('aria-hidden') && sets[1][1].includes('aria-hidden="true"'), `${path}: only the copy is hidden`)
-    assert.ok(!/role="img"/.test(sets[1][2]), `${path}: copy cards are not announced`)
+    const imgs = (s) => [...s.matchAll(/<img src="\/home\/assets\/reviews\/(review-\d+\.jpg)" alt="([^"]*)"/g)]
+    assert.equal(imgs(sets[0][2]).length, ids(sets[0][2]).length, `${path}: every card shows a screenshot`)
+    assert.ok(imgs(sets[0][2]).every((m) => m[2].length > 0), `${path}: original screenshots have alt text`)
+    assert.ok(imgs(sets[1][2]).every((m) => m[2] === ''), `${path}: copy screenshots are not announced`)
+    for (const m of imgs(sets[0][2])) assert.ok(existsSync(`public/home/assets/reviews/${m[1]}`), `${path}: ${m[1]} exists`)
   }
   assert.ok(css.includes("@keyframes v2-marquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}"), "loop ends exactly one set left")
-  assert.ok(css.includes("@media (prefers-reduced-motion:reduce){.v2-shots-track{animation-duration:90s!important;animation-iteration-count:infinite!important}}"), "reduced motion slows the strip instead of stopping it")
+  assert.ok(css.includes("@media (prefers-reduced-motion:reduce){.v2-shots-track{animation-duration:120s!important;animation-iteration-count:infinite!important}}"), "reduced motion slows the strip instead of stopping it")
   assert.ok(!/prefers-reduced-motion[^@]*animation:none/.test(css), "strip never stops for reduced motion")
 })
