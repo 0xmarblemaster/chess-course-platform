@@ -7,9 +7,9 @@ import { createHash } from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import vm from 'node:vm'
 
-const html = readFileSync('public/v2/index.html', 'utf8')
-const css = readFileSync('public/v2/v2.css', 'utf8')
-const js = readFileSync('public/v2/v2.js', 'utf8')
+const html = readFileSync('public/main/index.html', 'utf8')
+const css = readFileSync('public/main/v2.css', 'utf8')
+const js = readFileSync('public/main/v2.js', 'utf8')
 const branchesSrc = readFileSync('public/home/shared/branches.js', 'utf8')
 const text = html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
 
@@ -141,10 +141,10 @@ test('page setup: RU at /ru, indexable, main design via absolute paths, no old /
   assert.match(html, /<html lang="ru">/)
   assert.ok(!html.includes('noindex'), 'indexable')
   assert.match(html, /<link rel="canonical" href="https:\/\/www\.chessempire\.kz\/ru">/)
-  for (const href of ['/home/shared/fonts.css', '/home/shared/base.css', '/home/styles.css', '/v2/v2.css']) {
+  for (const href of ['/home/shared/fonts.css', '/home/shared/base.css', '/home/styles.css', '/main/v2.css']) {
     assert.ok(html.includes(`<link rel="stylesheet" href="${href}">`), href)
   }
-  for (const src of ['/home/shared/main.js', '/home/shared/branches.js', '/v2/v2.js', '/home/shared/board3d-day.js']) {
+  for (const src of ['/home/shared/main.js', '/home/shared/branches.js', '/main/v2.js', '/home/shared/board3d-day.js']) {
     assert.ok(html.includes(`src="${src}"`), src)
   }
   assert.equal((html.match(/<h1[\s>]/g) || []).length, 1, 'one h1')
@@ -173,7 +173,7 @@ test('content facts agree with the PRD', () => {
 })
 
 // EN and KZ versions are built from the RU page: same markup, translated text.
-const LANGS = [['en', 'public/v2/en/index.html'], ['kk', 'public/v2/kk/index.html']]
+const LANGS = [['en', 'public/main/en/index.html'], ['kk', 'public/main/kk/index.html']]
 const tags = (h) => h.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, '')
   .replace(/>[^<]*</g, '><').replace(/\s(alt|aria-label|placeholder|content|title|lang|href|hreflang|aria-current)="[^"]*"/g, '')
 for (const [lang, file] of LANGS) {
