@@ -96,9 +96,10 @@ const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a)
 function mountSite(canvas, hud, theme) {
   const small = Math.min(innerWidth, innerHeight) < 600;
   const r = new THREE.WebGLRenderer({ canvas, antialias: !small, alpha: true, powerPreference: 'high-performance' });
-  r.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 1.75));
+  r.setPixelRatio(Math.min(devicePixelRatio, small ? 1 : 1.5));
   r.toneMapping = THREE.NeutralToneMapping;
-  r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+  // light and pieces only change with scroll progress, so the shadow map is redrawn on demand (see step)
+  r.shadowMap.enabled = true; r.shadowMap.type = small ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap; r.shadowMap.autoUpdate = false;
   const scene = new THREE.Scene(); scene.environment = makeEnv(r);
   const P = BOARDS[theme] || BOARDS['3b'];
   if (!P.day) scene.fog = new THREE.Fog(P.fog, 13, 26);
@@ -129,20 +130,22 @@ function mountSite(canvas, hud, theme) {
     [0, .55, 11, 4.6, 1], [.14, 1.25, 8.2, 2.4, 0], [.4, 2.3, 9, 3.6, 0], [.7, 3.5, 9.5, 5.2, 0], [1, 4.6, 7, 12, 0],
   ];
   let mx = 0, my = 0, tx = 0, ty = 0;
-  const move = (e) => { tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; };
+  const move = (e) => { tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; wake(); };
   addEventListener('pointermove', move);
+  const clock = new THREE.Clock(); let raf = 0, lastLabel = null, prog = 0, shadowProg = -1, dirty = true, shown = true, lastStep = performance.now();
   let W = 1, H = 1;
-  const size = () => { const w = canvas.clientWidth || innerWidth, h = canvas.clientHeight || innerHeight; if (!w || !h) return; W = w; H = h; r.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix(); };
+  const size = () => { const w = canvas.clientWidth || innerWidth, h = canvas.clientHeight || innerHeight; if (!w || !h) return; W = w; H = h; r.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix(); dirty = true; wake(); };
   addEventListener('resize', size); const ro = new ResizeObserver(size); ro.observe(canvas); size();
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const clock = new THREE.Clock(); let raf, lastLabel = null, prog = 0;
   const step = (snap) => {
     if (!canvas.width || !canvas.height || canvas.clientWidth !== W) size();
     const t = reduce ? 0 : clock.getElapsedTime();
     const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
     const target = Math.min(1, scrollY / max);
-    prog = snap ? target : prog + (target - prog) * .12;
-    mx += (tx - mx) * .05; my += (ty - my) * .05;
+    // easing is tuned per 60 fps frame; scale it by real elapsed time so slow devices settle in fewer frames
+    const now = performance.now(), dt = Math.min(100, now - lastStep) / 16.7; lastStep = now;
+    prog = snap ? target : prog + (target - prog) * (1 - Math.pow(.88, dt));
+    const e = 1 - Math.pow(.95, dt); mx += (tx - mx) * e; my += (ty - my) * e;
     let k = 0; while (k < keys.length - 2 && prog > keys[k + 1][0]) k++;
     const [pa, aa, ra, ya, oa] = keys[k], [pb, ab, rb, yb, ob] = keys[k + 1];
     const u = sstep(pa, pb, prog);
@@ -156,14 +159,56 @@ function mountSite(canvas, hud, theme) {
     tracks.forEach(({ obj, a, b, s, e, first }) => { if (!first && prog < s) return; const q = sstep(s, e, prog); obj.position.set(a[0] + (b[0] - a[0]) * q, Math.sin(Math.PI * q) * .55, a[1] + (b[1] - a[1]) * q); });
     game.forEach(([l], i) => { if (prog >= p0 + i * w + w * .5) label = l; });
     if (hud && label !== lastLabel) { hud.textContent = label; lastLabel = label; }
-    r.render(scene, cam);
+    if (prog !== shadowProg) { r.shadowMap.needsUpdate = true; shadowProg = prog; }
+    r.render(scene, cam); dirty = false;
   };
-  let lastT = 0;
-  const frame = () => { raf = requestAnimationFrame(frame); lastT = performance.now(); step(false); };
-  const onScroll = () => { if (performance.now() - lastT > 100) step(true); };
+  // The canvas is fixed behind the page and shows only where no opaque section covers it.
+  // Sample the viewport; while fully covered (or the tab is hidden) nothing is drawn.
+  // elementsFromPoint skips the canvas (pointer-events:none); a point is covered when any element stacked
+  // there, other than html/body (which sit under the canvas), paints an opaque background
+  const opaque = new WeakMap();
+  const isOpaque = (el) => {
+    if (!opaque.has(el)) { const c = getComputedStyle(el).backgroundColor.match(/[\d.]+/g); opaque.set(el, !!c && (c.length < 4 || +c[3] === 1)); }
+    return opaque.get(el);
+  };
+  const covered = (x, y) => document.elementsFromPoint(x, y).some((el) => el !== document.body && el !== document.documentElement && isOpaque(el));
+  const exposed = () => {
+    for (const fy of [.15, .4, .65, .9]) for (const fx of [.2, .5, .8]) {
+      if (!covered(innerWidth * fx, innerHeight * fy)) return true;
+    }
+    return false;
+  };
+  let lastR = 0;
+  const frame = (now) => {
+    raf = 0;
+    if (document.hidden || !shown) return;
+    const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    const moving = Math.abs(Math.min(1, scrollY / max) - prog) > 1e-4 || Math.abs(tx - mx) > 1e-3 || Math.abs(ty - my) > 1e-3;
+    const drifting = !reduce && prog < .12; // idle camera sway, only near the top
+    // the sway is slow, so 30 fps is enough for it; scroll and pointer get every frame
+    if (moving || dirty || now - lastR >= 33) { step(false); lastR = now; }
+    if (moving || drifting) raf = requestAnimationFrame(frame);
+  };
+  // hoisted: size() and move() can call it before frame is defined, so frame is looked up lazily
+  function wake() { if (!raf) raf = requestAnimationFrame((t) => frame(t)); }
+  let checking = false;
+  const onScroll = () => {
+    if (checking) return; checking = true;
+    requestAnimationFrame(() => {
+      checking = false;
+      const was = shown; shown = exposed();
+      // back from behind a section: jump to the current position instead of easing from a stale one
+      if (shown && !was) step(true);
+      wake();
+    });
+  };
+  const onVis = () => { if (!document.hidden) wake(); };
   addEventListener('scroll', onScroll, { passive: true });
-  frame();
-  return () => { cancelAnimationFrame(raf); removeEventListener('scroll', onScroll); removeEventListener('pointermove', move); removeEventListener('resize', size); ro.disconnect(); r.dispose(); };
+  addEventListener('resize', onScroll); // layout changes move the sections over the canvas
+  document.addEventListener('visibilitychange', onVis);
+  // coverage is first measured a frame later, once the caller has added .has-3d (which opens the gaps)
+  step(true); onScroll();
+  return () => { cancelAnimationFrame(raf); removeEventListener('scroll', onScroll); removeEventListener('resize', onScroll); document.removeEventListener('visibilitychange', onVis); removeEventListener('pointermove', move); removeEventListener('resize', size); ro.disconnect(); r.dispose(); };
 }
 
 const BOARDS = {
