@@ -137,7 +137,7 @@
   .v2-sticky{display:flex;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:45;padding:10px var(--gutter) calc(10px + env(safe-area-inset-bottom));background:rgba(244,238,230,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .25s}
   .v2-sticky.is-shown{transform:none}
   .v2-sticky .btn-block{flex:1}
-  .v2-sticky-wa{flex:none;display:inline-flex;align-items:center;justify-content:center;width:52px;min-height:48px;background:var(--paper);border:1px solid var(--line);color:#1DA851}
+  .v2-sticky-wa{flex:none;display:inline-flex;align-items:center;justify-content:center;width:52px;min-height:48px;background:var(--paper);border:1px solid var(--line);color:var(--gold)}
   .wa-fab{display:none!important}
 }
 /* language switch + burger fit a 390px header (the switch was pushing the burger 10px off-screen) */
@@ -153,7 +153,7 @@
 
 /* Desktop WhatsApp button (bottom-right): labelled in the hero, icon-only once scrolled, hidden over #signup */
 .wa-fab{position:fixed;right:20px;bottom:18px;z-index:40;display:flex;align-items:center;gap:10px;min-height:48px;padding:0 16px 0 13px;background:rgba(244,238,230,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid var(--line);color:var(--body);font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 6px 18px rgba(16,18,17,.08);transition:padding .25s,opacity .2s,transform .2s,border-color .2s}
-.wa-fab svg{flex:none;color:#1DA851}
+.wa-fab svg{flex:none;color:var(--gold)}
 .wa-fab-label{white-space:nowrap;overflow:hidden;max-width:220px;transition:max-width .25s,opacity .2s}
 .wa-fab:hover,.wa-fab:focus-visible{border-color:var(--ink)}
 .wa-fab.is-compact{padding:0 12px;gap:0}
