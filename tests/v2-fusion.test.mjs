@@ -239,18 +239,52 @@ test('reviews: screenshot strip loops seamlessly in every language', () => {
   assert.ok(!/prefers-reduced-motion[^@]*animation:none/.test(css), "strip never stops for reduced motion")
 })
 
-test('hero stats end with the 2GIS rating linking to the Дебют reviews page', () => {
-  for (const path of ['public/main/index.html', 'public/main/en/index.html', 'public/main/kk/index.html']) {
+const PAGES = ['public/main/index.html', 'public/main/en/index.html', 'public/main/kk/index.html']
+const WA_Q = {
+  'public/main/index.html': 'Здравствуйте! У меня вопрос о занятиях в Chess Empire.',
+  'public/main/en/index.html': 'Hello! I have a question about classes at Chess Empire.',
+  'public/main/kk/index.html': 'Сәлеметсіз бе! Chess Empire сабақтары туралы сұрағым бар.',
+}
+
+test('hero stats are the three product facts; the 2GIS rating sits under the CTA', () => {
+  // 745 reviews across the six branches listed in the reviews block, weighted average 4,9
+  const branches = [...html.matchAll(/<li><a href="https:\/\/2gis\.kz[^"]*"[^>]*>[^<]*<b>★ (\d),(\d)<\/b> <small>(\d+)<\/small>/g)]
+  assert.equal(branches.length, 6, 'six branch ratings')
+  const total = branches.reduce((n, m) => n + Number(m[3]), 0)
+  const avg = branches.reduce((n, m) => n + Number(`${m[1]}.${m[2]}`) * Number(m[3]), 0) / total
+  assert.equal(total, 745)
+  assert.equal(avg.toFixed(1), '4.9')
+  for (const path of PAGES) {
     const page = readFileSync(path, 'utf8')
     const stats = page.match(/<ul class="hero-stats">(.*?)<\/ul>/)
     assert.ok(stats, `${path}: hero stats present`)
-    const items = [...stats[1].matchAll(/<li[^>]*>.*?<\/li>/g)].map((m) => m[0])
-    assert.equal(items.length, 4, `${path}: four hero stats`)
-    assert.ok(items[2].includes('<strong>6</strong>'), `${path}: branches stat is third`)
-    assert.ok(items[3].includes('href="https://2gis.kz/almaty/firm/70000001104248570/tab/reviews"'), `${path}: rating links to Дебют on 2GIS`)
-    assert.ok(items[3].includes('target="_blank" rel="noopener"'), `${path}: opens in a new tab safely`)
-    assert.ok(items[3].includes('<strong>★ 5,0</strong>'), `${path}: matches Дебют rating in the reviews block`)
+    assert.equal([...stats[1].matchAll(/<li[^>]*>/g)].length, 3, `${path}: three hero stats`)
+    assert.ok(!stats[1].includes('2gis'), `${path}: no rating in the stats row`)
+    const cta = page.match(/<a class="btn btn-primary btn-lg" href="#signup">[^<]*<\/a>\n<a class="hero-proof" href="#reviews" aria-label="[^"]+">(.*?)<\/a>/)
+    assert.ok(cta, `${path}: rating line directly follows the hero CTA and links to #reviews`)
+    assert.ok(/<b>4[,.]9<\/b>/.test(cta[1]) && cta[1].includes('745'), `${path}: rating line says 4,9 and 745 reviews`)
   }
-  assert.ok(html.includes('Дебют <b>★ 5,0</b>'), 'reviews block still lists Дебют at 5,0')
-  assert.ok(css.includes('.hero-stat-2gis a{'), 'rating link is styled')
+  assert.ok(!css.includes('hero-stat-2gis'), 'old stat styles removed')
+  assert.ok(css.includes('.hero-proof{'), 'rating line is styled')
+})
+
+test('move HUD is replaced by a WhatsApp question button (desktop) and a sticky-bar icon (mobile)', () => {
+  for (const path of PAGES) {
+    const page = readFileSync(path, 'utf8')
+    const href = `https://wa.me/77077872210?text=${encodeURIComponent(WA_Q[path])}`
+    assert.ok(!page.includes('move-hud'), `${path}: move HUD gone`)
+    const fab = page.match(/<a class="wa-fab" id="wa-fab" href="([^"]+)" target="_blank" rel="noopener" aria-label="[^"]+" data-wa="fab"><svg[^>]*aria-hidden="true"[\s\S]*?<\/svg><span class="wa-fab-label">[^<]+<\/span><\/a>/)
+    assert.ok(fab, `${path}: labelled desktop WhatsApp button`)
+    assert.equal(fab[1], href, `${path}: fab opens a question message`)
+    const sticky = page.match(/<div class="v2-sticky" id="v2-sticky" aria-hidden="true">(.*?)<\/div>/)
+    assert.ok(sticky[1].startsWith('<a class="btn btn-primary btn-block" href="#signup" tabindex="-1">'), `${path}: signup stays the main sticky action`)
+    assert.ok(sticky[1].includes(`<a class="v2-sticky-wa" href="${href}" target="_blank" rel="noopener" tabindex="-1" aria-label="`), `${path}: WhatsApp icon in the sticky bar`)
+  }
+  assert.ok(/@media \(max-width:820px\)\{[\s\S]*?\.wa-fab\{display:none!important\}\n\}/.test(css), 'fab hidden where the sticky bar exists')
+  assert.ok(css.includes('.wa-fab.is-compact .wa-fab-label{max-width:0;opacity:0}'), 'fab collapses to the icon')
+  assert.ok(css.includes('.wa-fab.is-hidden{'), 'fab can hide over the signup form')
+  assert.ok(js.includes('fab.classList.toggle("is-compact", heroOut)') && js.includes('fab.classList.toggle("is-hidden", signupIn)'), 'fab reacts to hero and signup visibility')
+  assert.ok(js.includes('sticky.querySelectorAll("a").forEach'), 'both sticky links get tab focus toggled')
+  // board3d-day.js tolerates the missing HUD element
+  assert.ok(readFileSync('public/home/shared/board3d-day.js', 'utf8').includes('if (hud && label !== lastLabel)'), 'board script guards a null HUD')
 })

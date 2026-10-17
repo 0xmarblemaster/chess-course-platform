@@ -64,13 +64,14 @@
   mobile.addEventListener("change", layoutWorries);
   layoutWorries();
 
-  /* --- sticky mobile CTA: after the hero, hidden while #signup is on screen --- */
-  var sticky = d.getElementById("v2-sticky"), heroOut = false, signupIn = false;
+  /* --- sticky mobile CTA + desktop WhatsApp button: react to the hero leaving and #signup entering --- */
+  var sticky = d.getElementById("v2-sticky"), fab = d.getElementById("wa-fab"), heroOut = false, signupIn = false;
   function updateSticky() {
     var show = heroOut && !signupIn;
     sticky.classList.toggle("is-shown", show);
     sticky.setAttribute("aria-hidden", show ? "false" : "true");
-    sticky.querySelector("a").tabIndex = show ? 0 : -1;
+    sticky.querySelectorAll("a").forEach(function (a) { a.tabIndex = show ? 0 : -1; });
+    if (fab) { fab.classList.toggle("is-compact", heroOut); fab.classList.toggle("is-hidden", signupIn); }
   }
   if ("IntersectionObserver" in window) {
     new IntersectionObserver(function (es) { heroOut = !es[0].isIntersecting; updateSticky(); }).observe(d.getElementById("top"));

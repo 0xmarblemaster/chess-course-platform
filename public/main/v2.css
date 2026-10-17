@@ -134,17 +134,30 @@
 /* sticky mobile CTA */
 .v2-sticky{display:none}
 @media (max-width:820px){
-  .v2-sticky{display:block;position:fixed;left:0;right:0;bottom:0;z-index:45;padding:10px var(--gutter) calc(10px + env(safe-area-inset-bottom));background:rgba(244,238,230,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .25s}
+  .v2-sticky{display:flex;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:45;padding:10px var(--gutter) calc(10px + env(safe-area-inset-bottom));background:rgba(244,238,230,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .25s}
   .v2-sticky.is-shown{transform:none}
-  .has-3d .move-hud{bottom:84px}
+  .v2-sticky .btn-block{flex:1}
+  .v2-sticky-wa{flex:none;display:inline-flex;align-items:center;justify-content:center;width:52px;min-height:48px;background:var(--paper);border:1px solid var(--line);color:#1DA851}
+  .wa-fab{display:none!important}
 }
 /* language switch + burger fit a 390px header (the switch was pushing the burger 10px off-screen) */
 @media (max-width:420px){.lang-switch a{min-width:32px;padding:0 4px}}
 @media (max-width:374px){.logo{font-size:15px;gap:8px}.logo-img{width:32px;height:32px}}
 
-/* Hero 2GIS rating stat (links to the Дебют 2GIS reviews page) */
-.hero-stats:has(.hero-stat-2gis){column-gap:clamp(24px,2.6vw,32px)}
-@media (min-width:600px){.hero-stats:has(.hero-stat-2gis){flex-wrap:nowrap}.hero-stats:has(.hero-stat-2gis) li{flex:0 1 auto;min-width:0}}
-.hero-stat-2gis a{display:flex;flex-direction:column;color:inherit;text-decoration:none}
-.hero-stat-2gis a span{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
-.hero-stat-2gis a:hover strong,.hero-stat-2gis a:focus-visible strong{opacity:.8}
+/* Hero rating line: social proof sits right under the CTA it backs up */
+.hero-proof{display:inline-flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin-top:14px;font-size:14px;color:var(--body);text-decoration:none}
+.hero-proof-stars{color:var(--gold);letter-spacing:2px;font-size:15px}
+.hero-proof b{font-weight:700;color:var(--ink)}
+.hero-proof span:last-child{text-decoration:underline;text-decoration-color:var(--line);text-decoration-thickness:1px;text-underline-offset:4px}
+.hero-proof:hover span:last-child,.hero-proof:focus-visible span:last-child{text-decoration-color:currentColor}
+
+/* Desktop WhatsApp button (bottom-right): labelled in the hero, icon-only once scrolled, hidden over #signup */
+.wa-fab{position:fixed;right:20px;bottom:18px;z-index:40;display:flex;align-items:center;gap:10px;min-height:48px;padding:0 16px 0 13px;background:rgba(244,238,230,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid var(--line);color:var(--body);font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 6px 18px rgba(16,18,17,.08);transition:padding .25s,opacity .2s,transform .2s,border-color .2s}
+.wa-fab svg{flex:none;color:#1DA851}
+.wa-fab-label{white-space:nowrap;overflow:hidden;max-width:220px;transition:max-width .25s,opacity .2s}
+.wa-fab:hover,.wa-fab:focus-visible{border-color:var(--ink)}
+.wa-fab.is-compact{padding:0 12px;gap:0}
+.wa-fab.is-compact .wa-fab-label{max-width:0;opacity:0}
+.wa-fab.is-compact:hover .wa-fab-label,.wa-fab.is-compact:focus-visible .wa-fab-label{max-width:220px;opacity:1;margin-left:10px}
+.wa-fab.is-hidden{opacity:0;transform:translateY(8px);pointer-events:none;visibility:hidden}
+@media (prefers-reduced-motion:reduce){.wa-fab,.wa-fab-label{transition:none}}
