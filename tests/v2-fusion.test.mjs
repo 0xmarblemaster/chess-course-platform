@@ -248,7 +248,7 @@ const WA_Q = {
 
 test('hero stats are the three product facts; the 2GIS rating sits under the CTA', () => {
   // 745 reviews across the six branches listed in the reviews block, weighted average 4,9
-  const branches = [...html.matchAll(/<li><a href="https:\/\/2gis\.kz[^"]*"[^>]*>[^<]*<b>★ (\d),(\d)<\/b> <small>(\d+)<\/small>/g)]
+  const branches = [...html.matchAll(/<li><a href="https:\/\/2gis\.kz[^"]*"[^>]*>[^<]*<b>(?:<span class="v2-chip-star" aria-hidden="true">)?★(?:<\/span>)? (\d),(\d)<\/b> <small>(\d+)<\/small>/g)]
   assert.equal(branches.length, 6, 'six branch ratings')
   const total = branches.reduce((n, m) => n + Number(m[3]), 0)
   const avg = branches.reduce((n, m) => n + Number(`${m[1]}.${m[2]}`) * Number(m[3]), 0) / total
