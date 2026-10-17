@@ -95,11 +95,13 @@ const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a)
 
 function mountSite(canvas, hud, theme) {
   const small = Math.min(innerWidth, innerHeight) < 600;
-  const r = new THREE.WebGLRenderer({ canvas, antialias: !small, alpha: true, powerPreference: 'high-performance' });
-  r.setPixelRatio(Math.min(devicePixelRatio, small ? 1 : 1.5));
+  // phones have 2-3 device pixels per CSS pixel; at ratio 1 the board is upscaled 3x and looks soft.
+  // Frames are only drawn while scrolling or drifting, so 2x + MSAA is affordable everywhere.
+  const r = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  r.setPixelRatio(Math.min(devicePixelRatio, 2));
   r.toneMapping = THREE.NeutralToneMapping;
   // light and pieces only change with scroll progress, so the shadow map is redrawn on demand (see step)
-  r.shadowMap.enabled = true; r.shadowMap.type = small ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap; r.shadowMap.autoUpdate = false;
+  r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap; r.shadowMap.autoUpdate = false;
   const scene = new THREE.Scene(); scene.environment = makeEnv(r);
   const P = BOARDS[theme] || BOARDS['3b'];
   if (!P.day) scene.fog = new THREE.Fog(P.fog, 13, 26);

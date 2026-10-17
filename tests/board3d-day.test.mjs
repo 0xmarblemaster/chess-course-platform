@@ -28,7 +28,12 @@ ok(/Math\.pow\(\.88, dt\)/.test(board), 'scroll easing is time-based, so slow de
 console.log('cheaper frames')
 ok(/shadowMap\.autoUpdate = false/.test(board), 'shadow map is not redrawn every frame')
 ok(/shadowMap\.needsUpdate = true/.test(board), 'shadow map is redrawn when the pieces move')
-ok(/setPixelRatio\(Math\.min\(devicePixelRatio, small \? 1 : 1\.5\)\)/.test(board), 'pixel ratio capped at 1 on phones, 1.5 on desktop')
+ok(/setPixelRatio\(Math\.min\(devicePixelRatio, 2\)\)/.test(board), 'pixel ratio capped at 2 on every device, so phones are not upscaled from 1x')
+
+console.log('sharp on phones')
+ok(/WebGLRenderer\(\{[^}]*antialias: true/.test(board), 'antialiasing is on for phones too')
+ok(!/small \? 1 :/.test(board), 'no 1x pixel ratio branch for small screens')
+ok(/shadowMap\.type = THREE\.PCFSoftShadowMap;/.test(board), 'soft shadows on every device')
 
 if (failures) { console.error(`\n${failures} failure(s)`); process.exit(1) }
 console.log('\nall board3d-day checks passed')
