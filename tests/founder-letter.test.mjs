@@ -31,6 +31,7 @@ for (const [file, L] of Object.entries(PAGES)) {
     const src = about.match(/<source src="([^"]+\.mp4)" type="video\/mp4">/)[1]
     assert.ok(existsSync('public' + poster), poster)
     assert.ok(existsSync('public' + src), src)
+    assert.match(src, /^\/home\/assets\/video\/trainer-[a-z]+\.[0-9a-f]{8}\.mp4$/, 'content-hashed name (served immutable)')
     assert.match(about, new RegExp(`<button type="button" class="v2-reel-play" aria-label="${L.play}"><svg`))
   })
 

@@ -54,6 +54,7 @@ for (const [file, L] of Object.entries(PAGES)) {
       const mp4 = c.match(/<source src="([^"]+\.mp4)" type="video\/mp4">/)[1]
       assert.ok(asset(poster), `${poster} exists`)
       assert.ok(asset(mp4), `${mp4} exists`)
+      assert.match(mp4, /^\/home\/assets\/video\/trainer-[a-z]+\.[0-9a-f]{8}\.mp4$/, 'content-hashed name (served immutable)')
       assert.match(c, new RegExp(`<button type="button" class="trainer-play" aria-label="${L.play}${L.names[i]}"><svg`))
     }
   })
@@ -93,4 +94,15 @@ test('v2.js: guarded block with nav, pause-others, ended reset and IntersectionO
   assert.match(js, /pauseOthers\(v\); v\.controls = true; play\.hidden = true;/)
   assert.match(js, /ArrowLeft[\s\S]*ArrowRight/)
   assert.match(js, /x >= max - 2/)
+})
+
+test('coach videos: buffered ahead of the tap, spinner while waiting, immutable caching', () => {
+  assert.match(js, /function warm\(v\)/)
+  assert.match(js, /"pointerdown", "pointerenter", "focus"/)
+  assert.match(js, /saveData/)
+  assert.match(css, /\.trainer-media\.is-loading::after/)
+  const vercel = JSON.parse(readFileSync('vercel.json', 'utf8'))
+  const rule = vercel.headers.find((h) => h.source === '/home/assets/video/(.*)')
+  assert.ok(rule, 'cache rule for /home/assets/video')
+  assert.match(rule.headers[0].value, /max-age=31536000, immutable/)
 })

@@ -78,6 +78,29 @@
     new IntersectionObserver(function (es) { signupIn = es[0].isIntersecting; updateSticky(); }).observe(d.getElementById("signup"));
   }
 
+  /* --- videos: buffer ahead of the tap so play starts at once; a spinner covers any wait that is left.
+     The HTML keeps preload="none" so nothing downloads until a video is about to be wanted. --- */
+  var conn = window.navigator && window.navigator.connection, saver = !!(conn && (conn.saveData || /2g/.test(conn.effectiveType || "")));
+  function warm(v) {
+    if (!v || v.preload === "auto") return;
+    v.preload = "auto";
+    if (v.readyState === 0 && v.paused) v.load();
+  }
+  function wireVideo(v, play) {
+    var box = v.parentNode;
+    // finger down / mouse over / keyboard focus on the play button: start fetching before the click lands (also with data saver on)
+    ["pointerdown", "pointerenter", "focus"].forEach(function (t) { play.addEventListener(t, function () { warm(v); }, { passive: true }); });
+    play.addEventListener("click", function () { box.classList.add("is-loading"); });
+    v.addEventListener("waiting", function () { box.classList.add("is-loading"); });
+    ["playing", "pause", "ended", "error"].forEach(function (t) { v.addEventListener(t, function () { box.classList.remove("is-loading"); }); });
+  }
+  // fires once the target comes within one screen of the viewport
+  function whenNear(el, fn) {
+    if (!("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); fn(); } }, { rootMargin: "100% 0px" });
+    io.observe(el);
+  }
+
   /* --- founder letter: click-to-play reel; any video starting pauses every other one on the page --- */
   var reel = d.querySelectorAll("#about .v2-reel-video")[0];
   if (reel) {
@@ -85,9 +108,11 @@
       d.querySelectorAll("video").forEach(function (v) { if (v !== e.target && !v.paused) v.pause(); });
     }, true);
     var reelPlay = reel.parentNode.querySelector(".v2-reel-play");
+    wireVideo(reel, reelPlay);
+    if (!saver) whenNear(reel, function () { warm(reel); });
     reelPlay.addEventListener("click", function () {
       reel.controls = true; reelPlay.hidden = true;
-      var p = reel.play(); if (p && p.catch) p.catch(function () {});
+      var p = reel.play(); if (p && p.catch) p.catch(function () { reel.parentNode.classList.remove("is-loading"); });
     });
     reel.addEventListener("ended", function () { reel.controls = false; reel.load(); reelPlay.hidden = false; });
     if ("IntersectionObserver" in window) new IntersectionObserver(function (es) {
@@ -100,7 +125,7 @@
   if (slider) {
     var track = slider.querySelector(".trainers"), cards = track.querySelectorAll(".trainer");
     var prev = slider.querySelector('[data-tr="prev"]'), next = slider.querySelector('[data-tr="next"]'), count = slider.querySelector(".tr-count");
-    var videos = track.querySelectorAll(".trainer-video");
+    var videos = track.querySelectorAll(".trainer-video"), near = false;
     function step() { return cards[0].offsetWidth + (parseFloat(getComputedStyle(track).columnGap) || 0); }
     function pauseOthers(keep) { videos.forEach(function (v) { if (v !== keep && !v.paused) v.pause(); }); }
     function updateNav() {
@@ -110,6 +135,8 @@
       prev.disabled = x <= 2;
       next.disabled = atEnd;
       count.textContent = (visible > 1 ? (first + 1) + "–" + (first + visible) : first + 1) + " / " + cards.length;
+      // buffer the cards on screen plus the next one (not all of them: ~4 MB each)
+      if (near) for (var i = first; i <= first + visible && i < cards.length; i++) warm(cards[i].querySelector(".trainer-video"));
     }
     function move(dir) { pauseOthers(null); track.scrollBy({ left: dir * step() }); }
     prev.addEventListener("click", function () { move(-1); });
@@ -121,15 +148,17 @@
     track.addEventListener("scroll", updateNav, { passive: true });
     window.addEventListener("resize", updateNav);
     updateNav();
+    if (!saver) whenNear(slider, function () { near = true; updateNav(); });
 
     var seen = "IntersectionObserver" in window && new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (!e.isIntersecting && !e.target.paused) e.target.pause(); });
     }, { threshold: 0.5 });
     videos.forEach(function (v) {
       var play = v.parentNode.querySelector(".trainer-play");
+      wireVideo(v, play);
       play.addEventListener("click", function () {
         pauseOthers(v); v.controls = true; play.hidden = true;
-        var p = v.play(); if (p && p.catch) p.catch(function () {});
+        var p = v.play(); if (p && p.catch) p.catch(function () { v.parentNode.classList.remove("is-loading"); });
       });
       v.addEventListener("play", function () { pauseOthers(v); });
       // ended: back to the poster and the play overlay

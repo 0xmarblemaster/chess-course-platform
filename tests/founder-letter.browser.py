@@ -30,7 +30,12 @@ def run(browser, path, label, size):
     page = browser.new_context(viewport={"width": size[0], "height": size[1]}).new_page()
     mp4 = []
     page.on("request", lambda r: mp4.append(r.url) if ".mp4" in r.url else None)
-    page.goto(BASE + path, wait_until="networkidle")
+    # load, not networkidle: a buffering video keeps the connection busy
+    page.goto(BASE + path, wait_until="load")
+    page.wait_for_timeout(300)
+    # at page load the reel buffers only if it is already within a screen of the viewport
+    near = page.evaluate("document.querySelector('.v2-reel').getBoundingClientRect().top < 2 * innerHeight")
+    check(page.evaluate("document.querySelector('.v2-reel-video').preload") == ("auto" if near else "none"), f"reel buffering at load matches distance (near={near})")
     about = page.locator("#about")
     about.scroll_into_view_if_needed()
     page.wait_for_timeout(300)
@@ -48,7 +53,8 @@ def run(browser, path, label, size):
     check(overflow == 0, f"no horizontal overflow in #about ({overflow})")
     check(page.locator("#about .v2-monogram").is_visible(), "monogram visible")
     about.screenshot(path=f"{SHOTS}/{path.strip('/').replace('/', '-')}-{label}.png")
-    check(not mp4, f"no .mp4 request before play ({len(mp4)})")
+    page.wait_for_function("document.querySelector('.v2-reel-video').preload === 'auto'", timeout=5000)
+    check(True, "reel buffers ahead once near the viewport")
     if label != "desktop":
         return
     page.evaluate("document.querySelectorAll('video').forEach(v => v.muted = true)")

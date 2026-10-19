@@ -3,6 +3,7 @@
 Run from the repo root: python3 tests/trainers-carousel.browser.py
 Serves public/ on :8790 itself; screenshots go to /tmp/trainers-shots/.
 """
+import json
 import os
 import subprocess
 import sys
@@ -46,9 +47,20 @@ def run(browser, path, label, size):
     mp4 = []
     page.on("request", lambda r: mp4.append(r.url) if ".mp4" in r.url else None)
     page.goto(BASE + path, wait_until="load")
+    page.wait_for_timeout(300)
+    check(page.evaluate("[...document.querySelectorAll('.trainer-video')].every(v => v.preload === 'none')"), "coach videos idle at page load")
     section = page.locator("#trainers")
     section.scroll_into_view_if_needed()
     page.wait_for_timeout(300)
+    # near the viewport: the cards on screen + the next one buffer, the rest stay untouched
+    want = ["auto", "auto", "auto", "-", "none"] if label == "desktop" else ["auto", "auto", "none", "-", "none"]
+    state = "[...document.querySelectorAll('#trainers li.trainer')].map(c => { const v = c.querySelector('video'); return v ? v.preload : '-' })"
+    try:
+        page.wait_for_function(f"JSON.stringify({state}) === {json.dumps(json.dumps(want))}", timeout=5000)
+    except Exception:
+        pass
+    warm = page.evaluate(state)
+    check(warm == want, f"buffered cards {warm}")
     prev, nxt, count = page.locator('[data-tr="prev"]'), page.locator('[data-tr="next"]'), page.locator(".tr-count")
 
     check(page.locator("#trainers li.trainer").count() == 5, "5 cards")
@@ -86,7 +98,7 @@ def run(browser, path, label, size):
     while not prev.is_disabled():
         step(page, prev)
 
-    check(not mp4, f"no .mp4 request before play ({len(mp4)})")
+    check(page.evaluate("[...document.querySelectorAll('.trainer-video')].every(v => v.preload === 'auto')"), "every card buffered after paging through")
     if label == "narrow":
         ctx.close()
         return
@@ -98,7 +110,7 @@ def run(browser, path, label, size):
     page.wait_for_function("!document.querySelectorAll('.trainer-video')[0].paused", timeout=10000)
     check(page.evaluate("document.querySelectorAll('.trainer-video')[0].controls"), "card 1 shows controls after play")
     check(plays.nth(0).is_hidden(), "card 1 overlay hidden")
-    check(mp4 != [], "mp4 requested after play")
+    check(mp4 != [], "mp4 requested")
     if label == "mobile":
         step(page, nxt)
         check(page.evaluate("document.querySelectorAll('.trainer-video')[0].paused"), "Next pauses the playing video")
