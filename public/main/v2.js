@@ -6,11 +6,14 @@
   // Language follows <html lang>: ru | en | kk.
   var L = {
     ru: { hiChild: "Здравствуйте! Хочу записать ребёнка на бесплатный пробный урок.", hiAdult: "Здравствуйте! Хочу записаться на бесплатный пробный урок.",
-      name: "Имя: ", age: "Возраст ребёнка: ", adult: "Возраст: взрослый", branch: "Филиал: ", help: "помогите выбрать", copied: "Скопировано", selected: "Выделено — скопируйте" },
+      name: "Имя: ", age: "Возраст ребёнка: ", adult: "Возраст: взрослый", branch: "Филиал: ", help: "помогите выбрать", copied: "Скопировано", selected: "Выделено — скопируйте",
+      topics: { parents: "Родителям", beginners: "Начинающим", tournaments: "Турниры" } },
     en: { hiChild: "Hello! I'd like to sign my child up for a free trial lesson.", hiAdult: "Hello! I'd like to sign up for a free trial lesson.",
-      name: "Name: ", age: "Child's age: ", adult: "Age: adult", branch: "Branch: ", help: "please help me choose", copied: "Copied", selected: "Selected — copy it" },
+      name: "Name: ", age: "Child's age: ", adult: "Age: adult", branch: "Branch: ", help: "please help me choose", copied: "Copied", selected: "Selected — copy it",
+      topics: { parents: "Parents", beginners: "Beginners", tournaments: "Tournaments" } },
     kk: { hiChild: "Сәлеметсіз бе! Баламды тегін сынақ сабаққа жазғым келеді.", hiAdult: "Сәлеметсіз бе! Тегін сынақ сабаққа жазылғым келеді.",
-      name: "Аты: ", age: "Баланың жасы: ", adult: "Жасы: ересек", branch: "Филиал: ", help: "таңдауға көмектесіңіз", copied: "Көшірілді", selected: "Белгіленді — көшіріп алыңыз" }
+      name: "Аты: ", age: "Баланың жасы: ", adult: "Жасы: ересек", branch: "Филиал: ", help: "таңдауға көмектесіңіз", copied: "Көшірілді", selected: "Белгіленді — көшіріп алыңыз",
+      topics: { parents: "Ата-аналарға", beginners: "Жаңадан бастағандарға", tournaments: "Турнирлер" } }
   };
   var T = L[d.documentElement.lang] || L.ru;
 
@@ -165,5 +168,27 @@
       v.addEventListener("ended", function () { v.controls = false; v.load(); play.hidden = false; });
       if (seen) seen.observe(v);
     });
+  }
+
+  /* --- articles block: texts and links (/articles/<slug>) of the latest articles from /api/articles; the static
+     cards stay as they are unless exactly as many articles come back (same layout either way) --- */
+  var rail = d.querySelector("#articles .qb-rail");
+  if (rail && window.fetch) {
+    var cards = rail.querySelectorAll(".qb");
+    fetch("/api/articles?lang=" + (L[d.documentElement.lang] ? d.documentElement.lang : "ru") + "&limit=" + cards.length)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (res) {
+        var list = res && res.articles;
+        if (!list || list.length !== cards.length) return;
+        list.forEach(function (a, i) {
+          var c = cards[i], mins = c.querySelector(".qb-foot > span");
+          c.href = c.getAttribute("href").replace(/[^/]+$/, a.slug);
+          c.querySelector(".qb-tag").textContent = T.topics[a.topic] || a.topic;
+          c.querySelector("h3").textContent = a.title;
+          c.querySelector("p").textContent = a.teaser;
+          if (a.read_minutes) mins.textContent = mins.textContent.replace(/\d+/, a.read_minutes);
+        });
+      })
+      .catch(function () {});
   }
 })();

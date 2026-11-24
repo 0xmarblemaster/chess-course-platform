@@ -1,7 +1,20 @@
 import type { NextConfig } from "next";
 
+// /articles, /en/articles, /kz/articles and their /<slug> article pages are route handlers
+// (src/app/**/articles/**/route.ts) that render DB articles into the static pages in
+// public/main/articles, which they read at runtime as templates.
+const articlesTemplates = ["./public/main/articles/**/*.html"];
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  outputFileTracingIncludes: {
+    "/articles": articlesTemplates,
+    "/en/articles": articlesTemplates,
+    "/kz/articles": articlesTemplates,
+    "/articles/[slug]": articlesTemplates,
+    "/en/articles/[slug]": articlesTemplates,
+    "/kz/articles/[slug]": articlesTemplates,
+  },
   async rewrites() {
     return [
       // Landing in 3 languages at short URLs; Russian is the default
@@ -12,10 +25,6 @@ const nextConfig: NextConfig = {
       { source: "/ru", destination: "/main/index.html" },
       { source: "/en", destination: "/main/en/index.html" },
       { source: "/kz", destination: "/main/kk/index.html" },
-      // Articles for parents (files in /main/articles — a public/articles folder would be served before this rewrite).
-      { source: "/articles", destination: "/main/articles/index.html" },
-      { source: "/en/articles", destination: "/main/articles/en/index.html" },
-      { source: "/kz/articles", destination: "/main/articles/kk/index.html" },
       { source: "/v2", destination: "/home/index.html" },
       { source: "/v2/en", destination: "/home/en/index.html" },
       { source: "/v2/kz", destination: "/home/kk/index.html" },

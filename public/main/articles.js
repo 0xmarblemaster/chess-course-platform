@@ -1,7 +1,14 @@
-/* Chess Empire /articles — topic chips filter the cards (without JS every card shows);
+/* Chess Empire /articles — old shared links /articles#<slug> go to the article's own page;
+   topic chips filter the cards (without JS every card shows);
    the sticky mobile CTA and the compact WhatsApp button appear once the hero scrolls away. */
 (function () {
   var d = document;
+  var slug = location.hash.slice(1);
+  if (/^[a-z0-9-]+$/.test(slug)) {
+    var known = d.querySelector('.pa-list a[href$="/articles/' + slug + '"]');
+    if (known) return location.replace(known.getAttribute("href"));
+  }
+
   var chips = d.querySelectorAll(".pa-chip"), items = d.querySelectorAll(".pa-list [data-cat]");
   chips.forEach(function (chip) {
     chip.addEventListener("click", function () {

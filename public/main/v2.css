@@ -213,7 +213,7 @@
 #approach,#fide{background-color:var(--sand);border-top:1px solid var(--ink)}
 
 /* articles teaser (Option B): "parents ask — coaches answer", 4 question cards on the deep band;
-   a scroll-snap rail with the next card peeking on phones. Cards link to /articles#id. */
+   a scroll-snap rail with the next card peeking on phones. Cards link to /articles/<slug>. */
 #articles{position:relative;background:var(--deep);color:#fff}
 #articles::before{content:"";position:absolute;inset:0;background-image:conic-gradient(rgba(194,165,128,.06) 25%,transparent 0 50%,rgba(194,165,128,.06) 0 75%,transparent 0);background-size:96px 96px;pointer-events:none}
 #articles>.wrap{position:relative}

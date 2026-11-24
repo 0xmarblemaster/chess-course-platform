@@ -224,7 +224,7 @@ test('v2.js picks its WhatsApp text from <html lang>', () => {
     const el = (id) => els[id] || (els[id] = { id, value: '', hidden: false, tagName: id === 'name' ? 'INPUT' : 'SELECT', href: '', textContent: '', tabIndex: 0,
       classList: { toggle() {} }, setAttribute() {}, focus() {}, click() {}, addEventListener(ev, fn) { this['on' + ev] = fn },
       querySelector() { return el(id + '-child') } })
-    const document = { documentElement: { lang }, getElementById: el, querySelectorAll: () => [] }
+    const document = { documentElement: { lang }, getElementById: el, querySelector: () => null, querySelectorAll: () => [] }
     const window = { matchMedia: () => ({ matches: false, addEventListener() {} }) }
     vm.runInNewContext(js, { document, window })
     el('name').value = 'Aigerim'; el('age').value = '6–7'; el('branch').value = 'help'
