@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
       { source: "/ru", destination: "/main/index.html" },
       { source: "/en", destination: "/main/en/index.html" },
       { source: "/kz", destination: "/main/kk/index.html" },
+      // Articles for parents (files in /main/articles — a public/articles folder would be served before this rewrite).
+      { source: "/articles", destination: "/main/articles/index.html" },
+      { source: "/en/articles", destination: "/main/articles/en/index.html" },
+      { source: "/kz/articles", destination: "/main/articles/kk/index.html" },
       { source: "/v2", destination: "/home/index.html" },
       { source: "/v2/en", destination: "/home/en/index.html" },
       { source: "/v2/kz", destination: "/home/kk/index.html" },
@@ -31,6 +35,9 @@ const nextConfig: NextConfig = {
       { source: "/main", destination: "/ru", permanent: true },
       { source: "/main/en", destination: "/en", permanent: true },
       { source: "/main/kk", destination: "/kz", permanent: true },
+      { source: "/main/articles", destination: "/articles", permanent: true },
+      { source: "/main/articles/en", destination: "/en/articles", permanent: true },
+      { source: "/main/articles/kk", destination: "/kz/articles", permanent: true },
       {
         source: "/landing",
         destination: "/landing/index.html",
