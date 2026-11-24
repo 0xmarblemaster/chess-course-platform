@@ -3,7 +3,7 @@
 Needs the local stack (nothing touches the real DB):
   bash tests/support/articles-stack.sh start && set -a && . /tmp/articles-stack/env && set +a
   python3 tests/admin-articles.browser.py
-The sign-in gate (form, wrong password, non-admin, admin, sign-out), then — signed in as the
+The sign-in gate (form, wrong password, no permission, coach without keys, admin, sign-out), then — signed in as the
 stub's admin by putting its articles-project session into localStorage — list, filters, create
 (validation, rich text, cover upload, preview), save draft, publish, unpublish, delete, API keys,
 mobile. Rows it creates use the prefix "test-" and are deleted at the end.
@@ -26,6 +26,8 @@ ANON = os.environ.get("NEXT_PUBLIC_ARTICLES_SUPABASE_ANON_KEY") or os.environ["N
 STORAGE_KEY = "ce-articles-auth"  # auth.storageKey of the articles browser client
 ADMIN = (os.environ.get("ARTICLES_ADMIN_EMAIL", "admin@articles.test"), os.environ.get("ARTICLES_ADMIN_PASSWORD", "admin-pass-123"))
 STUDENT = (os.environ.get("ARTICLES_USER_EMAIL", "student@articles.test"), os.environ.get("ARTICLES_USER_PASSWORD", "student-pass-123"))
+# user_roles 'coach' with can_manage_articles (tests/support/articles-stack.sh)
+COACH = ("coach@articles.test", "coach-pass-123")
 SHOTS = "/root/clawd/files/5731393254/articles-admin"
 RUN = format(int(time.time()), "x")
 SLUG = f"test-admin-{RUN}"
@@ -102,11 +104,21 @@ def guard(browser):
     expect(page.locator("form").get_by_role("alert")).to_contain_text("Invalid login credentials", timeout=15000)
     check(True, "wrong password: error shown")
     sign_in(page, *STUDENT)
-    expect(page.get_by_text("Нет прав администратора")).to_be_visible(timeout=15000)
-    check(True, "non-admin: 'Нет прав администратора'")
+    expect(page.get_by_text("Нет прав на управление статьями")).to_be_visible(timeout=15000)
+    check(True, "no article permission: 'Нет прав на управление статьями'")
     page.get_by_role("button", name="Выйти").click()
     expect(page.get_by_role("heading", name="Вход для администраторов")).to_be_visible(timeout=15000)
     check(True, "non-admin can sign out")
+    sign_in(page, *COACH)
+    expect(page.get_by_role("heading", name="Articles", exact=True)).to_be_visible(timeout=30000)
+    check(page.get_by_role("link", name="API keys").count() == 0, "coach with can_manage_articles: list, no 'API keys' link")
+    page.goto(BASE + "/admin/articles/keys")
+    expect(page.get_by_text("Ключами API управляют только администраторы")).to_be_visible(timeout=30000)
+    check(True, "coach: keys page refused")
+    page.goto(BASE + "/admin/articles")
+    expect(page.get_by_role("heading", name="Articles", exact=True)).to_be_visible(timeout=30000)
+    page.get_by_role("button", name="Выйти").click()
+    expect(page.get_by_role("heading", name="Вход для администраторов")).to_be_visible(timeout=15000)
     sign_in(page, *ADMIN)
     expect(page.get_by_role("heading", name="Articles", exact=True)).to_be_visible(timeout=30000)
     check(True, "admin signs in through the form")

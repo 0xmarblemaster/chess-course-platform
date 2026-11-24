@@ -73,7 +73,7 @@ export default function ArticleKeysPage() {
   }
 
   return (
-    <ArticlesShell title="Articles API keys">
+    <ArticlesShell title="Articles API keys" keysOnly>
       <p className="mb-4 max-w-3xl text-sm text-gray-600">
         Keys let scripts and integrations create, edit and delete articles through <code>/api/articles</code> (see docs/articles-api.md).
         Send them as <code>Authorization: Bearer cea_…</code>. Only a hash is stored, so a key is shown once, right after it is created.

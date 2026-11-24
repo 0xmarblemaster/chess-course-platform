@@ -5,7 +5,8 @@ import { getArticlesDb } from '@/lib/articles/db'
 
 export const API_KEY_PREFIX = 'cea_'
 
-export type Caller = { via: 'key'; keyId: string } | { via: 'user'; userId: string; email: string | null }
+type Permissions = { canManage: boolean; canManageKeys: boolean }
+export type Caller = { via: 'key'; keyId: string } | ({ via: 'user'; userId: string; email: string | null } & Permissions)
 type AuthResult = { ok: true; caller: Caller } | { ok: false; response: NextResponse }
 
 export const sha256 = (s: string) => createHash('sha256').update(s).digest('hex')
@@ -21,7 +22,8 @@ export const jsonError = (status: number, error: string, extra?: object) =>
 
 /**
  * Who is calling: an article API key (`Authorization: Bearer cea_…`, unless userOnly) or a
- * Supabase access token of an admin (see isAdmin). Missing/invalid → 401, valid but not
+ * Supabase access token of a user allowed to manage articles (see articlePermissions). userOnly
+ * endpoints (key management) also need the admin role. Missing/invalid → 401, valid but not
  * allowed → 403.
  */
 export async function authorize(req: Request, opts: { userOnly?: boolean } = {}): Promise<AuthResult> {
@@ -48,23 +50,27 @@ export async function authorize(req: Request, opts: { userOnly?: boolean } = {})
 
   const { data: auth, error } = await db.auth.getUser(token)
   if (error || !auth.user) return fail(401, 'Invalid or expired session')
-  const admin = await isAdmin(db, auth.user.id)
-  if (admin === null) return fail(503, 'Could not check the admin role')
-  if (!admin) return fail(403, 'Admin role required')
-  return { ok: true, caller: { via: 'user', userId: auth.user.id, email: auth.user.email ?? null } }
+  const perms = await articlePermissions(db, auth.user.id)
+  if (!perms) return fail(503, 'Could not check the article permission')
+  if (!perms.canManage) return fail(403, 'Article management permission required')
+  if (opts.userOnly && !perms.canManageKeys) return fail(403, 'Admin role required to manage API keys')
+  return { ok: true, caller: { via: 'user', userId: auth.user.id, email: auth.user.email ?? null, ...perms } }
 }
 
 // Missing table: 42P01 from Postgres, PGRST205 from PostgREST 13+.
 const NO_TABLE = new Set(['42P01', 'PGRST205'])
 
 /**
- * Admin = a public.user_roles row with role 'admin' (Chess Empire DB). Where that table doesn't
- * exist (the local test stack), users.role = 'admin' instead. null when the check itself failed.
+ * canManage = a public.user_roles row with can_manage_articles (Chess Empire DB); canManageKeys =
+ * that row also has role 'admin'. Where user_roles doesn't exist (the local test stack), users
+ * instead: role 'admin' or can_manage_articles, keys for role 'admin'. null when the check failed.
  */
-async function isAdmin(db: SupabaseClient, userId: string): Promise<boolean | null> {
-  const roles = await db.from('user_roles').select('role').eq('user_id', userId).eq('role', 'admin').limit(1)
-  if (!roles.error) return roles.data.length > 0
+async function articlePermissions(db: SupabaseClient, userId: string): Promise<Permissions | null> {
+  const roles = await db.from('user_roles').select('role').eq('user_id', userId).eq('can_manage_articles', true)
+  if (!roles.error) return { canManage: roles.data.length > 0, canManageKeys: roles.data.some((r) => r.role === 'admin') }
   if (!NO_TABLE.has(roles.error.code)) return null
-  const { data, error } = await db.from('users').select('role').eq('id', userId).maybeSingle()
-  return error ? null : data?.role === 'admin'
+  const { data, error } = await db.from('users').select('role, can_manage_articles').eq('id', userId).maybeSingle()
+  if (error) return null
+  const admin = data?.role === 'admin'
+  return { canManage: admin || data?.can_manage_articles === true, canManageKeys: admin }
 }

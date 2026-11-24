@@ -29,13 +29,19 @@ start() {
   local psql="psql -q -v ON_ERROR_STOP=1 -h 127.0.0.1 -p $PGPORT -U postgres -d postgres"
   $psql -f tests/support/articles-bootstrap.sql
   $psql -f supabase/migrations/20261124_articles.sql
-  $psql -c "insert into public.users (id, email, role) values
-    ('00000000-0000-4000-8000-00000000a001', 'admin@articles.test', 'admin'),
-    ('00000000-0000-4000-8000-00000000a002', 'student@articles.test', 'student'),
-    ('00000000-0000-4000-8000-00000000a003', 'legacy-admin@articles.test', 'admin')"
-  # Chess Empire DB's admin check (src/lib/articles/auth.ts); only admin@ has a row.
-  $psql -c "create table public.user_roles (user_id uuid not null, role text not null, created_at timestamptz default now());
-    insert into public.user_roles (user_id, role) values ('00000000-0000-4000-8000-00000000a001', 'admin')"
+  $psql -c "insert into public.users (id, email, role, can_manage_articles) values
+    ('00000000-0000-4000-8000-00000000a001', 'admin@articles.test', 'admin', false),
+    ('00000000-0000-4000-8000-00000000a002', 'student@articles.test', 'student', false),
+    ('00000000-0000-4000-8000-00000000a003', 'legacy-admin@articles.test', 'admin', false),
+    ('00000000-0000-4000-8000-00000000a004', 'coach@articles.test', 'coach', true),
+    ('00000000-0000-4000-8000-00000000a005', 'noflag-admin@articles.test', 'student', false)"
+  # Chess Empire DB's permission check (src/lib/articles/auth.ts, dashboard migration 106).
+  $psql -c "create table public.user_roles (user_id uuid not null, role text not null,
+      can_manage_articles boolean not null default false, created_at timestamptz default now());
+    insert into public.user_roles (user_id, role, can_manage_articles) values
+      ('00000000-0000-4000-8000-00000000a001', 'admin', true),
+      ('00000000-0000-4000-8000-00000000a004', 'coach', true),
+      ('00000000-0000-4000-8000-00000000a005', 'admin', false)"
 
   node tests/support/supabase-stub.mjs --env > $DIR/env
   set -a; . $DIR/env; set +a

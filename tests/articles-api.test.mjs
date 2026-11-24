@@ -7,7 +7,7 @@
 // NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / NEXT_PUBLIC_SUPABASE_ANON_KEY, like the app);
 // optional ARTICLES_ADMIN_EMAIL/PASSWORD and ARTICLES_USER_EMAIL/PASSWORD (default to the stub's test
 // users when the Supabase URL is local); ARTICLES_STACK_PG (the local stack's Postgres) for the
-// user_roles → users.role fallback check.
+// user_roles → users fallback check.
 // Every row it creates uses the slug/name prefix "test-" and is deleted at the end.
 import { execFileSync } from 'child_process'
 import { createClient } from '@supabase/supabase-js'
@@ -25,6 +25,9 @@ const ADMIN = [process.env.ARTICLES_ADMIN_EMAIL || (local && 'admin@articles.tes
 const USER = [process.env.ARTICLES_USER_EMAIL || (local && 'student@articles.test'), process.env.ARTICLES_USER_PASSWORD || (local && 'student-pass-123')]
 // The stub's user with users.role = 'admin' but no user_roles row.
 const LEGACY_ADMIN = [local && 'legacy-admin@articles.test', local && 'legacy-pass-123']
+// user_roles 'coach' with can_manage_articles, and user_roles 'admin' without it.
+const COACH = [local && 'coach@articles.test', local && 'coach-pass-123']
+const NOFLAG_ADMIN = [local && 'noflag-admin@articles.test', local && 'noflag-pass-123']
 const STACK_PG = process.env.ARTICLES_STACK_PG
 
 const db = createClient(SB_URL, SERVICE, { auth: { persistSession: false } })
@@ -100,7 +103,7 @@ async function main() {
     ok((await call('GET', '/api/articles/keys', { token: userToken })).status === 403, 'non-admin session cannot list keys → 403')
   } else console.log('  - skipped: no non-admin test user')
 
-  console.log('GET /api/articles/me and the admin role')
+  console.log('GET /api/articles/me and can_manage_articles')
   ok((await call('GET', '/api/articles/me')).status === 401, '/me without a token → 401')
   ok((await call('GET', '/api/articles/me', { token: 'not-a-jwt' })).status === 401, '/me with a garbage token → 401')
   ok((await call('GET', '/api/articles/me', { token: key })).status === 403, '/me with an API key → 403')
@@ -108,7 +111,32 @@ async function main() {
   if (adminToken) {
     const me = await call('GET', '/api/articles/me', { token: adminToken })
     ok(me.status === 200 && me.body.admin === true && me.body.email === ADMIN[0], '/me as an admin → 200 { admin: true, email }')
+    ok(me.body.canManage === true && me.body.canManageKeys === true, '/me as an admin → canManage and canManageKeys')
   }
+  const noflagToken = await signIn(NOFLAG_ADMIN)
+  if (noflagToken) {
+    const me = await call('GET', '/api/articles/me', { token: noflagToken })
+    ok(me.status === 403 && me.body.error === 'Article management permission required', "user_roles admin without can_manage_articles: /me → 403 'Article management permission required'")
+    ok((await call('POST', '/api/articles', { json: draft, token: noflagToken })).status === 403, 'and cannot create')
+    ok((await call('GET', '/api/articles?all=1', { token: noflagToken })).status === 403, 'nor list drafts')
+    ok((await call('GET', '/api/articles/keys', { token: noflagToken })).status === 403, 'nor list keys')
+  } else console.log('  - skipped: no admin-without-flag test user')
+  const coachToken = await signIn(COACH)
+  if (coachToken) {
+    const me = await call('GET', '/api/articles/me', { token: coachToken })
+    ok(me.status === 200 && me.body.canManage === true && me.body.canManageKeys === false && me.body.email === COACH[0], '/me as a coach with the flag → 200 { canManage: true, canManageKeys: false }')
+    const slug = `${SLUG}-coach`
+    const made = await call('POST', '/api/articles', { token: coachToken, json: { ...draft, slug } })
+    ok(made.status === 201, 'coach with the flag creates an article')
+    const edited = await call('PATCH', `/api/articles/${slug}`, { token: coachToken, json: { title_en: 'Coach edit', status: 'published' } })
+    ok(edited.status === 200 && edited.body.article.title_en === 'Coach edit', 'and edits it')
+    ok((await call('GET', '/api/articles?all=1', { token: coachToken })).body.articles?.some((x) => x.slug === slug), 'and lists drafts')
+    ok((await call('POST', '/api/articles/upload', { token: coachToken, form: fileForm(new Blob(['GIF89a'], { type: 'image/gif' }), 'a.gif') })).status === 415, 'and may upload (past auth)')
+    ok((await call('DELETE', `/api/articles/${slug}`, { token: coachToken })).status === 200, 'and deletes it')
+    ok((await call('GET', '/api/articles/keys', { token: coachToken })).status === 403, 'coach cannot list keys → 403')
+    ok((await call('POST', '/api/articles/keys', { token: coachToken, json: { name: `${KEY_NAME}-coach` } })).status === 403, 'coach cannot create keys → 403')
+    ok((await call('DELETE', '/api/articles/keys/00000000-0000-4000-8000-000000000000', { token: coachToken })).status === 403, 'coach cannot revoke keys → 403')
+  } else console.log('  - skipped: no coach test user')
   const legacyToken = await signIn(LEGACY_ADMIN)
   if (legacyToken) {
     ok((await call('GET', '/api/articles/me', { token: legacyToken })).status === 403, 'users.role = admin without a user_roles row → 403 (user_roles decides)')
@@ -119,6 +147,12 @@ async function main() {
     await setUserRoles(false)
     ok(await meStatus(legacyToken, 200), 'no user_roles table: users.role = admin → 200')
     if (userToken) ok((await call('GET', '/api/articles/me', { token: userToken })).status === 403, 'no user_roles table: users.role = student → 403')
+    if (coachToken) {
+      const me = await call('GET', '/api/articles/me', { token: coachToken })
+      ok(me.status === 200 && me.body.canManageKeys === false, 'no user_roles table: users.can_manage_articles → 200, no keys')
+      ok((await call('GET', '/api/articles/keys', { token: coachToken })).status === 403, 'no user_roles table: and keys → 403')
+    }
+    if (noflagToken) ok((await call('GET', '/api/articles/me', { token: noflagToken })).status === 403, 'no user_roles table: neither admin nor flag → 403')
     await setUserRoles(true)
     ok(await meStatus(legacyToken, 403), 'user_roles back: users.role alone → 403 again')
     if (adminToken) ok((await call('GET', '/api/articles/me', { token: adminToken })).status === 200, 'user_roles admin → 200')

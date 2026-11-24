@@ -1,17 +1,28 @@
 'use client'
 
 import Link from 'next/link'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { ApiError, articlesApi } from '@/lib/articles/client'
 import { articlesSupabase } from '@/lib/articles/browser'
 
 const signOut = () => articlesSupabase.auth.signOut()
 
-/** Admin-guarded page frame shared by the /admin/articles pages. */
-export function ArticlesShell({ title, actions, children }: { title: string; actions?: React.ReactNode; children: React.ReactNode }) {
+type Access = { email: string | null; canManageKeys: boolean }
+const AccessContext = createContext<Access>({ email: null, canManageKeys: false })
+
+/** Link to the API keys page, only for users who may manage keys. */
+export function KeysLink() {
+  return useContext(AccessContext).canManageKeys ? <Link href="/admin/articles/keys" className={btn.secondary}>API keys</Link> : null
+}
+
+/**
+ * Page frame shared by the /admin/articles pages, for users with the article permission
+ * (keysOnly: also the admin role, for the API keys page).
+ */
+export function ArticlesShell({ title, actions, keysOnly, children }: { title: string; actions?: React.ReactNode; keysOnly?: boolean; children: React.ReactNode }) {
   return (
-    <ArticlesGate>
-      {(email) => (
+    <ArticlesGate keysOnly={keysOnly}>
+      {({ email }) => (
         <div className="min-h-screen bg-gray-50">
           <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
             <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
@@ -36,13 +47,13 @@ export function ArticlesShell({ title, actions, children }: { title: string; act
   )
 }
 
-type GateState = { kind: 'loading' } | { kind: 'signed-out' } | { kind: 'forbidden' } | { kind: 'error'; message: string } | { kind: 'admin'; email: string | null }
+type GateState = { kind: 'loading' } | { kind: 'signed-out' } | { kind: 'forbidden'; message: string } | { kind: 'error'; message: string } | { kind: 'allowed'; access: Access }
 
 /**
  * Sign-in for the articles project (its own session, apart from the main app's): no session →
  * email + password form; a session is then checked with GET /api/articles/me.
  */
-function ArticlesGate({ children }: { children: (email: string | null) => React.ReactNode }) {
+function ArticlesGate({ keysOnly, children }: { keysOnly?: boolean; children: (access: Access) => React.ReactNode }) {
   const [state, setState] = useState<GateState>({ kind: 'loading' })
 
   useEffect(() => {
@@ -53,12 +64,12 @@ function ArticlesGate({ children }: { children: (email: string | null) => React.
       setState({ kind: 'loading' })
       let next: GateState
       try {
-        const me = await articlesApi<{ email: string | null }>('/me')
-        next = { kind: 'admin', email: me.email }
+        const me = await articlesApi<Access>('/me')
+        next = keysOnly && !me.canManageKeys ? { kind: 'forbidden', message: 'Ключами API управляют только администраторы' } : { kind: 'allowed', access: me }
       } catch (e) {
         const status = e instanceof ApiError ? e.status : 0
         if (status === 401) await signOut()
-        next = status === 401 ? { kind: 'signed-out' } : status === 403 ? { kind: 'forbidden' } : { kind: 'error', message: (e as Error).message }
+        next = status === 401 ? { kind: 'signed-out' } : status === 403 ? { kind: 'forbidden', message: 'Нет прав на управление статьями' } : { kind: 'error', message: (e as Error).message }
       }
       if (run === current) setState(next)
     }
@@ -68,9 +79,9 @@ function ArticlesGate({ children }: { children: (email: string | null) => React.
       if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') setTimeout(() => check(!!session))
     })
     return () => data.subscription.unsubscribe()
-  }, [])
+  }, [keysOnly])
 
-  if (state.kind === 'admin') return <>{children(state.email)}</>
+  if (state.kind === 'allowed') return <AccessContext.Provider value={state.access}>{children(state.access)}</AccessContext.Provider>
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -78,7 +89,7 @@ function ArticlesGate({ children }: { children: (email: string | null) => React.
         {state.kind === 'signed-out' && <SignInForm />}
         {(state.kind === 'forbidden' || state.kind === 'error') && (
           <div className="text-center">
-            <p className="mb-4 font-medium text-gray-900" role="alert">{state.kind === 'forbidden' ? 'Нет прав администратора' : state.message}</p>
+            <p className="mb-4 font-medium text-gray-900" role="alert">{state.message}</p>
             <button type="button" className={btn.secondary} onClick={signOut}>Выйти</button>
           </div>
         )}

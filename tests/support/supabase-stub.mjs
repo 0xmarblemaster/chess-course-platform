@@ -15,6 +15,10 @@ export const USERS = {
   'student@articles.test': { id: '00000000-0000-4000-8000-00000000a002', password: 'student-pass-123', role: 'student' },
   // users.role = 'admin' but no user_roles row: an admin only where user_roles doesn't exist.
   'legacy-admin@articles.test': { id: '00000000-0000-4000-8000-00000000a003', password: 'legacy-pass-123', role: 'admin' },
+  // user_roles 'coach' with can_manage_articles: may edit articles, not manage API keys.
+  'coach@articles.test': { id: '00000000-0000-4000-8000-00000000a004', password: 'coach-pass-123', role: 'coach' },
+  // user_roles 'admin' with can_manage_articles = false: no articles access.
+  'noflag-admin@articles.test': { id: '00000000-0000-4000-8000-00000000a005', password: 'noflag-pass-123', role: 'admin' },
 }
 
 const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url')

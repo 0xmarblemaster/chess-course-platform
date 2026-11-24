@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ArticlesShell, btn, ConfirmDialog, StatusBadge, useToast } from '@/components/articles/ui'
+import { ArticlesShell, btn, ConfirmDialog, KeysLink, StatusBadge, useToast } from '@/components/articles/ui'
 import { articlesApi, ApiError } from '@/lib/articles/client'
 import { TOPICS, type Article } from '@/lib/articles/schema'
 
@@ -73,7 +73,7 @@ export default function AdminArticlesPage() {
     <ArticlesShell
       title="Articles"
       actions={<>
-        <Link href="/admin/articles/keys" className={btn.secondary}>API keys</Link>
+        <KeysLink />
         <Link href="/admin/articles/new" className={btn.primary}>New article</Link>
       </>}
     >
