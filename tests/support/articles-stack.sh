@@ -31,7 +31,11 @@ start() {
   $psql -f supabase/migrations/20261124_articles.sql
   $psql -c "insert into public.users (id, email, role) values
     ('00000000-0000-4000-8000-00000000a001', 'admin@articles.test', 'admin'),
-    ('00000000-0000-4000-8000-00000000a002', 'student@articles.test', 'student')"
+    ('00000000-0000-4000-8000-00000000a002', 'student@articles.test', 'student'),
+    ('00000000-0000-4000-8000-00000000a003', 'legacy-admin@articles.test', 'admin')"
+  # Chess Empire DB's admin check (src/lib/articles/auth.ts); only admin@ has a row.
+  $psql -c "create table public.user_roles (user_id uuid not null, role text not null, created_at timestamptz default now());
+    insert into public.user_roles (user_id, role) values ('00000000-0000-4000-8000-00000000a001', 'admin')"
 
   node tests/support/supabase-stub.mjs --env > $DIR/env
   set -a; . $DIR/env; set +a
@@ -49,6 +53,7 @@ EOF
   setsid nohup npx next dev -p "$APP_PORT" >$DIR/next.log 2>&1 & echo $! > $DIR/next.pid
   wait_for "http://127.0.0.1:$APP_PORT/api/articles?limit=1" 120
   echo "ARTICLES_BASE=http://127.0.0.1:$APP_PORT" >> $DIR/env
+  echo "ARTICLES_STACK_PG=postgres://postgres@127.0.0.1:$PGPORT/postgres" >> $DIR/env
   echo "stack up: app http://127.0.0.1:$APP_PORT, env in $DIR/env"
 }
 

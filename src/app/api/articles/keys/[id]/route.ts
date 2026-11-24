@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabaseServer'
+import { getArticlesDb } from '@/lib/articles/db'
 import { authorize, jsonError } from '@/lib/articles/auth'
 
 export const runtime = 'nodejs'
@@ -12,7 +12,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   if (!auth.ok) return auth.response
   const { id } = await params
   if (!UUID_RE.test(id)) return jsonError(404, 'Key not found')
-  const db = getSupabaseAdmin()!
+  const db = getArticlesDb()!
   const { data: key, error } = await db.from('article_api_keys').select('id, revoked_at').eq('id', id).maybeSingle()
   if (error) return jsonError(500, error.message)
   if (!key) return jsonError(404, 'Key not found')

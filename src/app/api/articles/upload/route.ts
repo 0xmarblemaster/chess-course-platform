@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabaseServer'
+import { getArticlesDb } from '@/lib/articles/db'
 import { authorize, jsonError } from '@/lib/articles/auth'
 
 export const runtime = 'nodejs'
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   if (!type || !type.magic(buf)) return jsonError(415, 'Only JPEG, PNG or WebP images are allowed')
 
   const path = `${new Date().getFullYear()}/${randomUUID()}.${type.ext}`
-  const storage = getSupabaseAdmin()!.storage.from(BUCKET)
+  const storage = getArticlesDb()!.storage.from(BUCKET)
   const { error } = await storage.upload(path, buf, { contentType: file.type, upsert: false })
   if (error) return jsonError(500, error.message)
   return NextResponse.json({ url: storage.getPublicUrl(path).data.publicUrl, path }, { status: 201 })

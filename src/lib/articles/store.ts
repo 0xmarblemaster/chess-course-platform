@@ -1,5 +1,5 @@
 import { unstable_cache } from 'next/cache'
-import { getSupabaseAdmin } from '@/lib/supabaseServer'
+import { getArticlesDb } from '@/lib/articles/db'
 import type { Article, Lang } from './schema'
 import seed from './seed.json'
 
@@ -7,8 +7,8 @@ export const ARTICLES_TAG = 'articles'
 
 /** Featured first, then sort_order, then newest. */
 export async function listArticles(opts: { includeDrafts: boolean }): Promise<Article[]> {
-  const db = getSupabaseAdmin()
-  if (!db) throw new Error('Supabase admin client is not configured')
+  const db = getArticlesDb()
+  if (!db) throw new Error('Articles DB is not configured')
   let q = db.from('articles').select('*')
   if (!opts.includeDrafts) q = q.eq('status', 'published')
   const { data, error } = await q

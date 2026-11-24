@@ -1,8 +1,11 @@
 # Articles API
 
 Articles for parents (`/articles`, `/en/articles`, `/kz/articles` and one page per article at
-`/articles/<slug>`, `/en/articles/<slug>`, `/kz/articles/<slug>`) live in the Supabase table
-`articles`. The admin editor at `/admin/articles` and any script/integration use the same API.
+`/articles/<slug>`, `/en/articles/<slug>`, `/kz/articles/<slug>`) live in the table `articles` of
+the Chess Empire DB Supabase project (env `ARTICLES_SUPABASE_URL` + `ARTICLES_SUPABASE_SECRET_KEY` on
+the server, `NEXT_PUBLIC_ARTICLES_SUPABASE_URL` + `NEXT_PUBLIC_ARTICLES_SUPABASE_ANON_KEY` in the
+browser; each falls back to the main project's `NEXT_PUBLIC_SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY`
+/ `NEXT_PUBLIC_SUPABASE_ANON_KEY`). The admin editor at `/admin/articles` and any script/integration use the same API.
 Every write refreshes the public pages (`revalidateTag('articles')`); otherwise they refresh at most
 every 60 s.
 
@@ -13,17 +16,19 @@ Base URL: the site domain, e.g. `https://www.chessempire.kz`. All bodies are JSO
 Writes, drafts and uploads need `Authorization: Bearer <token>` where the token is either
 
 - an **article API key** (`cea_…`), or
-- the **Supabase access token** of a signed-in user whose `users.role` is `admin` (used by the editor).
+- the **Supabase access token** (articles project) of a user with a `user_roles` row `role = 'admin'`
+  (used by the editor; where `user_roles` doesn't exist, `users.role = 'admin'`).
 
 Missing or invalid token → `401`. Valid token without the admin role → `403`.
-Key management (`/api/articles/keys…`) accepts the admin session only, not API keys.
+Key management (`/api/articles/keys…`) and `GET /api/articles/me` (→ `{ admin: true, email }`)
+accept the admin session only, not API keys.
 
 ### Getting a key
 
 - In the admin: `/admin/articles/keys` → *Create key*. The plain key is shown **once**.
 - First key, from a shell with the service role env:
   ```bash
-  NEXT_PUBLIC_SUPABASE_URL=… SUPABASE_SERVICE_ROLE_KEY=… node scripts/create-article-api-key.mjs "Content bot"
+  ARTICLES_SUPABASE_URL=… ARTICLES_SUPABASE_SECRET_KEY=… node scripts/create-article-api-key.mjs "Content bot"
   ```
 
 Only the sha256 of a key and its first 8 characters are stored. Revoked keys stop working immediately.

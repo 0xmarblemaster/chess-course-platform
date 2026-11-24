@@ -1,6 +1,6 @@
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabaseServer'
+import { getArticlesDb } from '@/lib/articles/db'
 import { authorize, jsonError } from '@/lib/articles/auth'
 import { sanitizeBodies } from '@/lib/articles/sanitize'
 import { LANGS, validateArticleInput, type Article, type Lang } from '@/lib/articles/schema'
@@ -11,7 +11,7 @@ export const runtime = 'nodejs'
 type Ctx = { params: Promise<{ slug: string }> }
 
 async function findArticle(slug: string) {
-  const db = getSupabaseAdmin()
+  const db = getArticlesDb()
   if (!db) throw new Error('Supabase admin client is not configured')
   const { data, error } = await db.from('articles').select('*').eq('slug', slug).maybeSingle()
   if (error) throw new Error(error.message)
@@ -53,7 +53,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
   if (!existing) return jsonError(404, 'Article not found')
   sanitizeBodies(data)
   const row = { ...data, ...(data.status === 'published' && !existing.published_at ? { published_at: new Date().toISOString() } : {}) }
-  const { data: article, error } = await getSupabaseAdmin()!.from('articles').update(row).eq('id', existing.id).select().single()
+  const { data: article, error } = await getArticlesDb()!.from('articles').update(row).eq('id', existing.id).select().single()
   if (error) return error.code === '23505' ? jsonError(409, 'An article with this slug already exists') : jsonError(500, error.message)
   revalidateTag(ARTICLES_TAG)
   return NextResponse.json({ article })
@@ -64,7 +64,7 @@ export async function DELETE(req: NextRequest, { params }: Ctx) {
   const auth = await authorize(req)
   if (!auth.ok) return auth.response
   const { slug } = await params
-  const { data, error } = await getSupabaseAdmin()!.from('articles').delete().eq('slug', slug).select('slug')
+  const { data, error } = await getArticlesDb()!.from('articles').delete().eq('slug', slug).select('slug')
   if (error) return jsonError(500, error.message)
   if (!data.length) return jsonError(404, 'Article not found')
   revalidateTag(ARTICLES_TAG)

@@ -1,6 +1,6 @@
 // Browser-side helpers for the /admin/articles pages: API calls with the admin's Supabase access
 // token, and a cleanup of contenteditable output down to the article HTML subset.
-import { supabase } from '@/lib/supabaseClient'
+import { articlesSupabase } from './browser'
 
 export class ApiError extends Error {
   constructor(public status: number, message: string, public fields: Record<string, string> = {}) {
@@ -9,7 +9,7 @@ export class ApiError extends Error {
 }
 
 export async function articlesApi<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const { data } = await supabase.auth.getSession()
+  const { data } = await articlesSupabase.auth.getSession()
   const headers = new Headers(init.headers)
   if (data.session) headers.set('Authorization', `Bearer ${data.session.access_token}`)
   if (typeof init.body === 'string') headers.set('Content-Type', 'application/json')

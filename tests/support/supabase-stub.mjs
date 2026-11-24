@@ -13,6 +13,8 @@ const STORAGE_DIR = process.env.STUB_STORAGE_DIR || '/tmp/articles-stack/storage
 export const USERS = {
   'admin@articles.test': { id: '00000000-0000-4000-8000-00000000a001', password: 'admin-pass-123', role: 'admin' },
   'student@articles.test': { id: '00000000-0000-4000-8000-00000000a002', password: 'student-pass-123', role: 'student' },
+  // users.role = 'admin' but no user_roles row: an admin only where user_roles doesn't exist.
+  'legacy-admin@articles.test': { id: '00000000-0000-4000-8000-00000000a003', password: 'legacy-pass-123', role: 'admin' },
 }
 
 const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url')
@@ -34,10 +36,16 @@ const far = Math.floor(Date.now() / 1000) + 10 * 365 * 86400
 const ANON_KEY = sign({ role: 'anon', iss: 'stub', exp: far })
 const SERVICE_KEY = sign({ role: 'service_role', iss: 'stub', exp: far })
 
+// The stub stands in for the articles project; the main project's vars point at a closed port so
+// anything in the articles feature still reading them fails.
 if (process.argv.includes('--env')) {
-  console.log(`NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:${PORT}`)
-  console.log(`NEXT_PUBLIC_SUPABASE_ANON_KEY=${ANON_KEY}`)
-  console.log(`SUPABASE_SERVICE_ROLE_KEY=${SERVICE_KEY}`)
+  console.log(`ARTICLES_SUPABASE_URL=http://127.0.0.1:${PORT}`)
+  console.log(`ARTICLES_SUPABASE_SECRET_KEY=${SERVICE_KEY}`)
+  console.log(`NEXT_PUBLIC_ARTICLES_SUPABASE_URL=http://127.0.0.1:${PORT}`)
+  console.log(`NEXT_PUBLIC_ARTICLES_SUPABASE_ANON_KEY=${ANON_KEY}`)
+  console.log('NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:9')
+  console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY=unused')
+  console.log('SUPABASE_SERVICE_ROLE_KEY=unused')
   console.log(`PGRST_JWT_SECRET=${SECRET}`)
   process.exit(0)
 }

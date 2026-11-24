@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabaseServer'
+import { getArticlesDb } from '@/lib/articles/db'
 import { authorize, jsonError, mintApiKey } from '@/lib/articles/auth'
 
 export const runtime = 'nodejs'
@@ -10,7 +10,7 @@ const COLUMNS = 'id, name, key_prefix, created_by, created_at, last_used_at, rev
 export async function GET(req: NextRequest) {
   const auth = await authorize(req, { userOnly: true })
   if (!auth.ok) return auth.response
-  const { data, error } = await getSupabaseAdmin()!.from('article_api_keys').select(COLUMNS).order('created_at', { ascending: false })
+  const { data, error } = await getArticlesDb()!.from('article_api_keys').select(COLUMNS).order('created_at', { ascending: false })
   if (error) return jsonError(500, error.message)
   return NextResponse.json({ keys: data }, { headers: { 'Cache-Control': 'no-store' } })
 }
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 
   const { key, key_prefix, key_hash } = mintApiKey()
   const created_by = auth.caller.via === 'user' ? auth.caller.userId : null
-  const { data, error } = await getSupabaseAdmin()!
+  const { data, error } = await getArticlesDb()!
     .from('article_api_keys')
     .insert({ name, key_prefix, key_hash, created_by })
     .select(COLUMNS)

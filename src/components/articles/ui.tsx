@@ -2,26 +2,119 @@
 
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import AdminRoute from '@/components/AdminRoute'
+import { ApiError, articlesApi } from '@/lib/articles/client'
+import { articlesSupabase } from '@/lib/articles/browser'
+
+const signOut = () => articlesSupabase.auth.signOut()
 
 /** Admin-guarded page frame shared by the /admin/articles pages. */
 export function ArticlesShell({ title, actions, children }: { title: string; actions?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <AdminRoute>
-      <div className="min-h-screen bg-gray-50">
-        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
-          <nav className="mb-2 text-sm text-gray-500" aria-label="Breadcrumb">
-            <Link href="/admin" className="hover:underline">Admin</Link> <span aria-hidden="true">/</span>{' '}
-            <Link href="/admin/articles" className="hover:underline">Articles</Link>
-          </nav>
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-            {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+    <ArticlesGate>
+      {(email) => (
+        <div className="min-h-screen bg-gray-50">
+          <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+              <nav className="text-sm text-gray-500" aria-label="Breadcrumb">
+                <Link href="/admin" className="hover:underline">Admin</Link> <span aria-hidden="true">/</span>{' '}
+                <Link href="/admin/articles" className="hover:underline">Articles</Link>
+              </nav>
+              <div className="flex items-center gap-3 text-sm text-gray-500">
+                {email && <span className="hidden sm:inline">{email}</span>}
+                <button type="button" className="font-medium text-indigo-600 hover:underline" onClick={signOut}>Выйти</button>
+              </div>
+            </div>
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+              <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+              {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+            </div>
+            {children}
           </div>
-          {children}
         </div>
+      )}
+    </ArticlesGate>
+  )
+}
+
+type GateState = { kind: 'loading' } | { kind: 'signed-out' } | { kind: 'forbidden' } | { kind: 'error'; message: string } | { kind: 'admin'; email: string | null }
+
+/**
+ * Sign-in for the articles project (its own session, apart from the main app's): no session →
+ * email + password form; a session is then checked with GET /api/articles/me.
+ */
+function ArticlesGate({ children }: { children: (email: string | null) => React.ReactNode }) {
+  const [state, setState] = useState<GateState>({ kind: 'loading' })
+
+  useEffect(() => {
+    let current = 0
+    const check = async (signedIn: boolean) => {
+      const run = ++current
+      if (!signedIn) return setState({ kind: 'signed-out' })
+      setState({ kind: 'loading' })
+      let next: GateState
+      try {
+        const me = await articlesApi<{ email: string | null }>('/me')
+        next = { kind: 'admin', email: me.email }
+      } catch (e) {
+        const status = e instanceof ApiError ? e.status : 0
+        if (status === 401) await signOut()
+        next = status === 401 ? { kind: 'signed-out' } : status === 403 ? { kind: 'forbidden' } : { kind: 'error', message: (e as Error).message }
+      }
+      if (run === current) setState(next)
+    }
+    articlesSupabase.auth.getSession().then(({ data }) => check(!!data.session))
+    const { data } = articlesSupabase.auth.onAuthStateChange((event, session) => {
+      // Deferred: supabase-js holds its auth lock during this callback, and check() reads the session.
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') setTimeout(() => check(!!session))
+    })
+    return () => data.subscription.unsubscribe()
+  }, [])
+
+  if (state.kind === 'admin') return <>{children(state.email)}</>
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        {state.kind === 'loading' && <p className="text-center text-sm text-gray-500" role="status">Загрузка…</p>}
+        {state.kind === 'signed-out' && <SignInForm />}
+        {(state.kind === 'forbidden' || state.kind === 'error') && (
+          <div className="text-center">
+            <p className="mb-4 font-medium text-gray-900" role="alert">{state.kind === 'forbidden' ? 'Нет прав администратора' : state.message}</p>
+            <button type="button" className={btn.secondary} onClick={signOut}>Выйти</button>
+          </div>
+        )}
       </div>
-    </AdminRoute>
+    </div>
+  )
+}
+
+function SignInForm() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setBusy(true)
+    setError('')
+    const { error } = await articlesSupabase.auth.signInWithPassword({ email: email.trim(), password })
+    setBusy(false)
+    if (error) setError(error.message)
+  }
+  const input = 'mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+  return (
+    <form onSubmit={submit} className="space-y-4">
+      <h1 className="text-lg font-semibold text-gray-900">Вход для администраторов</h1>
+      <label className="block text-sm font-medium text-gray-700">
+        Email
+        <input type="email" required autoComplete="username" className={input} value={email} onChange={(e) => setEmail(e.target.value)} />
+      </label>
+      <label className="block text-sm font-medium text-gray-700">
+        Пароль
+        <input type="password" required autoComplete="current-password" className={input} value={password} onChange={(e) => setPassword(e.target.value)} />
+      </label>
+      {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
+      <button type="submit" className={`${btn.primary} w-full`} disabled={busy}>Войти</button>
+    </form>
   )
 }
 

@@ -58,7 +58,7 @@ export function validateSlug(slug: unknown): string | null {
 }
 
 // Covers uploaded through /api/articles/upload live here (http only on a local test stack).
-const COVER_STORAGE = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/article-covers/`
+const COVER_STORAGE = `${process.env.NEXT_PUBLIC_ARTICLES_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/article-covers/`
 
 function validCoverUrl(v: string): boolean {
   if (v.length > 500) return false

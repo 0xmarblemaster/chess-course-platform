@@ -1,10 +1,11 @@
 import { createHash, randomBytes, timingSafeEqual } from 'crypto'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabaseServer'
+import { getArticlesDb } from '@/lib/articles/db'
 
 export const API_KEY_PREFIX = 'cea_'
 
-export type Caller = { via: 'key'; keyId: string } | { via: 'user'; userId: string }
+export type Caller = { via: 'key'; keyId: string } | { via: 'user'; userId: string; email: string | null }
 type AuthResult = { ok: true; caller: Caller } | { ok: false; response: NextResponse }
 
 export const sha256 = (s: string) => createHash('sha256').update(s).digest('hex')
@@ -20,14 +21,14 @@ export const jsonError = (status: number, error: string, extra?: object) =>
 
 /**
  * Who is calling: an article API key (`Authorization: Bearer cea_…`, unless userOnly) or a
- * Supabase access token of a user whose users.role is admin. Missing/invalid → 401, valid but
- * not allowed → 403.
+ * Supabase access token of an admin (see isAdmin). Missing/invalid → 401, valid but not
+ * allowed → 403.
  */
 export async function authorize(req: Request, opts: { userOnly?: boolean } = {}): Promise<AuthResult> {
   const fail = (status: number, error: string): AuthResult => ({ ok: false, response: jsonError(status, error) })
   const token = req.headers.get('authorization')?.match(/^Bearer\s+(\S+)$/i)?.[1]
   if (!token) return fail(401, 'Missing bearer token')
-  const db = getSupabaseAdmin()
+  const db = getArticlesDb()
   if (!db) return fail(503, 'Database is not configured')
 
   if (token.startsWith(API_KEY_PREFIX)) {
@@ -47,7 +48,23 @@ export async function authorize(req: Request, opts: { userOnly?: boolean } = {})
 
   const { data: auth, error } = await db.auth.getUser(token)
   if (error || !auth.user) return fail(401, 'Invalid or expired session')
-  const { data: profile } = await db.from('users').select('role').eq('id', auth.user.id).maybeSingle()
-  if (profile?.role !== 'admin') return fail(403, 'Admin role required')
-  return { ok: true, caller: { via: 'user', userId: auth.user.id } }
+  const admin = await isAdmin(db, auth.user.id)
+  if (admin === null) return fail(503, 'Could not check the admin role')
+  if (!admin) return fail(403, 'Admin role required')
+  return { ok: true, caller: { via: 'user', userId: auth.user.id, email: auth.user.email ?? null } }
+}
+
+// Missing table: 42P01 from Postgres, PGRST205 from PostgREST 13+.
+const NO_TABLE = new Set(['42P01', 'PGRST205'])
+
+/**
+ * Admin = a public.user_roles row with role 'admin' (Chess Empire DB). Where that table doesn't
+ * exist (the local test stack), users.role = 'admin' instead. null when the check itself failed.
+ */
+async function isAdmin(db: SupabaseClient, userId: string): Promise<boolean | null> {
+  const roles = await db.from('user_roles').select('role').eq('user_id', userId).eq('role', 'admin').limit(1)
+  if (!roles.error) return roles.data.length > 0
+  if (!NO_TABLE.has(roles.error.code)) return null
+  const { data, error } = await db.from('users').select('role').eq('id', userId).maybeSingle()
+  return error ? null : data?.role === 'admin'
 }

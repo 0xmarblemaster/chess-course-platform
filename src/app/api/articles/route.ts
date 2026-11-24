@@ -1,6 +1,6 @@
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabaseServer'
+import { getArticlesDb } from '@/lib/articles/db'
 import { authorize, jsonError } from '@/lib/articles/auth'
 import { sanitizeBodies } from '@/lib/articles/sanitize'
 import { estimateReadMinutes, LANGS, TOPICS, validateArticleInput, type Lang, type Topic } from '@/lib/articles/schema'
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
   sanitizeBodies(data)
   data.read_minutes ??= estimateReadMinutes(data.body_ru || data.body_en || data.body_kk || '')
   const row = { ...data, published_at: data.status === 'published' ? new Date().toISOString() : null }
-  const { data: article, error } = await getSupabaseAdmin()!.from('articles').insert(row).select().single()
+  const { data: article, error } = await getArticlesDb()!.from('articles').insert(row).select().single()
   if (error) return error.code === '23505' ? jsonError(409, 'An article with this slug already exists') : jsonError(500, error.message)
   revalidateTag(ARTICLES_TAG)
   return NextResponse.json({ article }, { status: 201 })

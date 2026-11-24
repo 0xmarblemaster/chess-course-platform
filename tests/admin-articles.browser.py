@@ -3,9 +3,10 @@
 Needs the local stack (nothing touches the real DB):
   bash tests/support/articles-stack.sh start && set -a && . /tmp/articles-stack/env && set +a
   python3 tests/admin-articles.browser.py
-Signs in as the stub's admin by putting its Supabase session into localStorage, then: list,
-filters, create (validation, rich text, cover upload, preview), save draft, publish, unpublish,
-delete, API keys, mobile. Rows it creates use the prefix "test-" and are deleted at the end.
+The sign-in gate (form, wrong password, non-admin, admin, sign-out), then — signed in as the
+stub's admin by putting its articles-project session into localStorage — list, filters, create
+(validation, rich text, cover upload, preview), save draft, publish, unpublish, delete, API keys,
+mobile. Rows it creates use the prefix "test-" and are deleted at the end.
 Screenshots: /root/clawd/files/5731393254/articles-admin/.
 """
 import json
@@ -14,14 +15,15 @@ import re
 import sys
 import time
 import urllib.request
-from urllib.parse import urlparse
 
 from playwright.sync_api import expect, sync_playwright
 
 BASE = os.environ.get("ARTICLES_BASE", "http://127.0.0.1:3917")
-SB = os.environ["NEXT_PUBLIC_SUPABASE_URL"]
-SERVICE = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
-ANON = os.environ["NEXT_PUBLIC_SUPABASE_ANON_KEY"]
+# The articles project, with the same fallbacks as the app (src/lib/articles/db.ts, browser.ts).
+SB = os.environ.get("ARTICLES_SUPABASE_URL") or os.environ["NEXT_PUBLIC_SUPABASE_URL"]
+SERVICE = os.environ.get("ARTICLES_SUPABASE_SECRET_KEY") or os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+ANON = os.environ.get("NEXT_PUBLIC_ARTICLES_SUPABASE_ANON_KEY") or os.environ["NEXT_PUBLIC_SUPABASE_ANON_KEY"]
+STORAGE_KEY = "ce-articles-auth"  # auth.storageKey of the articles browser client
 ADMIN = (os.environ.get("ARTICLES_ADMIN_EMAIL", "admin@articles.test"), os.environ.get("ARTICLES_ADMIN_PASSWORD", "admin-pass-123"))
 STUDENT = (os.environ.get("ARTICLES_USER_EMAIL", "student@articles.test"), os.environ.get("ARTICLES_USER_PASSWORD", "student-pass-123"))
 SHOTS = "/root/clawd/files/5731393254/articles-admin"
@@ -56,10 +58,9 @@ def session(email, password):
 
 
 def signed_in(browser, sess, size):
-    """A context whose localStorage already holds the Supabase session (supabase-js storage key)."""
+    """A context whose localStorage already holds the articles-project session."""
     ctx = browser.new_context(viewport={"width": size[0], "height": size[1]})
-    key = f"sb-{urlparse(SB).hostname.split('.')[0]}-auth-token"
-    ctx.add_init_script(f"localStorage.setItem({json.dumps(key)}, {json.dumps(json.dumps(sess))})")
+    ctx.add_init_script(f"localStorage.setItem({json.dumps(STORAGE_KEY)}, {json.dumps(json.dumps(sess))})")
     return ctx
 
 
@@ -82,19 +83,38 @@ def row(page, slug):
     return page.locator(f"[data-slug='{slug}']:visible")
 
 
+def sign_in(page, email, password):
+    page.get_by_label("Email").fill(email)
+    page.get_by_label("Пароль").fill(password)
+    page.get_by_role("button", name="Войти").click()
+
+
 def guard(browser):
-    print("guard")
-    ctx = signed_in(browser, session(*STUDENT), (1280, 800))
+    print("sign-in gate")
+    ctx = browser.new_context(viewport={"width": 1280, "height": 800})
     page = ctx.new_page()
     page.goto(BASE + "/admin/articles")
-    page.wait_for_url("**/dashboard**", timeout=30000)
-    check("/admin/articles" not in page.url, "non-admin is sent away from /admin/articles")
-    ctx.close()
-    ctx = browser.new_context()
-    page = ctx.new_page()
-    page.goto(BASE + "/admin/articles")
-    page.wait_for_url("**/login**", timeout=30000)
-    check("/login" in page.url, "signed-out visitor is sent to /login")
+    expect(page.get_by_role("heading", name="Вход для администраторов")).to_be_visible(timeout=30000)
+    check("/admin/articles" in page.url, "signed out: sign-in form on /admin/articles itself")
+    check(page.locator("form").get_by_role("link").count() == 0, "no sign-up / magic links on the form")
+    page.screenshot(path=f"{SHOTS}/admin-login.png")
+    sign_in(page, ADMIN[0], "wrong-password")
+    expect(page.locator("form").get_by_role("alert")).to_contain_text("Invalid login credentials", timeout=15000)
+    check(True, "wrong password: error shown")
+    sign_in(page, *STUDENT)
+    expect(page.get_by_text("Нет прав администратора")).to_be_visible(timeout=15000)
+    check(True, "non-admin: 'Нет прав администратора'")
+    page.get_by_role("button", name="Выйти").click()
+    expect(page.get_by_role("heading", name="Вход для администраторов")).to_be_visible(timeout=15000)
+    check(True, "non-admin can sign out")
+    sign_in(page, *ADMIN)
+    expect(page.get_by_role("heading", name="Articles", exact=True)).to_be_visible(timeout=30000)
+    check(True, "admin signs in through the form")
+    keys = page.evaluate("Object.keys(localStorage)")
+    check(STORAGE_KEY in keys and not any(k.startswith("sb-") for k in keys), f"session stored under {STORAGE_KEY} only")
+    page.get_by_role("button", name="Выйти").click()
+    expect(page.get_by_role("heading", name="Вход для администраторов")).to_be_visible(timeout=15000)
+    check(STORAGE_KEY not in page.evaluate("Object.keys(localStorage)"), "header 'Выйти' signs out")
     ctx.close()
 
 
@@ -103,11 +123,7 @@ def desktop_flow(browser, admin):
     ctx = signed_in(browser, admin, (1440, 900))
     page = ctx.new_page()
     page.on("dialog", lambda d: d.accept())
-    page.goto(BASE + "/admin")
-    link = page.locator("a[href='/admin/articles']")
-    expect(link).to_be_visible(timeout=30000)
-    check(True, "dashboard links to /admin/articles")
-    link.click()
+    page.goto(BASE + "/admin/articles")
     expect(page.get_by_role("heading", name="Articles", exact=True)).to_be_visible(timeout=30000)
     expect(row(page, "age-to-start")).to_be_visible(timeout=30000)
     check(page.locator("tbody tr").count() >= 6, f"{page.locator('tbody tr').count()} articles in the table")

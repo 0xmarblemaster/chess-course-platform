@@ -2,9 +2,12 @@
 // Local stack (nothing touches the real DB):
 //   bash tests/support/articles-stack.sh start && set -a && . /tmp/articles-stack/env && set +a
 //   node tests/articles-api.test.mjs
-// Env: ARTICLES_BASE (app URL, default http://127.0.0.1:3917), NEXT_PUBLIC_SUPABASE_URL,
-// SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_SUPABASE_ANON_KEY; optional ARTICLES_ADMIN_EMAIL/PASSWORD and
-// ARTICLES_USER_EMAIL/PASSWORD (default to the stub's test users when the Supabase URL is local).
+// Env: ARTICLES_BASE (app URL, default http://127.0.0.1:3917), ARTICLES_SUPABASE_URL,
+// ARTICLES_SUPABASE_SECRET_KEY, NEXT_PUBLIC_ARTICLES_SUPABASE_ANON_KEY (each falls back to
+// NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / NEXT_PUBLIC_SUPABASE_ANON_KEY, like the app);
+// optional ARTICLES_ADMIN_EMAIL/PASSWORD and ARTICLES_USER_EMAIL/PASSWORD (default to the stub's test
+// users when the Supabase URL is local); ARTICLES_STACK_PG (the local stack's Postgres) for the
+// user_roles → users.role fallback check.
 // Every row it creates uses the slug/name prefix "test-" and is deleted at the end.
 import { execFileSync } from 'child_process'
 import { createClient } from '@supabase/supabase-js'
@@ -13,12 +16,16 @@ let failures = 0
 const ok = (cond, msg) => { if (cond) { console.log(`  ✓ ${msg}`) } else { failures++; console.error(`  ✗ ${msg}`) } }
 
 const BASE = process.env.ARTICLES_BASE || 'http://127.0.0.1:3917'
-const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
-const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY
-if (!SB_URL || !SERVICE) { console.error('Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY'); process.exit(1) }
+const SB_URL = process.env.ARTICLES_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+const SERVICE = process.env.ARTICLES_SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
+const ANON = process.env.NEXT_PUBLIC_ARTICLES_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+if (!SB_URL || !SERVICE) { console.error('Set ARTICLES_SUPABASE_URL and ARTICLES_SUPABASE_SECRET_KEY (or the NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY fallbacks)'); process.exit(1) }
 const local = /127\.0\.0\.1|localhost/.test(SB_URL)
 const ADMIN = [process.env.ARTICLES_ADMIN_EMAIL || (local && 'admin@articles.test'), process.env.ARTICLES_ADMIN_PASSWORD || (local && 'admin-pass-123')]
 const USER = [process.env.ARTICLES_USER_EMAIL || (local && 'student@articles.test'), process.env.ARTICLES_USER_PASSWORD || (local && 'student-pass-123')]
+// The stub's user with users.role = 'admin' but no user_roles row.
+const LEGACY_ADMIN = [local && 'legacy-admin@articles.test', local && 'legacy-pass-123']
+const STACK_PG = process.env.ARTICLES_STACK_PG
 
 const db = createClient(SB_URL, SERVICE, { auth: { persistSession: false } })
 const RUN = Date.now().toString(36)
@@ -38,7 +45,7 @@ async function call(method, path, { token, json, form } = {}) {
 
 async function signIn([email, password]) {
   if (!email || !password) return null
-  const c = createClient(SB_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || SERVICE, { auth: { persistSession: false } })
+  const c = createClient(SB_URL, ANON || SERVICE, { auth: { persistSession: false } })
   const { data, error } = await c.auth.signInWithPassword({ email, password })
   return error ? null : data.session.access_token
 }
@@ -92,6 +99,30 @@ async function main() {
     ok((await call('POST', '/api/articles', { json: draft, token: userToken })).status === 403, 'non-admin session → 403')
     ok((await call('GET', '/api/articles/keys', { token: userToken })).status === 403, 'non-admin session cannot list keys → 403')
   } else console.log('  - skipped: no non-admin test user')
+
+  console.log('GET /api/articles/me and the admin role')
+  ok((await call('GET', '/api/articles/me')).status === 401, '/me without a token → 401')
+  ok((await call('GET', '/api/articles/me', { token: 'not-a-jwt' })).status === 401, '/me with a garbage token → 401')
+  ok((await call('GET', '/api/articles/me', { token: key })).status === 403, '/me with an API key → 403')
+  if (userToken) ok((await call('GET', '/api/articles/me', { token: userToken })).status === 403, '/me as a non-admin → 403')
+  if (adminToken) {
+    const me = await call('GET', '/api/articles/me', { token: adminToken })
+    ok(me.status === 200 && me.body.admin === true && me.body.email === ADMIN[0], '/me as an admin → 200 { admin: true, email }')
+  }
+  const legacyToken = await signIn(LEGACY_ADMIN)
+  if (legacyToken) {
+    ok((await call('GET', '/api/articles/me', { token: legacyToken })).status === 403, 'users.role = admin without a user_roles row → 403 (user_roles decides)')
+    ok((await call('POST', '/api/articles', { json: draft, token: legacyToken })).status === 403, 'and cannot write')
+  }
+  if (STACK_PG && legacyToken) {
+    // Without a user_roles table (the old schema) the check falls back to users.role.
+    await setUserRoles(false)
+    ok(await meStatus(legacyToken, 200), 'no user_roles table: users.role = admin → 200')
+    if (userToken) ok((await call('GET', '/api/articles/me', { token: userToken })).status === 403, 'no user_roles table: users.role = student → 403')
+    await setUserRoles(true)
+    ok(await meStatus(legacyToken, 403), 'user_roles back: users.role alone → 403 again')
+    if (adminToken) ok((await call('GET', '/api/articles/me', { token: adminToken })).status === 200, 'user_roles admin → 200')
+  } else console.log('  - skipped: user_roles fallback (needs ARTICLES_STACK_PG and the stub users)')
 
   console.log('validation')
   ok((await call('POST', '/api/articles', { token: key, json: { ...draft, slug: 'Bad Slug' } })).body.fields?.slug, 'bad slug → 400 with a field error')
@@ -184,7 +215,22 @@ async function main() {
   ok((await call('POST', '/api/articles', { token: key, json: draft })).status === 401, 'revoked key → 401')
 }
 
+// Hides/restores public.user_roles in the local stack's Postgres and reloads PostgREST's schema cache.
+async function setUserRoles(on) {
+  const [from, to] = on ? ['user_roles_off', 'user_roles'] : ['user_roles', 'user_roles_off']
+  execFileSync('psql', ['-q', STACK_PG, '-c', `set client_min_messages = warning; alter table if exists public.${from} rename to ${to}; notify pgrst, 'reload schema'`])
+}
+
+async function meStatus(token, want) {
+  for (let i = 0; i < 20; i++) {
+    if ((await call('GET', '/api/articles/me', { token })).status === want) return true
+    await new Promise((r) => setTimeout(r, 250))
+  }
+  return false
+}
+
 async function cleanup() {
+  if (STACK_PG) await setUserRoles(true)
   await db.from('articles').delete().like('slug', 'test-%')
   await db.from('article_api_keys').delete().like('name', 'test-key-%')
   const { count } = await db.from('articles').select('id', { count: 'exact', head: true }).like('slug', 'test-%')
