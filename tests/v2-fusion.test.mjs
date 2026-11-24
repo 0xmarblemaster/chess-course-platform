@@ -23,7 +23,8 @@ const BASELINE = {
 }
 
 // Section order set by Alex 2026-10-17: reviews, trainers and branches moved up; the learning sections follow.
-const ORDER = ['top', 'about', 'reviews', 'trainers', 'branches', 'club', 'skills', 'approach', 'path', 'fide', 'faq', 'signup']
+// The articles teaser sits between trainers and branches.
+const ORDER = ['top', 'about', 'reviews', 'trainers', 'articles', 'branches', 'club', 'skills', 'approach', 'path', 'fide', 'faq', 'signup']
 const LANG_PAGES = { ru: html, kk: readFileSync('public/main/kk/index.html', 'utf8'), en: readFileSync('public/main/en/index.html', 'utf8') }
 
 test('1. section ids are present in the agreed order (all languages)', () => {
@@ -40,9 +41,9 @@ test('1b. menu and footer links follow the page order; chess phase labels stay o
   for (const [lang, page] of Object.entries(LANG_PAGES)) {
     const ids = (block) => [...block.matchAll(/href="#([a-z]+)"/g)].map((m) => m[1]).filter((id) => ORDER.includes(id))
     const nav = ids(page.match(/<nav class="main-nav"[\s\S]*?<\/nav>/)[0])
-    assert.deepEqual(nav, ['about', 'trainers', 'branches', 'club', 'path', 'faq'], `${lang} menu`)
+    assert.deepEqual(nav, ['about', 'trainers', 'articles', 'branches', 'club', 'path', 'faq'], `${lang} menu`)
     const foot = ids(page.slice(page.indexOf('<footer')).match(/<ul>(?:(?!<\/ul>)[\s\S])*href="#signup"[\s\S]*?<\/ul>/)[0])
-    assert.deepEqual(foot, ['about', 'trainers', 'branches', 'path', 'faq', 'signup'], `${lang} footer sections`)
+    assert.deepEqual(foot, ['about', 'trainers', 'articles', 'branches', 'path', 'faq', 'signup'], `${lang} footer sections`)
     const owner = (n) => { const i = page.indexOf(` · ${n}</p>`); return [...page.slice(0, i).matchAll(/<section\b[^>]*\bid="([^"]+)"/g)].pop()[1] }
     assert.deepEqual(['I', 'II', 'III'].map(owner), ['about', 'trainers', 'branches'], `${lang} phase labels`)
   }

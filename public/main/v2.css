@@ -211,3 +211,52 @@
    Alternate white bands so neighbours don't merge — also where the 3D gaps are closed (no WebGL). */
 #trainers{border-top:1px solid var(--ink)}
 #approach,#fide{background-color:var(--sand);border-top:1px solid var(--ink)}
+
+/* articles teaser (Option B): "parents ask — coaches answer", 4 question cards on the deep band;
+   a scroll-snap rail with the next card peeking on phones. Cards link to /articles#id. */
+#articles{position:relative;background:var(--deep);color:#fff}
+#articles::before{content:"";position:absolute;inset:0;background-image:conic-gradient(rgba(194,165,128,.06) 25%,transparent 0 50%,rgba(194,165,128,.06) 0 75%,transparent 0);background-size:96px 96px;pointer-events:none}
+#articles>.wrap{position:relative}
+#articles .section-head{max-width:none;flex-direction:row;justify-content:space-between;align-items:flex-end;gap:40px}
+#articles .eyebrow{color:var(--gold)}
+#articles h2{max-width:760px;color:#fff;hyphens:manual}
+#articles h2 em{font-style:italic;font-weight:500;color:var(--gold)}
+#articles .section-head .art-b-lead{max-width:360px;font-size:16px;line-height:1.55;color:#EBEBEB}
+.qb-rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;margin:0;padding:0;list-style:none}
+.qb{height:100%;min-height:400px;display:flex;flex-direction:column;gap:14px;padding:28px 26px;background:var(--bg);border-top:6px solid var(--gold);color:var(--body);text-decoration:none}
+.qb-n{font:700 56px/1 var(--font-display);color:var(--ink);opacity:.18}
+.qb-tag{font:600 11px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.qb h3{font-size:22px;line-height:1.2;hyphens:manual}
+.qb p{font-size:15px;line-height:1.55;color:var(--muted)}
+.qb-foot{display:flex;justify-content:space-between;margin-top:auto;padding-top:16px;border-top:1px solid var(--line);font:500 13px var(--font-mono);color:var(--soft)}
+.qb-more{font-weight:700;color:var(--ink)}
+.qb:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media (hover:hover){
+  .qb{transition:transform .2s,box-shadow .2s}
+  .qb:hover{transform:translateY(-6px);box-shadow:0 14px 0 var(--gold)}
+}
+@media (prefers-reduced-motion:reduce){.qb{transition:none}.qb:hover{transform:none}}
+.art-b-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:40px;padding-top:28px;border-top:1px solid rgba(194,165,128,.35)}
+.art-b-foot p{font-family:var(--font-mono);font-size:14px;letter-spacing:.04em;color:#EBEBEB}
+@media (max-width:900px){
+  #articles .section-head{flex-direction:column;align-items:flex-start;gap:20px}
+  .qb-rail{display:flex;gap:14px;margin-right:calc(-1*var(--gutter));padding-right:var(--gutter);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+  .qb-rail::-webkit-scrollbar{display:none}
+  .qb-rail>li{flex:0 0 82%;scroll-snap-align:start}
+  .qb{min-height:340px}
+  .art-b-foot{flex-direction:column;align-items:flex-start}
+}
+
+/* KZ menu labels are long: with the articles item the desktop row no longer fits below 1440px
+   (it already spilled over below 1366px), so the KZ header keeps the burger menu up to there. */
+@media (min-width:1121px) and (max-width:1439px){
+  html[lang="kk"] .burger{display:inline-flex}
+  html[lang="kk"] .main-nav{position:fixed;left:0;right:0;top:var(--header-h);bottom:0;display:none;overflow:auto;z-index:49;background:var(--bg);border-top:1px solid var(--line)}
+  html[lang="kk"] .main-nav.is-open{display:block}
+  html[lang="kk"] .main-nav ul{flex-direction:column;gap:0;padding:12px var(--gutter) 32px}
+  html[lang="kk"] .main-nav a{display:block;padding:14px 0;border-bottom:1px solid var(--line);font:600 20px var(--font-display);color:var(--ink)}
+  html[lang="kk"] body.nav-open{overflow:hidden}
+}
+/* the menu row (with "Articles") must stay inside the page width: tighter gaps on narrow laptops, tighter KZ row on desktop */
+@media (min-width:1121px) and (max-width:1199px){.main-nav ul{gap:12px}}
+@media (min-width:1440px){html[lang="kk"] .main-nav ul{gap:14px}html[lang="kk"] .main-nav a{font-size:13px}}
