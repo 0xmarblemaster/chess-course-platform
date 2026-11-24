@@ -15,6 +15,9 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
   const router = useRouter()
   const [userRole, setUserRole] = useState<string | null>(null)
   const [checkingRole, setCheckingRole] = useState(true)
+  // The user whose role is in userRole: until the role of the current user is loaded we are still checking
+  // (the session can arrive after the first, signed-out check has finished).
+  const [roleUserId, setRoleUserId] = useState<string | null>(null)
 
   console.log('AdminRoute - Render. user:', user?.id, 'loading:', loading, 'userRole:', userRole, 'checkingRole:', checkingRole)
 
@@ -45,6 +48,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
         console.error('Error checking user role:', error)
         setUserRole(null)
       } finally {
+        setRoleUserId(user.id)
         setCheckingRole(false)
       }
     }
@@ -53,7 +57,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
   }, [user])
 
   // Show loading while checking authentication and role
-  if (loading || checkingRole) {
+  if (loading || checkingRole || (user && roleUserId !== user.id)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

@@ -253,6 +253,12 @@ const AdminDashboard = () => {
                   {t('admin.manageAccess', 'Manage Access')}
                 </Link>
                 <Link
+                  href="/admin/articles"
+                  className="bg-indigo-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-indigo-700 transition-colors"
+                >
+                  {t('admin.manageArticles', 'Manage Articles')}
+                </Link>
+                <Link
                   href="/admin/payments"
                   className="bg-green-600 text-white px-4 py-3 rounded-md text-center font-medium hover:bg-green-700 transition-colors"
                 >
