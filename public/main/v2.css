@@ -236,8 +236,7 @@
   .qb:hover{transform:translateY(-6px);box-shadow:0 14px 0 var(--gold)}
 }
 @media (prefers-reduced-motion:reduce){.qb{transition:none}.qb:hover{transform:none}}
-.art-b-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:40px;padding-top:28px;border-top:1px solid rgba(194,165,128,.35)}
-.art-b-foot p{font-family:var(--font-mono);font-size:14px;letter-spacing:.04em;color:#EBEBEB}
+.art-b-foot{display:flex;justify-content:flex-end;align-items:center;gap:16px;margin-top:40px;padding-top:28px;border-top:1px solid rgba(194,165,128,.35)}
 @media (max-width:900px){
   #articles .section-head{flex-direction:column;align-items:flex-start;gap:20px}
   .qb-rail{display:flex;gap:14px;margin-right:calc(-1*var(--gutter));padding-right:var(--gutter);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
